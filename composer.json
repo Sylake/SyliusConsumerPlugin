@@ -1,12 +1,13 @@
 {
-    "name": "sylius/plugin-skeleton",
+    "name": "sylake/rabbitmq-akeneo",
     "type": "sylius-plugin",
     "description": "Acme example plugin for Sylius.",
     "license": "MIT",
     "require": {
         "php": "^5.6|^7.0",
 
-        "sylius/sylius": "^1.0.0@beta"
+        "sylius/sylius": "^1.0.0@beta",
+        "sylius-labs/rabbitmq-simplebus-bundle": "^0.1.0"
     },
     "require-dev": {
         "phpspec/phpspec": "^3.2",
@@ -27,8 +28,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\ExamplePlugin\\": "src/",
-            "Tests\\Acme\\ExamplePlugin\\": "tests/"
+            "Sylake\\RabbitmqAkeneo\\": "src/",
+            "Tests\\Sylake\\RabbitmqAkeneo\\": "tests/"
         }
     }
 }
