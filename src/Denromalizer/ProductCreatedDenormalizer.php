@@ -6,17 +6,20 @@ namespace Sylake\RabbitmqAkeneo\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;
 use Sylake\RabbitmqAkeneo\Event\ProductCreated;
-use Sylius\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
+use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
 final class ProductCreatedDenormalizer implements DenormalizerInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function supports(AMQPMessage $message)
     {
         $decodedMessage = $this->denormalize($message);
 
         if (
             isset($decodedMessage['type']) &&
-            MessageTypes::PRODUCT_CREATED_MESSAGE_TYPE === $decodedMessage['type'] &&
+            MessageType::PRODUCT_CREATED_MESSAGE_TYPE === $decodedMessage['type'] &&
             $message->get('content_type') === 'json'
         ) {
             return true;
@@ -25,6 +28,9 @@ final class ProductCreatedDenormalizer implements DenormalizerInterface
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function denormalize(AMQPMessage $message)
     {
         $message = json_decode($message->getBody(), true);

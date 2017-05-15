@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d73d8fd6415900035dbf8286873555a",
+    "content-hash": "d34167f8090b360d4914011c76dd1620",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -4769,24 +4769,24 @@
         },
         {
             "name": "sylius-labs/rabbitmq-simplebus-bundle",
-            "version": "v0.1.0",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SyliusLabs/RabbitMqSimpleBusBundle.git",
-                "reference": "b32345b85ed375ba8e84b80002c609769e5b33c5"
+                "reference": "0489c7c8f810615bbaa6618ac031dbf9352b358e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SyliusLabs/RabbitMqSimpleBusBundle/zipball/b32345b85ed375ba8e84b80002c609769e5b33c5",
-                "reference": "b32345b85ed375ba8e84b80002c609769e5b33c5",
+                "url": "https://api.github.com/repos/SyliusLabs/RabbitMqSimpleBusBundle/zipball/0489c7c8f810615bbaa6618ac031dbf9352b358e",
+                "reference": "0489c7c8f810615bbaa6618ac031dbf9352b358e",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6|^7.0",
                 "php-amqplib/rabbitmq-bundle": "^1.12",
-                "psr/log": "^1.0",
                 "simple-bus/message-bus": "^2.2",
-                "simple-bus/symfony-bridge": "^4.1"
+                "simple-bus/symfony-bridge": "^4.1",
+                "symfony/monolog-bundle": "^3.1"
             },
             "require-dev": {
                 "phpspec/phpspec": "^3.2",
@@ -4803,7 +4803,7 @@
                 "MIT"
             ],
             "description": "Integrates RabbitMQ with SimpleBus.",
-            "time": "2017-05-12T13:42:05+00:00"
+            "time": "2017-05-12T15:26:01+00:00"
         },
         {
             "name": "sylius/sylius",
@@ -5969,16 +5969,16 @@
         },
         {
             "name": "willdurand/negotiation",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/willdurand/Negotiation.git",
-                "reference": "2ba90aa46b5e77f87b55f149cfd544b8434941d9"
+                "reference": "03436ededa67c6e83b9b12defac15384cb399dc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/willdurand/Negotiation/zipball/2ba90aa46b5e77f87b55f149cfd544b8434941d9",
-                "reference": "2ba90aa46b5e77f87b55f149cfd544b8434941d9",
+                "url": "https://api.github.com/repos/willdurand/Negotiation/zipball/03436ededa67c6e83b9b12defac15384cb399dc9",
+                "reference": "03436ededa67c6e83b9b12defac15384cb399dc9",
                 "shasum": ""
             },
             "require": {
@@ -6017,7 +6017,7 @@
                 "header",
                 "negotiation"
             ],
-            "time": "2017-05-04T12:15:48+00:00"
+            "time": "2017-05-14T17:21:12+00:00"
         },
         {
             "name": "winzou/state-machine",

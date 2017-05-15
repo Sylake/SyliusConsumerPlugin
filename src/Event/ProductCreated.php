@@ -35,7 +35,7 @@ final class ProductCreated
     private $attributes;
 
     /**
-     * @var string
+     * @var array
      */
     private $description;
 
@@ -46,7 +46,7 @@ final class ProductCreated
      * @param array $associations
      * @param array $price
      * @param array $attributes
-     * @param string $description
+     * @param array $description
      */
     public function __construct(
         $code,
@@ -55,7 +55,7 @@ final class ProductCreated
         array $associations,
         array $price,
         array $attributes,
-        $description
+        array $description
     ) {
         $this->code = $code;
         $this->taxons = $taxons;
@@ -115,7 +115,7 @@ final class ProductCreated
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function description()
     {

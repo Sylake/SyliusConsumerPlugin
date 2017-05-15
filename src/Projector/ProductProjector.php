@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Sylake\RabbitmqAkeneo\Projector;
 
 use Sylake\RabbitmqAkeneo\Event\ProductCreated;
+use Sylius\Component\Channel\Factory\ChannelFactoryInterface;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
@@ -41,6 +44,11 @@ final class ProductProjector
     private $productFactory;
 
     /**
+     * @var ChannelFactoryInterface
+     */
+    private $channelFactory;
+
+    /**
      * @var TaxonRepositoryInterface
      */
     private $taxonRepository;
@@ -66,16 +74,23 @@ final class ProductProjector
     private $productRepository;
 
     /**
+     * @var ChannelRepositoryInterface
+     */
+    private $channelRepository;
+
+    /**
      * @param TaxonFactoryInterface $taxonFactory
      * @param FactoryInterface $associationFactory
      * @param FactoryInterface $channelPricingFactory
      * @param FactoryInterface $productAttributeFactory
      * @param ProductFactoryInterface $productFactory
+     * @param ChannelFactoryInterface $channelFactory
      * @param TaxonRepositoryInterface $taxonRepository
      * @param RepositoryInterface $associationRepository
      * @param RepositoryInterface $channelPricingRepository
      * @param RepositoryInterface $productAttributeRepository
      * @param ProductRepositoryInterface $productRepository
+     * @param ChannelRepositoryInterface $channelRepository
      */
     public function __construct(
         TaxonFactoryInterface $taxonFactory,
@@ -83,22 +98,26 @@ final class ProductProjector
         FactoryInterface $channelPricingFactory,
         FactoryInterface $productAttributeFactory,
         ProductFactoryInterface $productFactory,
+        ChannelFactoryInterface $channelFactory,
         TaxonRepositoryInterface $taxonRepository,
         RepositoryInterface $associationRepository,
         RepositoryInterface $channelPricingRepository,
         RepositoryInterface $productAttributeRepository,
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $productRepository,
+        ChannelRepositoryInterface $channelRepository
     ) {
         $this->taxonFactory = $taxonFactory;
         $this->associationFactory = $associationFactory;
         $this->channelPricingFactory = $channelPricingFactory;
         $this->productAttributeFactory = $productAttributeFactory;
         $this->productFactory = $productFactory;
+        $this->channelFactory = $channelFactory;
         $this->taxonRepository = $taxonRepository;
         $this->associationRepository = $associationRepository;
         $this->channelPricingRepository = $channelPricingRepository;
         $this->productAttributeRepository = $productAttributeRepository;
         $this->productRepository = $productRepository;
+        $this->channelRepository = $channelRepository;
     }
 
     /**
@@ -109,6 +128,19 @@ final class ProductProjector
         /** @var ProductInterface $product */
         $product = $this->productFactory->createWithVariant();
 
-//        $this->productRepository->add($product);
+        /** @var ChannelPricingInterface $channelPrice */
+        $channelPrice = $this->channelPricingFactory->createNew();
+
+        foreach ($event->price() as $priceInformation) {
+            $channelPrice->setChannelCode($priceInformation['scope']);
+            $channelPrice->setPrice($priceInformation['data'][0]['amount']);
+        }
+
+        foreach ($event->description() as $locale => $description) {
+            $product->setCurrentLocale($locale);
+            $product->setDescription($description);
+        }
+
+        $this->productRepository->add($product);
     }
 }
