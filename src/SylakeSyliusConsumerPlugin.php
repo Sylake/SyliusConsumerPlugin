@@ -1,11 +1,11 @@
 <?php
 
-namespace Sylake\RabbitmqAkeneo;
+namespace Sylake\SyliusConsumerPlugin;
 
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-final class SylakeRabbitMqAkeneo extends Bundle
+final class SylakeSyliusConsumerPlugin extends Bundle
 {
     use SyliusPluginTrait;
 }

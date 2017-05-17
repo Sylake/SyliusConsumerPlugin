@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sylake\RabbitmqAkeneo\Projector;
+namespace Sylake\SyliusConsumerPlugin\Projector;
 
-use Sylake\RabbitmqAkeneo\Event\ProductCreated;
+use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
 use Sylius\Component\Channel\Factory\ChannelFactoryInterface;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelPricingInterface;

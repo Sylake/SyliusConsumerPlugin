@@ -1,8 +1,8 @@
 <?php
 
-namespace Sylake\RabbitmqAkeneo\Denormalizer;
+namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
-use Sylake\RabbitmqAkeneo\Event\AssociationTypeCreated;
+use Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated;
 use PhpAmqpLib\Message\AMQPMessage;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 

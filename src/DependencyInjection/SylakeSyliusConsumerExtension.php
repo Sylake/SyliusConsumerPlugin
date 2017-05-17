@@ -1,13 +1,13 @@
 <?php
 
-namespace Sylake\RabbitmqAkeneo\DependencyInjection;
+namespace Sylake\SyliusConsumerPlugin\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-final class SylakeRabbitMqAkeneoExtension extends Extension
+final class SylakeSyliusConsumerExtension extends Extension
 {
     /**
      * {@inheritdoc}

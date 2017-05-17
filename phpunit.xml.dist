@@ -4,15 +4,11 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.6/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="tests/Application/app/autoload.php">
+         bootstrap="vendor/autoload.php"
+>
     <testsuites>
-        <testsuite name="AcmeExamplePlugin Test Suite">
+        <testsuite name="SyliusConsumerPlugin Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-
-    <php>
-        <server name="KERNEL_CLASS_PATH" value="/tests/Application/AppKernel.php" />
-        <server name="IS_DOCTRINE_ORM_SUPPORTED" value="true" />
-    </php>
 </phpunit>
