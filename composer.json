@@ -3,6 +3,16 @@
     "type": "sylius-plugin",
     "description": "Integrates Sylius with message processing for sylake/akeneo-producer-bundle.",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Arkadiusz Krakowiak"
+        },
+        {
+            "name": "Kamil Kokot",
+            "email": "kamil@kokot.me",
+            "homepage": "http://kamil.kokot.me"
+        }
+    ],
     "require": {
         "php": "^5.6|^7.0",
 
