@@ -1,6 +1,6 @@
 <?php
 
-namespace Sylake\RabbitmqAkeneo\DependencyInjection;
+namespace Sylake\SyliusConsumerPlugin\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -13,7 +13,7 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sylake_rabbitmq_akeneo_handlers');
+        $rootNode = $treeBuilder->root('sylake_sylius_consumer');
 
         return $treeBuilder;
     }

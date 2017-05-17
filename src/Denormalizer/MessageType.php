@@ -1,6 +1,6 @@
 <?php
 
-namespace Sylake\RabbitmqAkeneo\Denormalizer;
+namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
 final class MessageType
 {

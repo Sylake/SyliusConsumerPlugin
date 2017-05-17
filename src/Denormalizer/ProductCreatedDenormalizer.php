@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sylake\RabbitmqAkeneo\Denormalizer;
+namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;
-use Sylake\RabbitmqAkeneo\Event\ProductCreated;
+use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
 final class ProductCreatedDenormalizer implements DenormalizerInterface

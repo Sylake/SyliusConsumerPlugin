@@ -1,6 +1,6 @@
 <?php
 
-namespace Sylake\RabbitmqAkeneo\Event;
+namespace Sylake\SyliusConsumerPlugin\Event;
 
 final class TaxonCreated
 {

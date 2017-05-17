@@ -1,8 +1,8 @@
 <?php
 
-namespace Sylake\RabbitmqAkeneo\Projector;
+namespace Sylake\SyliusConsumerPlugin\Projector;
 
-use Sylake\RabbitmqAkeneo\Event\AssociationTypeCreated;
+use Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated;
 use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
 use Sylius\Component\Product\Repository\ProductAssociationTypeRepositoryInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;

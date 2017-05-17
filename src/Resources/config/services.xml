@@ -1,16 +1,13 @@
 <?xml version="1.0" ?>
 
-<container xmlns="http://symfony.com/schema/dic/services"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sylake_rabbitmqakeneo.projector.association_type" class="Sylake\RabbitmqAkeneo\Projector\AssociationTypeProjector">
+        <service id="sylake_sylius_consumer.projector.association_type" class="Sylake\SyliusConsumerPlugin\Projector\AssociationTypeProjector">
             <argument type="service" id="sylius.factory.product_association_type" />
             <argument type="service" id="sylius.repository.product_association_type" />
-            <tag name="event_subscriber" subscribes_to="Sylake\RabbitmqAkeneo\Event\AssociationTypeCreated" method="handleAssociationTypeCreated" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated" method="handleAssociationTypeCreated" />
         </service>
-        <service id="sylake_rabbitmqakeneo.projector.product" class="Sylake\RabbitmqAkeneo\Projector\ProductProjector">
+        <service id="sylake_sylius_consumer.projector.product" class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
             <argument type="service" id="sylius.factory.taxon" />
             <argument type="service" id="sylius.factory.product_association" />
             <argument type="service" id="sylius.factory.channel_pricing" />
@@ -21,21 +18,21 @@
             <argument type="service" id="sylius.repository.channel_pricing" />
             <argument type="service" id="sylius.repository.product_attribute" />
             <argument type="service" id="sylius.repository.product" />
-            <tag name="event_subscriber" subscribes_to="Sylake\RabbitmqAkeneo\Event\ProductCreated" method="handleProductCreated" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductCreated" method="handleProductCreated" />
         </service>
-        <service id="sylake_rabbitmqakeneo.projector.taxon" class="Sylake\RabbitmqAkeneo\Projector\TaxonProjector">
+        <service id="sylake_sylius_consumer.projector.taxon" class="Sylake\SyliusConsumerPlugin\Projector\TaxonProjector">
             <argument type="service" id="sylius.factory.taxon" />
             <argument type="service" id="sylius.repository.taxon" />
-            <tag name="event_subscriber" subscribes_to="Sylake\RabbitmqAkeneo\Event\TaxonCreated" method="handleTaxonCreated" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\TaxonCreated" method="handleTaxonCreated" />
         </service>
 
-        <service id="sylake_rabbitmqakeneo.denormalizer.association_type" class="Sylake\RabbitmqAkeneo\Denormalizer\AssociationTypeCreatedDenormalizer">
+        <service id="sylake_sylius_consumer.denormalizer.association_type" class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service id="sylake_rabbitmqakeneo.denormalizer.product" class="Sylake\RabbitmqAkeneo\Denormalizer\ProductCreatedDenormalizer">
+        <service id="sylake_sylius_consumer.denormalizer.product" class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service id="sylake_rabbitmqakeneo.denormalizer.taxon" class="Sylake\RabbitmqAkeneo\Denormalizer\TaxonCreatedDenormalizer">
+        <service id="sylake_sylius_consumer.denormalizer.taxon" class="Sylake\SyliusConsumerPlugin\Denormalizer\TaxonCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
     </services>

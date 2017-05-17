@@ -1,8 +1,8 @@
 <?php
 
-namespace Sylake\RabbitmqAkeneo\Projector;
+namespace Sylake\SyliusConsumerPlugin\Projector;
 
-use Sylake\RabbitmqAkeneo\Event\TaxonCreated;
+use Sylake\SyliusConsumerPlugin\Event\TaxonCreated;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
