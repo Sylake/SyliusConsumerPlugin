@@ -3,28 +3,22 @@
 namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated;
-use PhpAmqpLib\Message\AMQPMessage;
-use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
-final class AssociationTypeCreatedDenormalizer implements DenormalizerInterface
+final class AssociationTypeCreatedDenormalizer extends AkeneoDenormalizer
 {
     /**
      * {@inheritdoc}
      */
-    public function supports(AMQPMessage $message)
+    protected function denormalizePayload(array $payload)
     {
-        $body = json_decode($message->getBody(), true);
-
-        return isset($body['type'], $body['payload']) && MessageType::ASSOCIATION_TYPE_CREATED_MESSAGE_TYPE === $body['type'];
+        return new AssociationTypeCreated($payload['code'], $payload['labels']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function denormalize(AMQPMessage $message)
+    protected function getSupportedMessageType()
     {
-        $payload = json_decode($message->getBody(), true)['payload'];
-
-        return new AssociationTypeCreated($payload['code'], $payload['labels']);
+        return MessageType::ASSOCIATION_TYPE_CREATED_MESSAGE_TYPE;
     }
 }

@@ -19,3 +19,4 @@ install:
 script:
     - composer validate --strict
 
+    - vendor/bin/phpspec run --format dot -vvv --no-interaction

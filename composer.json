@@ -28,5 +28,11 @@
         "psr-4": {
             "Sylake\\SyliusConsumerPlugin\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Sylake\\SyliusConsumerPlugin\\": "tests/",
+            "spec\\Sylake\\SyliusConsumerPlugin\\": "spec/"
+        }
     }
 }
