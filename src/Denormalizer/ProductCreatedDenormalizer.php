@@ -15,17 +15,9 @@ final class ProductCreatedDenormalizer implements DenormalizerInterface
      */
     public function supports(AMQPMessage $message)
     {
-        $decodedMessage = $this->denormalize($message);
+        $body = json_decode($message->getBody(), true);
 
-        if (
-            isset($decodedMessage['type']) &&
-            MessageType::PRODUCT_CREATED_MESSAGE_TYPE === $decodedMessage['type'] &&
-            $message->get('content_type') === 'json'
-        ) {
-            return true;
-        }
-
-        return false;
+        return isset($body['type'], $body['payload']) && MessageType::PRODUCT_CREATED_MESSAGE_TYPE === $body['type'];
     }
 
     /**
@@ -33,19 +25,19 @@ final class ProductCreatedDenormalizer implements DenormalizerInterface
      */
     public function denormalize(AMQPMessage $message)
     {
-        $message = json_decode($message->getBody(), true);
+        $payload = json_decode($message->getBody(), true)['payload'];
 
-        unset($message['values']['description']);
-        unset($message['values']['sku']);
+        unset($payload['values']['description']);
+        unset($payload['values']['sku']);
 
         return new ProductCreated(
-            $message['identifier'],
-            $message['categories'],
-            \DateTime::createFromFormat(\DateTime::W3C, $message['created']),
-            $message['association'],
-            $message['price'],
-            $message['values'],
-            $message['description']
+            $payload['identifier'],
+            $payload['categories'],
+            \DateTime::createFromFormat(\DateTime::W3C, $payload['created']),
+            $payload['associations'],
+            $payload['price'],
+            $payload['values'],
+            $payload['description']
         );
     }
 }

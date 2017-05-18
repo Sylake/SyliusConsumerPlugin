@@ -34,10 +34,15 @@ final class AssociationTypeProjector
      */
     public function handleAssociationTypeCreated(AssociationTypeCreated $event)
     {
-        /** @var ProductAssociationTypeInterface $associationType */
-        $associationType = $this->factory->createNew();
-        $associationType->setCode($event->code());
+        /** @var ProductAssociationTypeInterface|null $associationType */
+        $associationType = $this->repository->findOneBy(['code' => $event->code()]);
+        if (null === $associationType) {
+            $associationType = $this->factory->createNew();
+            $associationType->setCode($event->code());
+        }
+
         foreach ($event->names() as $locale => $name) {
+            $associationType->setFallbackLocale($locale);
             $associationType->setCurrentLocale($locale);
             $associationType->setName($name);
         }

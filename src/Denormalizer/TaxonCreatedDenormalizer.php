@@ -13,17 +13,9 @@ final class TaxonCreatedDenormalizer implements DenormalizerInterface
      */
     public function supports(AMQPMessage $message)
     {
-        $decodedMessage = json_decode($message->getBody(), true);
+        $body = json_decode($message->getBody(), true);
 
-        if (
-            isset($decodedMessage['type']) &&
-            MessageType::ASSOCIATION_TYPE_CREATED_MESSAGE_TYPE === $decodedMessage['type'] &&
-            $message->get('content_type') === 'json'
-        ) {
-            return true;
-        }
-
-        return false;
+        return isset($body['type'], $body['payload']) && MessageType::CATEGORY_CREATED_MESSAGE_TYPE === $body['type'];
     }
 
     /**
@@ -31,8 +23,8 @@ final class TaxonCreatedDenormalizer implements DenormalizerInterface
      */
     public function denormalize(AMQPMessage $message)
     {
-        $message = json_decode($message->getBody(), true);
+        $payload = json_decode($message->getBody(), true)['payload'];
 
-        return new TaxonCreated($message['code'], $message['parent'], $message['labels']);
+        return new TaxonCreated($payload['code'], $payload['parent'], $payload['labels']);
     }
 }

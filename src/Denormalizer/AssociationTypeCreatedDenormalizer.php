@@ -13,17 +13,9 @@ final class AssociationTypeCreatedDenormalizer implements DenormalizerInterface
      */
     public function supports(AMQPMessage $message)
     {
-        $decodedMessage = json_decode($message->getBody(), true);
+        $body = json_decode($message->getBody(), true);
 
-        if (
-            isset($decodedMessage['type']) &&
-            MessageType::ASSOCIATION_TYPE_CREATED_MESSAGE_TYPE === $decodedMessage['type'] &&
-            $message->get('content_type') === 'json'
-        ) {
-            return true;
-        }
-
-        return false;
+        return isset($body['type'], $body['payload']) && MessageType::ASSOCIATION_TYPE_CREATED_MESSAGE_TYPE === $body['type'];
     }
 
     /**
@@ -31,8 +23,8 @@ final class AssociationTypeCreatedDenormalizer implements DenormalizerInterface
      */
     public function denormalize(AMQPMessage $message)
     {
-        $decodedMessage = json_decode($message->getBody(), true);
+        $payload = json_decode($message->getBody(), true)['payload'];
 
-        return new AssociationTypeCreated($decodedMessage['code'], $decodedMessage['labels']);
+        return new AssociationTypeCreated($payload['code'], $payload['labels']);
     }
 }
