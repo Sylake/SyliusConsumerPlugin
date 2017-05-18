@@ -32,9 +32,9 @@
         <service id="sylake_sylius_consumer.denormalizer.association_type" class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service id="sylake_sylius_consumer.denormalizer.product" class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductCreatedDenormalizer">
-            <tag name="rabbitmq_simplebus.amqp_denormalizer" />
-        </service>
+        <!--<service id="sylake_sylius_consumer.denormalizer.product" class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductCreatedDenormalizer">-->
+            <!--<tag name="rabbitmq_simplebus.amqp_denormalizer" />-->
+        <!--</service>-->
         <service id="sylake_sylius_consumer.denormalizer.taxon" class="Sylake\SyliusConsumerPlugin\Denormalizer\TaxonCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
