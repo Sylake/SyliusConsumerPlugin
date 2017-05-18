@@ -2,6 +2,8 @@
 
 namespace Sylake\SyliusConsumerPlugin\Event;
 
+use Sylake\SyliusConsumerPlugin\Model\Translations;
+
 final class AssociationTypeCreated
 {
     /**
@@ -10,15 +12,15 @@ final class AssociationTypeCreated
     private $code;
 
     /**
-     * @var array
+     * @var Translations
      */
     private $names;
 
     /**
      * @param string $code
-     * @param array $names
+     * @param Translations $names
      */
-    public function __construct($code, array $names)
+    public function __construct($code, Translations $names)
     {
         $this->code = $code;
         $this->names = $names;
@@ -33,7 +35,7 @@ final class AssociationTypeCreated
     }
 
     /**
-     * @return array
+     * @return Translations
      */
     public function names()
     {

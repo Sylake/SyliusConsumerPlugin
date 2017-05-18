@@ -2,6 +2,8 @@
 
 namespace Sylake\SyliusConsumerPlugin\Event;
 
+use Sylake\SyliusConsumerPlugin\Model\Translations;
+
 final class TaxonCreated
 {
     /**
@@ -15,16 +17,16 @@ final class TaxonCreated
     private $parent;
 
     /**
-     * @var array
+     * @var Translations
      */
     private $names;
 
     /**
      * @param string $code
      * @param string $parent
-     * @param array $names
+     * @param Translations $names
      */
-    public function __construct($code, $parent, array $names)
+    public function __construct($code, $parent, Translations $names)
     {
         $this->code = $code;
         $this->parent = $parent;
@@ -48,7 +50,7 @@ final class TaxonCreated
     }
 
     /**
-     * @return array
+     * @return Translations
      */
     public function names()
     {

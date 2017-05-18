@@ -5,6 +5,7 @@ namespace spec\Sylake\SyliusConsumerPlugin\Denormalizer;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpSpec\ObjectBehavior;
 use Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated;
+use Sylake\SyliusConsumerPlugin\Model\Translations;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizationFailedException;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
@@ -52,7 +53,7 @@ final class AssociationTypeCreatedDenormalizerSpec extends ObjectBehavior
         $this->supports($supportedMessage)->shouldReturn(true);
         $this->denormalize($supportedMessage)->shouldBeLike(new AssociationTypeCreated(
             'CROSS_SELL',
-            ['en_US' => 'Cross sell', 'fr_FR' => 'Vente croisée']
+            new Translations(['en_US' => 'Cross sell', 'fr_FR' => 'Vente croisée'])
         ));
     }
 }

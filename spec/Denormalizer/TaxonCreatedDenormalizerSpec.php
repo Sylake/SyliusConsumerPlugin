@@ -5,6 +5,7 @@ namespace spec\Sylake\SyliusConsumerPlugin\Denormalizer;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpSpec\ObjectBehavior;
 use Sylake\SyliusConsumerPlugin\Event\TaxonCreated;
+use Sylake\SyliusConsumerPlugin\Model\Translations;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizationFailedException;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
@@ -54,7 +55,7 @@ final class TaxonCreatedDenormalizerSpec extends ObjectBehavior
         $this->denormalize($supportedMessage)->shouldBeLike(new TaxonCreated(
             'SUBCATEGORY',
             'CATEGORY',
-            ['en_US' => 'Subcategory', 'pl_PL' => 'Podkategoria']
+            new Translations(['en_US' => 'Subcategory', 'pl_PL' => 'Podkategoria'])
         ));
     }
 
@@ -76,7 +77,7 @@ final class TaxonCreatedDenormalizerSpec extends ObjectBehavior
         $this->denormalize($supportedMessage)->shouldBeLike(new TaxonCreated(
             'SUBCATEGORY',
             null,
-            ['en_US' => 'Subcategory', 'pl_PL' => 'Podkategoria']
+            new Translations(['en_US' => 'Subcategory', 'pl_PL' => 'Podkategoria'])
         ));
     }
 }
