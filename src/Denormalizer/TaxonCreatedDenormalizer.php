@@ -3,28 +3,22 @@
 namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use Sylake\SyliusConsumerPlugin\Event\TaxonCreated;
-use PhpAmqpLib\Message\AMQPMessage;
-use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
-final class TaxonCreatedDenormalizer implements DenormalizerInterface
+final class TaxonCreatedDenormalizer extends AkeneoDenormalizer
 {
     /**
      * {@inheritdoc}
      */
-    public function supports(AMQPMessage $message)
+    protected function denormalizePayload(array $payload)
     {
-        $body = json_decode($message->getBody(), true);
-
-        return isset($body['type'], $body['payload']) && MessageType::CATEGORY_CREATED_MESSAGE_TYPE === $body['type'];
+        return new TaxonCreated($payload['code'], $payload['parent'], $payload['labels']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function denormalize(AMQPMessage $message)
+    protected function getSupportedMessageType()
     {
-        $payload = json_decode($message->getBody(), true)['payload'];
-
-        return new TaxonCreated($payload['code'], $payload['parent'], $payload['labels']);
+        return MessageType::CATEGORY_CREATED_MESSAGE_TYPE;
     }
 }
