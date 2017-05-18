@@ -3,6 +3,7 @@
 namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use Sylake\SyliusConsumerPlugin\Event\TaxonCreated;
+use Sylake\SyliusConsumerPlugin\Model\Translations;
 
 final class TaxonCreatedDenormalizer extends AkeneoDenormalizer
 {
@@ -11,7 +12,7 @@ final class TaxonCreatedDenormalizer extends AkeneoDenormalizer
      */
     protected function denormalizePayload(array $payload)
     {
-        return new TaxonCreated($payload['code'], $payload['parent'], $payload['labels']);
+        return new TaxonCreated($payload['code'], $payload['parent'], new Translations($payload['labels']));
     }
 
     /**
