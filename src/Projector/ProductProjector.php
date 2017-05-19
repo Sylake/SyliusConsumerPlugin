@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
+use Sylius\Component\Attribute\Model\AttributeInterface;
+use Sylius\Component\Attribute\Model\AttributeValueInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductInterface;
@@ -28,6 +30,16 @@ final class ProductProjector
      * @var FactoryInterface
      */
     private $productTaxonFactory;
+
+    /**
+     * @var FactoryInterface
+     */
+    private $channelPricingFactory;
+
+    /**
+     * @var FactoryInterface
+     */
+    private $attributeValueFactory;
 
     /**
      * @var SlugGeneratorInterface
@@ -65,14 +77,20 @@ final class ProductProjector
     private $channelRepository;
 
     /**
-     * @var FactoryInterface
+     * @var RepositoryInterface
      */
-    private $channelPricingFactory;
+    private $attributeRepository;
+
+    /**
+     * @var RepositoryInterface
+     */
+    private $attributeValueRepository;
 
     /**
      * @param ProductFactoryInterface $productFactory
      * @param FactoryInterface $productTaxonFactory
      * @param FactoryInterface $channelPricingFactory
+     * @param FactoryInterface $attributeValueFactory
      * @param SlugGeneratorInterface $slugGenerator
      * @param RepositoryInterface $productRepository
      * @param RepositoryInterface $productTaxonRepository
@@ -80,22 +98,28 @@ final class ProductProjector
      * @param RepositoryInterface $currencyRepository
      * @param RepositoryInterface $channelRepository
      * @param RepositoryInterface $channelPricingRepository
+     * @param RepositoryInterface $attributeRepository
+     * @param RepositoryInterface $attributeValueRepository
      */
     public function __construct(
         ProductFactoryInterface $productFactory,
         FactoryInterface $productTaxonFactory,
         FactoryInterface $channelPricingFactory,
+        FactoryInterface $attributeValueFactory,
         SlugGeneratorInterface $slugGenerator,
         RepositoryInterface $productRepository,
         RepositoryInterface $productTaxonRepository,
         RepositoryInterface $taxonRepository,
         RepositoryInterface $currencyRepository,
         RepositoryInterface $channelRepository,
-        RepositoryInterface $channelPricingRepository
+        RepositoryInterface $channelPricingRepository,
+        RepositoryInterface $attributeRepository,
+        RepositoryInterface $attributeValueRepository
     ) {
         $this->productFactory = $productFactory;
         $this->productTaxonFactory = $productTaxonFactory;
         $this->channelPricingFactory = $channelPricingFactory;
+        $this->attributeValueFactory = $attributeValueFactory;
         $this->slugGenerator = $slugGenerator;
         $this->productRepository = $productRepository;
         $this->productTaxonRepository = $productTaxonRepository;
@@ -103,6 +127,8 @@ final class ProductProjector
         $this->currencyRepository = $currencyRepository;
         $this->channelRepository = $channelRepository;
         $this->channelPricingRepository = $channelPricingRepository;
+        $this->attributeRepository = $attributeRepository;
+        $this->attributeValueRepository = $attributeValueRepository;
     }
 
     /**
@@ -119,6 +145,7 @@ final class ProductProjector
         $this->handleChannelPricings($event->prices(), $productVariant);
         $this->handleMainTaxon($event->mainTaxon(), $product);
         $this->handleProductTaxons($event->taxons(), $product);
+        $this->handleAttributes($event->attributes(), $product);
         $this->handleCreatedAt($event->createdAt(), $product, $productVariant);
 
         $this->productRepository->add($product);
@@ -238,6 +265,28 @@ final class ProductProjector
     }
 
     /**
+     * @param array $attributes
+     * @param ProductInterface $product
+     */
+    private function handleAttributes(array $attributes, ProductInterface $product)
+    {
+        foreach ($product->getAttributes() as $attributeValue) {
+            $product->removeAttribute($attributeValue);
+        }
+
+        foreach ($attributes as $attributeCode => $attributeValueValue) {
+            /** @var AttributeInterface $attribute */
+            $attribute = $this->attributeRepository->findOneBy(['code' => $attributeCode]);
+
+            $attributeValue = $this->provideAttributeValue($product, $attribute);
+
+            $attributeValue->setValue($attributeValueValue);
+
+            $product->addAttribute($attributeValue);
+        }
+    }
+
+    /**
      * @param \DateTime $createdAt
      * @param ProductInterface $product
      * @param ProductVariantInterface $productVariant
@@ -299,5 +348,26 @@ final class ProductProjector
         }
 
         return $productTaxon;
+    }
+
+    /**
+     * @param ProductInterface $product
+     * @param AttributeInterface $attribute
+     *
+     * @return AttributeValueInterface
+     */
+    private function provideAttributeValue(ProductInterface $product, AttributeInterface $attribute)
+    {
+        /** @var AttributeValueInterface $attributeValue */
+        $attributeValue = $this->attributeValueRepository->findOneBy(['attribute' => $attribute, 'subject' => $product]);
+
+        if (null === $attributeValue) {
+            $attributeValue = $this->attributeValueFactory->createNew();
+            $attributeValue->setLocaleCode($product->getTranslation()->getLocale());
+            $attributeValue->setAttribute($attribute);
+            $attributeValue->setSubject($product);
+        }
+
+        return $attributeValue;
     }
 }

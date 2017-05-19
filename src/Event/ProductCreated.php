@@ -40,6 +40,11 @@ final class ProductCreated
     private $prices;
 
     /**
+     * @var array
+     */
+    private $attributes;
+
+    /**
      * @var \DateTime
      */
     private $createdAt;
@@ -52,6 +57,7 @@ final class ProductCreated
      * @param string|null $mainTaxon
      * @param array $taxons
      * @param array $prices
+     * @param array $attributes
      * @param \DateTime $createdAt
      */
     public function __construct(
@@ -62,6 +68,7 @@ final class ProductCreated
         $mainTaxon,
         array $taxons,
         array $prices,
+        array $attributes,
         \DateTime $createdAt
     ) {
         $this->code = $code;
@@ -71,6 +78,7 @@ final class ProductCreated
         $this->mainTaxon = $mainTaxon;
         $this->taxons = $taxons;
         $this->prices = $prices;
+        $this->attributes = $attributes;
         $this->createdAt = $createdAt;
     }
 
@@ -128,6 +136,14 @@ final class ProductCreated
     public function prices()
     {
         return $this->prices;
+    }
+
+    /**
+     * @return array
+     */
+    public function attributes()
+    {
+        return $this->attributes;
     }
 
     /**

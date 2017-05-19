@@ -16,6 +16,25 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
      */
     protected function denormalizePayload(array $payload)
     {
+        $attributes = [];
+        foreach ($payload['values'] as $attributeCode => $value) {
+            $value = $value[0]['data'];
+
+            if (is_array($value)) {
+                $hasNestedArrays = !array_reduce($value, function ($acc, $value) {
+                    return $acc && !is_array($value);
+                }, true);
+
+                if ($hasNestedArrays) {
+                    continue;
+                }
+
+                $value = implode(', ', $value);
+            }
+
+            $attributes[$attributeCode] = $value;
+        }
+
         return new ProductCreated(
             $payload['identifier'],
             $payload['values']['name'][0]['data'],
@@ -24,6 +43,7 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
             $payload['family'],
             $payload['categories'],
             $payload['values']['price'][0]['data'],
+            $attributes,
             \DateTime::createFromFormat(\DateTime::W3C, $payload['created'])
         );
     }
