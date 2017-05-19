@@ -69,12 +69,33 @@ final class ProductProjector
         $product = $this->provideProduct($event->code());
         $productVariant = $this->provideProductVariant($event->code(), $product);
 
-        $product->setCreatedAt($event->createdAt());
-        $productVariant->setCreatedAt($event->createdAt());
-
+        $this->handleCreatedAt($event->createdAt(), $product, $productVariant);
+        $this->handleMainTaxon($event->mainTaxon(), $product);
         $this->handleProductTaxons($event->taxons(), $product);
 
         $this->productRepository->add($product);
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     * @param ProductInterface $product
+     * @param ProductVariantInterface $productVariant
+     */
+    private function handleCreatedAt(\DateTime $createdAt, ProductInterface $product, ProductVariantInterface $productVariant)
+    {
+        $product->setCreatedAt($event->createdAt());
+        $productVariant->setCreatedAt($event->createdAt());
+    }
+
+    /**
+     * @param string|null $mainTaxonCode
+     * @param ProductInterface $product
+     */
+    private function handleMainTaxon($mainTaxonCode, ProductInterface $product)
+    {
+        $mainTaxon = $this->taxonRepository->findOneBy(['code' => $mainTaxonCode]);
+
+        $product->setMainTaxon($mainTaxon);
     }
 
     /**

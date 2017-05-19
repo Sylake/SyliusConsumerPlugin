@@ -10,6 +10,11 @@ final class ProductCreated
     private $code;
 
     /**
+     * @var string|null
+     */
+    private $mainTaxon;
+
+    /**
      * @var array
      */
     private $taxons;
@@ -21,15 +26,18 @@ final class ProductCreated
 
     /**
      * @param string $code
+     * @param string|null $mainTaxon
      * @param array $taxons
      * @param \DateTime $createdAt
      */
     public function __construct(
         $code,
+        $mainTaxon,
         array $taxons,
         \DateTime $createdAt
     ) {
         $this->code = $code;
+        $this->mainTaxon = $mainTaxon;
         $this->taxons = $taxons;
         $this->createdAt = $createdAt;
     }
@@ -40,6 +48,14 @@ final class ProductCreated
     public function code()
     {
         return $this->code;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function mainTaxon()
+    {
+        return $this->mainTaxon;
     }
 
     /**
