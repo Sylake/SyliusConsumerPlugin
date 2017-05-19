@@ -16,6 +16,8 @@ use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Currency\Model\CurrencyInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Sylius\Component\Product\Generator\SlugGeneratorInterface;
+use Sylius\Component\Product\Model\ProductAssociationInterface;
+use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
@@ -40,6 +42,11 @@ final class ProductProjector
      * @var FactoryInterface
      */
     private $attributeValueFactory;
+
+    /**
+     * @var FactoryInterface
+     */
+    private $associationFactory;
 
     /**
      * @var SlugGeneratorInterface
@@ -87,10 +94,21 @@ final class ProductProjector
     private $attributeValueRepository;
 
     /**
+     * @var RepositoryInterface
+     */
+    private $associationTypeRepository;
+
+    /**
+     * @var RepositoryInterface
+     */
+    private $associationRepository;
+
+    /**
      * @param ProductFactoryInterface $productFactory
      * @param FactoryInterface $productTaxonFactory
      * @param FactoryInterface $channelPricingFactory
      * @param FactoryInterface $attributeValueFactory
+     * @param FactoryInterface $associationFactory
      * @param SlugGeneratorInterface $slugGenerator
      * @param RepositoryInterface $productRepository
      * @param RepositoryInterface $productTaxonRepository
@@ -100,12 +118,15 @@ final class ProductProjector
      * @param RepositoryInterface $channelPricingRepository
      * @param RepositoryInterface $attributeRepository
      * @param RepositoryInterface $attributeValueRepository
+     * @param RepositoryInterface $associationTypeRepository
+     * @param RepositoryInterface $associationRepository
      */
     public function __construct(
         ProductFactoryInterface $productFactory,
         FactoryInterface $productTaxonFactory,
         FactoryInterface $channelPricingFactory,
         FactoryInterface $attributeValueFactory,
+        FactoryInterface $associationFactory,
         SlugGeneratorInterface $slugGenerator,
         RepositoryInterface $productRepository,
         RepositoryInterface $productTaxonRepository,
@@ -114,12 +135,15 @@ final class ProductProjector
         RepositoryInterface $channelRepository,
         RepositoryInterface $channelPricingRepository,
         RepositoryInterface $attributeRepository,
-        RepositoryInterface $attributeValueRepository
+        RepositoryInterface $attributeValueRepository,
+        RepositoryInterface $associationTypeRepository,
+        RepositoryInterface $associationRepository
     ) {
         $this->productFactory = $productFactory;
         $this->productTaxonFactory = $productTaxonFactory;
         $this->channelPricingFactory = $channelPricingFactory;
         $this->attributeValueFactory = $attributeValueFactory;
+        $this->associationFactory = $associationFactory;
         $this->slugGenerator = $slugGenerator;
         $this->productRepository = $productRepository;
         $this->productTaxonRepository = $productTaxonRepository;
@@ -129,6 +153,8 @@ final class ProductProjector
         $this->channelPricingRepository = $channelPricingRepository;
         $this->attributeRepository = $attributeRepository;
         $this->attributeValueRepository = $attributeValueRepository;
+        $this->associationTypeRepository = $associationTypeRepository;
+        $this->associationRepository = $associationRepository;
     }
 
     /**
@@ -146,6 +172,7 @@ final class ProductProjector
         $this->handleMainTaxon($event->mainTaxon(), $product);
         $this->handleProductTaxons($event->taxons(), $product);
         $this->handleAttributes($event->attributes(), $product);
+        $this->handleAssociations($event->associations(), $product);
         $this->handleCreatedAt($event->createdAt(), $product, $productVariant);
 
         $this->productRepository->add($product);
@@ -287,6 +314,37 @@ final class ProductProjector
     }
 
     /**
+     * @param array $associations
+     * @param ProductInterface $product
+     */
+    private function handleAssociations(array $associations, ProductInterface $product)
+    {
+        foreach ($product->getAssociations() as $association) {
+            $product->removeAssociation($association);
+        }
+
+        foreach ($associations as $associationTypeCode => $productsCodes) {
+            /** @var ProductAssociationTypeInterface $associationType */
+            $associationType = $this->associationTypeRepository->findOneBy(['code' => $associationTypeCode]);
+
+            $association = $this->provideAssociation($product, $associationType);
+
+            foreach ($productsCodes as $productCode) {
+                /** @var ProductInterface|null $relatedProduct */
+                $relatedProduct = $this->productRepository->findOneBy(['code' => $productCode]);
+
+                if (null === $relatedProduct) {
+                    continue;
+                }
+
+                $association->addAssociatedProduct($relatedProduct);
+            }
+
+            $product->addAssociation($association);
+        }
+    }
+
+    /**
      * @param \DateTime $createdAt
      * @param ProductInterface $product
      * @param ProductVariantInterface $productVariant
@@ -369,5 +427,25 @@ final class ProductProjector
         }
 
         return $attributeValue;
+    }
+
+    /**
+     * @param ProductInterface $product
+     * @param ProductAssociationTypeInterface $associationType
+     *
+     * @return ProductAssociationInterface
+     */
+    private function provideAssociation(ProductInterface $product, ProductAssociationTypeInterface $associationType)
+    {
+        /** @var ProductAssociationInterface $association */
+        $association = $this->associationRepository->findOneBy(['associationType' => $associationType, 'onwer' => $product]);
+
+        if (null === $association) {
+            $association = $this->associationFactory->createNew();
+            $association->setOwner($product);
+            $association->setType($associationType);
+        }
+
+        return $association;
     }
 }

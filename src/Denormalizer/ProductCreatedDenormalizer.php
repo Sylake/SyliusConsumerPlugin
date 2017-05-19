@@ -16,6 +16,35 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
      */
     protected function denormalizePayload(array $payload)
     {
+        return new ProductCreated(
+            $payload['identifier'],
+            $payload['values']['name'][0]['data'],
+            $payload['values']['description'][0]['data'],
+            $payload['enabled'],
+            $payload['family'],
+            $payload['categories'],
+            $payload['values']['price'][0]['data'],
+            $this->getAttributes($payload),
+            $this->getAssociations($payload),
+            \DateTime::createFromFormat(\DateTime::W3C, $payload['created'])
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSupportedMessageType()
+    {
+        return MessageType::PRODUCT_CREATED_MESSAGE_TYPE;
+    }
+
+    /**
+     * @param array $payload
+     *
+     * @return array
+     */
+    private function getAttributes(array $payload)
+    {
         $attributes = [];
         foreach ($payload['values'] as $attributeCode => $value) {
             $value = $value[0]['data'];
@@ -35,24 +64,21 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
             $attributes[$attributeCode] = $value;
         }
 
-        return new ProductCreated(
-            $payload['identifier'],
-            $payload['values']['name'][0]['data'],
-            $payload['values']['description'][0]['data'],
-            $payload['enabled'],
-            $payload['family'],
-            $payload['categories'],
-            $payload['values']['price'][0]['data'],
-            $attributes,
-            \DateTime::createFromFormat(\DateTime::W3C, $payload['created'])
-        );
+        return $attributes;
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $payload
+     *
+     * @return array
      */
-    protected function getSupportedMessageType()
+    private function getAssociations(array $payload)
     {
-        return MessageType::PRODUCT_CREATED_MESSAGE_TYPE;
+        $associations = [];
+        foreach ($payload['associations'] as $associationTypeCode => $value) {
+            $associations[$associationTypeCode] = $value['products'];
+        }
+
+        return $associations;
     }
 }

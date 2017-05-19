@@ -45,6 +45,11 @@ final class ProductCreated
     private $attributes;
 
     /**
+     * @var array
+     */
+    private $associations;
+
+    /**
      * @var \DateTime
      */
     private $createdAt;
@@ -58,6 +63,7 @@ final class ProductCreated
      * @param array $taxons
      * @param array $prices
      * @param array $attributes
+     * @param array $associations
      * @param \DateTime $createdAt
      */
     public function __construct(
@@ -69,6 +75,7 @@ final class ProductCreated
         array $taxons,
         array $prices,
         array $attributes,
+        array $associations,
         \DateTime $createdAt
     ) {
         $this->code = $code;
@@ -79,6 +86,7 @@ final class ProductCreated
         $this->taxons = $taxons;
         $this->prices = $prices;
         $this->attributes = $attributes;
+        $this->associations = $associations;
         $this->createdAt = $createdAt;
     }
 
@@ -144,6 +152,14 @@ final class ProductCreated
     public function attributes()
     {
         return $this->attributes;
+    }
+
+    /**
+     * @return array
+     */
+    public function associations()
+    {
+        return $this->associations;
     }
 
     /**
