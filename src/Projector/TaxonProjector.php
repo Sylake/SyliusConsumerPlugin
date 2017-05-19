@@ -4,19 +4,19 @@ namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Sylake\SyliusConsumerPlugin\Event\TaxonCreated;
 use Sylius\Component\Core\Model\TaxonInterface;
-use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Taxonomy\Generator\TaxonSlugGeneratorInterface;
-use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 
 final class TaxonProjector
 {
     /**
-     * @var TaxonFactoryInterface
+     * @var FactoryInterface
      */
     private $factory;
 
     /**
-     * @var TaxonRepositoryInterface
+     * @var RepositoryInterface
      */
     private $repository;
 
@@ -26,13 +26,13 @@ final class TaxonProjector
     private $slugGenerator;
 
     /**
-     * @param TaxonFactoryInterface $factory
-     * @param TaxonRepositoryInterface $repository
+     * @param FactoryInterface $factory
+     * @param RepositoryInterface $repository
      * @param TaxonSlugGeneratorInterface $slugGenerator
      */
     public function __construct(
-        TaxonFactoryInterface $factory,
-        TaxonRepositoryInterface $repository,
+        FactoryInterface $factory,
+        RepositoryInterface $repository,
         TaxonSlugGeneratorInterface $slugGenerator
     ) {
         $this->factory = $factory;

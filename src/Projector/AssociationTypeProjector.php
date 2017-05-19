@@ -4,8 +4,8 @@ namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated;
 use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
-use Sylius\Component\Product\Repository\ProductAssociationTypeRepositoryInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class AssociationTypeProjector
 {
@@ -15,15 +15,15 @@ final class AssociationTypeProjector
     private $factory;
 
     /**
-     * @var ProductAssociationTypeRepositoryInterface
+     * @var RepositoryInterface
      */
     private $repository;
 
     /**
      * @param FactoryInterface $factory
-     * @param ProductAssociationTypeRepositoryInterface $repository
+     * @param RepositoryInterface $repository
      */
-    public function __construct(FactoryInterface $factory, ProductAssociationTypeRepositoryInterface $repository)
+    public function __construct(FactoryInterface $factory, RepositoryInterface $repository)
     {
         $this->factory = $factory;
         $this->repository = $repository;

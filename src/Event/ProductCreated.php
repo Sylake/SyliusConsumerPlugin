@@ -10,24 +10,34 @@ final class ProductCreated
     private $code;
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var bool
+     */
+    private $enabled;
+
+    /**
+     * @var string|null
+     */
+    private $mainTaxon;
+
+    /**
      * @var array
      */
     private $taxons;
 
     /**
-     * @var \DateTime
-     */
-    private $createdAt;
-
-    /**
      * @var array
      */
-    private $associations;
-
-    /**
-     * @var array
-     */
-    private $price;
+    private $prices;
 
     /**
      * @var array
@@ -37,33 +47,47 @@ final class ProductCreated
     /**
      * @var array
      */
-    private $description;
+    private $associations;
+
+    /**
+     * @var \DateTime
+     */
+    private $createdAt;
 
     /**
      * @param string $code
+     * @param string $name
+     * @param string $description
+     * @param bool $enabled
+     * @param string|null $mainTaxon
      * @param array $taxons
-     * @param \DateTime $createdAt
-     * @param array $associations
-     * @param array $price
+     * @param array $prices
      * @param array $attributes
-     * @param array $description
+     * @param array $associations
+     * @param \DateTime $createdAt
      */
     public function __construct(
         $code,
+        $name,
+        $description,
+        $enabled,
+        $mainTaxon,
         array $taxons,
-        \DateTime $createdAt,
-        array $associations,
-        array $price,
+        array $prices,
         array $attributes,
-        array $description
+        array $associations,
+        \DateTime $createdAt
     ) {
         $this->code = $code;
-        $this->taxons = $taxons;
-        $this->createdAt = $createdAt;
-        $this->associations = $associations;
-        $this->price = $price;
-        $this->attributes = $attributes;
+        $this->name = $name;
         $this->description = $description;
+        $this->enabled = $enabled;
+        $this->mainTaxon = $mainTaxon;
+        $this->taxons = $taxons;
+        $this->prices = $prices;
+        $this->attributes = $attributes;
+        $this->associations = $associations;
+        $this->createdAt = $createdAt;
     }
 
     /**
@@ -75,6 +99,38 @@ final class ProductCreated
     }
 
     /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function description()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return bool
+     */
+    public function enabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function mainTaxon()
+    {
+        return $this->mainTaxon;
+    }
+
+    /**
      * @return array
      */
     public function taxons()
@@ -83,27 +139,11 @@ final class ProductCreated
     }
 
     /**
-     * @return \DateTime
-     */
-    public function createdAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
      * @return array
      */
-    public function associations()
+    public function prices()
     {
-        return $this->associations;
-    }
-
-    /**
-     * @return array
-     */
-    public function price()
-    {
-        return $this->price;
+        return $this->prices;
     }
 
     /**
@@ -117,8 +157,16 @@ final class ProductCreated
     /**
      * @return array
      */
-    public function description()
+    public function associations()
     {
-        return $this->description;
+        return $this->associations;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function createdAt()
+    {
+        return $this->createdAt;
     }
 }

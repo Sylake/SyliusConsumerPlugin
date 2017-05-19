@@ -6,38 +6,79 @@ namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;
 use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
+use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizationFailedException;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
-final class ProductCreatedDenormalizer implements DenormalizerInterface
+final class ProductCreatedDenormalizer extends AkeneoDenormalizer
 {
     /**
      * {@inheritdoc}
      */
-    public function supports(AMQPMessage $message)
+    protected function denormalizePayload(array $payload)
     {
-        $body = json_decode($message->getBody(), true);
-
-        return isset($body['type'], $body['payload']) && MessageType::PRODUCT_CREATED_MESSAGE_TYPE === $body['type'];
+        return new ProductCreated(
+            $payload['identifier'],
+            $payload['values']['name'][0]['data'],
+            $payload['values']['description'][0]['data'],
+            $payload['enabled'],
+            $payload['family'],
+            $payload['categories'],
+            $payload['values']['price'][0]['data'],
+            $this->getAttributes($payload),
+            $this->getAssociations($payload),
+            \DateTime::createFromFormat(\DateTime::W3C, $payload['created'])
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function denormalize(AMQPMessage $message)
+    protected function getSupportedMessageType()
     {
-        $payload = json_decode($message->getBody(), true)['payload'];
+        return MessageType::PRODUCT_CREATED_MESSAGE_TYPE;
+    }
 
-        unset($payload['values']['description']);
-        unset($payload['values']['sku']);
+    /**
+     * @param array $payload
+     *
+     * @return array
+     */
+    private function getAttributes(array $payload)
+    {
+        $attributes = [];
+        foreach ($payload['values'] as $attributeCode => $value) {
+            $value = $value[0]['data'];
 
-        return new ProductCreated(
-            $payload['identifier'],
-            $payload['categories'],
-            \DateTime::createFromFormat(\DateTime::W3C, $payload['created']),
-            $payload['associations'],
-            $payload['price'],
-            $payload['values'],
-            $payload['description']
-        );
+            if (is_array($value)) {
+                $hasNestedArrays = !array_reduce($value, function ($acc, $value) {
+                    return $acc && !is_array($value);
+                }, true);
+
+                if ($hasNestedArrays) {
+                    continue;
+                }
+
+                $value = implode(', ', $value);
+            }
+
+            $attributes[$attributeCode] = $value;
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @param array $payload
+     *
+     * @return array
+     */
+    private function getAssociations(array $payload)
+    {
+        $associations = [];
+        foreach ($payload['associations'] as $associationTypeCode => $value) {
+            $associations[$associationTypeCode] = $value['products'];
+        }
+
+        return $associations;
     }
 }
