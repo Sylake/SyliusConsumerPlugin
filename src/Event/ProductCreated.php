@@ -10,6 +10,11 @@ final class ProductCreated
     private $code;
 
     /**
+     * @var bool
+     */
+    private $enabled;
+
+    /**
      * @var string|null
      */
     private $mainTaxon;
@@ -26,17 +31,20 @@ final class ProductCreated
 
     /**
      * @param string $code
+     * @param bool $enabled
      * @param string|null $mainTaxon
      * @param array $taxons
      * @param \DateTime $createdAt
      */
     public function __construct(
         $code,
+        $enabled,
         $mainTaxon,
         array $taxons,
         \DateTime $createdAt
     ) {
         $this->code = $code;
+        $this->enabled = $enabled;
         $this->mainTaxon = $mainTaxon;
         $this->taxons = $taxons;
         $this->createdAt = $createdAt;
@@ -48,6 +56,14 @@ final class ProductCreated
     public function code()
     {
         return $this->code;
+    }
+
+    /**
+     * @return bool
+     */
+    public function enabled()
+    {
+        return $this->enabled;
     }
 
     /**

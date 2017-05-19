@@ -18,6 +18,7 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
     {
         return new ProductCreated(
             $payload['identifier'],
+            $payload['enabled'],
             $payload['family'],
             $payload['categories'],
             \DateTime::createFromFormat(\DateTime::W3C, $payload['created'])

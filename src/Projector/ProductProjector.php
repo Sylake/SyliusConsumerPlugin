@@ -70,6 +70,7 @@ final class ProductProjector
         $productVariant = $this->provideProductVariant($event->code(), $product);
 
         $this->handleCreatedAt($event->createdAt(), $product, $productVariant);
+        $this->handleEnabled($event->enabled(), $product);
         $this->handleMainTaxon($event->mainTaxon(), $product);
         $this->handleProductTaxons($event->taxons(), $product);
 
@@ -83,8 +84,17 @@ final class ProductProjector
      */
     private function handleCreatedAt(\DateTime $createdAt, ProductInterface $product, ProductVariantInterface $productVariant)
     {
-        $product->setCreatedAt($event->createdAt());
-        $productVariant->setCreatedAt($event->createdAt());
+        $product->setCreatedAt($createdAt);
+        $productVariant->setCreatedAt($createdAt);
+    }
+
+    /**
+     * @param bool $enabled
+     * @param ProductInterface $product
+     */
+    private function handleEnabled($enabled, ProductInterface $product)
+    {
+        $product->setEnabled($enabled);
     }
 
     /**
