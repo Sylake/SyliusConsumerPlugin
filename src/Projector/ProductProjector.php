@@ -5,119 +5,60 @@ declare(strict_types=1);
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
-use Sylius\Component\Channel\Factory\ChannelFactoryInterface;
-use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
-use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductInterface;
-use Sylius\Component\Core\Repository\ProductRepositoryInterface;
+use Sylius\Component\Core\Model\ProductTaxonInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
+use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
-use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 
 final class ProductProjector
 {
-    /**
-     * @var TaxonFactoryInterface
-     */
-    private $taxonFactory;
-
-    /**
-     * @var FactoryInterface
-     */
-    private $associationFactory;
-
-    /**
-     * @var FactoryInterface
-     */
-    private $channelPricingFactory;
-
-    /**
-     * @var FactoryInterface
-     */
-    private $productAttributeFactory;
-
     /**
      * @var ProductFactoryInterface
      */
     private $productFactory;
 
     /**
-     * @var ChannelFactoryInterface
+     * @var FactoryInterface
      */
-    private $channelFactory;
-
-    /**
-     * @var TaxonRepositoryInterface
-     */
-    private $taxonRepository;
+    private $productTaxonFactory;
 
     /**
      * @var RepositoryInterface
-     */
-    private $associationRepository;
-
-    /**
-     * @var RepositoryInterface
-     */
-    private $channelPricingRepository;
-
-    /**
-     * @var RepositoryInterface
-     */
-    private $productAttributeRepository;
-
-    /**
-     * @var ProductRepositoryInterface
      */
     private $productRepository;
 
     /**
-     * @var ChannelRepositoryInterface
+     * @var RepositoryInterface
      */
-    private $channelRepository;
+    private $productTaxonRepository;
 
     /**
-     * @param TaxonFactoryInterface $taxonFactory
-     * @param FactoryInterface $associationFactory
-     * @param FactoryInterface $channelPricingFactory
-     * @param FactoryInterface $productAttributeFactory
+     * @var RepositoryInterface
+     */
+    private $taxonRepository;
+
+    /**
      * @param ProductFactoryInterface $productFactory
-     * @param ChannelFactoryInterface $channelFactory
-     * @param TaxonRepositoryInterface $taxonRepository
-     * @param RepositoryInterface $associationRepository
-     * @param RepositoryInterface $channelPricingRepository
-     * @param RepositoryInterface $productAttributeRepository
-     * @param ProductRepositoryInterface $productRepository
-     * @param ChannelRepositoryInterface $channelRepository
+     * @param FactoryInterface $productTaxonFactory
+     * @param RepositoryInterface $productRepository
+     * @param RepositoryInterface $productTaxonRepository
+     * @param RepositoryInterface $taxonRepository
      */
     public function __construct(
-        TaxonFactoryInterface $taxonFactory,
-        FactoryInterface $associationFactory,
-        FactoryInterface $channelPricingFactory,
-        FactoryInterface $productAttributeFactory,
         ProductFactoryInterface $productFactory,
-        ChannelFactoryInterface $channelFactory,
-        TaxonRepositoryInterface $taxonRepository,
-        RepositoryInterface $associationRepository,
-        RepositoryInterface $channelPricingRepository,
-        RepositoryInterface $productAttributeRepository,
-        ProductRepositoryInterface $productRepository,
-        ChannelRepositoryInterface $channelRepository
+        FactoryInterface $productTaxonFactory,
+        RepositoryInterface $productRepository,
+        RepositoryInterface $productTaxonRepository,
+        RepositoryInterface $taxonRepository
     ) {
-        $this->taxonFactory = $taxonFactory;
-        $this->associationFactory = $associationFactory;
-        $this->channelPricingFactory = $channelPricingFactory;
-        $this->productAttributeFactory = $productAttributeFactory;
         $this->productFactory = $productFactory;
-        $this->channelFactory = $channelFactory;
-        $this->taxonRepository = $taxonRepository;
-        $this->associationRepository = $associationRepository;
-        $this->channelPricingRepository = $channelPricingRepository;
-        $this->productAttributeRepository = $productAttributeRepository;
+        $this->productTaxonFactory = $productTaxonFactory;
         $this->productRepository = $productRepository;
-        $this->channelRepository = $channelRepository;
+        $this->productTaxonRepository = $productTaxonRepository;
+        $this->taxonRepository = $taxonRepository;
     }
 
     /**
@@ -125,22 +66,87 @@ final class ProductProjector
      */
     public function handleProductCreated(ProductCreated $event)
     {
-        /** @var ProductInterface $product */
-        $product = $this->productFactory->createWithVariant();
+        $product = $this->provideProduct($event->code());
+        $productVariant = $this->provideProductVariant($event->code(), $product);
 
-        /** @var ChannelPricingInterface $channelPrice */
-        $channelPrice = $this->channelPricingFactory->createNew();
+        $product->setCreatedAt($event->createdAt());
+        $productVariant->setCreatedAt($event->createdAt());
 
-        foreach ($event->price() as $priceInformation) {
-            $channelPrice->setChannelCode($priceInformation['scope']);
-            $channelPrice->setPrice($priceInformation['data'][0]['amount']);
-        }
-
-        foreach ($event->description() as $locale => $description) {
-            $product->setCurrentLocale($locale);
-            $product->setDescription($description);
-        }
+        $this->handleProductTaxons($event->taxons(), $product);
 
         $this->productRepository->add($product);
+    }
+
+    /**
+     * @param array $taxonCodes
+     * @param ProductInterface $product
+     */
+    private function handleProductTaxons(array $taxonCodes, ProductInterface $product)
+    {
+        foreach ($product->getProductTaxons() as $productTaxon) {
+            $product->removeProductTaxon($productTaxon);
+        }
+
+        foreach ($taxonCodes as $taxonCode) {
+            /** @var TaxonInterface $taxon */
+            $taxon = $this->taxonRepository->findOneBy(['code' => $taxonCode]);
+
+            $productTaxon = $this->provideProductTaxon($product, $taxon);
+
+            $product->addProductTaxon($productTaxon);
+        }
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return ProductInterface
+     */
+    private function provideProduct($code)
+    {
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => $code]);
+
+        if (null === $product) {
+            $product = $this->productFactory->createWithVariant();
+            $product->setCode($code);
+        }
+
+        return $product;
+    }
+
+    /**
+     * @param string $code
+     * @param ProductInterface $product
+     *
+     * @return ProductVariantInterface
+     */
+    private function provideProductVariant($code, ProductInterface $product)
+    {
+        /** @var ProductVariantInterface $productVariant */
+        $productVariant = current($product->getVariants()->slice(0, 1));
+        $productVariant->setCode($code);
+
+        return $productVariant;
+    }
+
+    /**
+     * @param ProductInterface $product
+     * @param TaxonInterface $taxon
+     *
+     * @return ProductTaxonInterface
+     */
+    private function provideProductTaxon(ProductInterface $product, $taxon)
+    {
+        $productTaxon = $this->productTaxonRepository->findOneBy(['product' => $product, 'taxon' => $taxon]);
+
+        if (null === $productTaxon) {
+            /** @var ProductTaxonInterface $productTaxon */
+            $productTaxon = $this->productTaxonFactory->createNew();
+            $productTaxon->setTaxon($taxon);
+            $productTaxon->setProduct($product);
+        }
+
+        return $productTaxon;
     }
 }

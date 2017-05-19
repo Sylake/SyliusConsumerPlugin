@@ -6,38 +6,28 @@ namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;
 use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
+use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizationFailedException;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
-final class ProductCreatedDenormalizer implements DenormalizerInterface
+final class ProductCreatedDenormalizer extends AkeneoDenormalizer
 {
     /**
      * {@inheritdoc}
      */
-    public function supports(AMQPMessage $message)
+    protected function denormalizePayload(array $payload)
     {
-        $body = json_decode($message->getBody(), true);
-
-        return isset($body['type'], $body['payload']) && MessageType::PRODUCT_CREATED_MESSAGE_TYPE === $body['type'];
+        return new ProductCreated(
+            $payload['identifier'],
+            $payload['categories'],
+            \DateTime::createFromFormat(\DateTime::W3C, $payload['created'])
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function denormalize(AMQPMessage $message)
+    protected function getSupportedMessageType()
     {
-        $payload = json_decode($message->getBody(), true)['payload'];
-
-        unset($payload['values']['description']);
-        unset($payload['values']['sku']);
-
-        return new ProductCreated(
-            $payload['identifier'],
-            $payload['categories'],
-            \DateTime::createFromFormat(\DateTime::W3C, $payload['created']),
-            $payload['associations'],
-            $payload['price'],
-            $payload['values'],
-            $payload['description']
-        );
+        return MessageType::PRODUCT_CREATED_MESSAGE_TYPE;
     }
 }
