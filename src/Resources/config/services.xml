@@ -2,6 +2,11 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <service id="sylake_sylius_consumer.projector.attribute" class="Sylake\SyliusConsumerPlugin\Projector\AttributeProjector">
+            <argument type="service" id="sylius.factory.product_attribute" />
+            <argument type="service" id="sylius.repository.product_attribute" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeCreated" method="handleAttributeCreated" />
+        </service>
         <service id="sylake_sylius_consumer.projector.association_type" class="Sylake\SyliusConsumerPlugin\Projector\AssociationTypeProjector">
             <argument type="service" id="sylius.factory.product_association_type" />
             <argument type="service" id="sylius.repository.product_association_type" />
@@ -22,6 +27,9 @@
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\TaxonCreated" method="handleTaxonCreated" />
         </service>
 
+        <service id="sylake_sylius_consumer.denormalizer.attribute" class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeCreatedDenormalizer">
+            <tag name="rabbitmq_simplebus.amqp_denormalizer" />
+        </service>
         <service id="sylake_sylius_consumer.denormalizer.association_type" class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
