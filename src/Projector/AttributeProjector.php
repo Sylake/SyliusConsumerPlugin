@@ -3,8 +3,7 @@
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Sylake\SyliusConsumerPlugin\Event\AttributeCreated;
-use Sylius\Bundle\AttributeBundle\Form\Type\AttributeType;
-use Sylius\Component\Attribute\AttributeType\SelectAttributeType;
+use Sylius\Component\Attribute\AttributeType\TextAttributeType;
 use Sylius\Component\Attribute\Factory\AttributeFactoryInterface;
 use Sylius\Component\Product\Model\ProductAttributeInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -39,7 +38,7 @@ final class AttributeProjector
         /** @var ProductAttributeInterface|null $attribute */
         $attribute = $this->repository->findOneBy(['code' => $event->code()]);
         if (null === $attribute) {
-            $attribute = $this->factory->createTyped(SelectAttributeType::TYPE);
+            $attribute = $this->factory->createTyped(TextAttributeType::TYPE);
             $attribute->setCode($event->code());
         }
 

@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
+use Sylius\Component\Core\Model\ChannelInterface;
+use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductTaxonInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
+use Sylius\Component\Currency\Model\CurrencyInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
+use Sylius\Component\Product\Generator\SlugGeneratorInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
@@ -24,6 +28,16 @@ final class ProductProjector
      * @var FactoryInterface
      */
     private $productTaxonFactory;
+
+    /**
+     * @var SlugGeneratorInterface
+     */
+    private $slugGenerator;
+
+    /**
+     * @var RepositoryInterface
+     */
+    private $channelPricingRepository;
 
     /**
      * @var RepositoryInterface
@@ -41,24 +55,54 @@ final class ProductProjector
     private $taxonRepository;
 
     /**
+     * @var RepositoryInterface
+     */
+    private $currencyRepository;
+
+    /**
+     * @var RepositoryInterface
+     */
+    private $channelRepository;
+
+    /**
+     * @var FactoryInterface
+     */
+    private $channelPricingFactory;
+
+    /**
      * @param ProductFactoryInterface $productFactory
      * @param FactoryInterface $productTaxonFactory
+     * @param FactoryInterface $channelPricingFactory
+     * @param SlugGeneratorInterface $slugGenerator
      * @param RepositoryInterface $productRepository
      * @param RepositoryInterface $productTaxonRepository
      * @param RepositoryInterface $taxonRepository
+     * @param RepositoryInterface $currencyRepository
+     * @param RepositoryInterface $channelRepository
+     * @param RepositoryInterface $channelPricingRepository
      */
     public function __construct(
         ProductFactoryInterface $productFactory,
         FactoryInterface $productTaxonFactory,
+        FactoryInterface $channelPricingFactory,
+        SlugGeneratorInterface $slugGenerator,
         RepositoryInterface $productRepository,
         RepositoryInterface $productTaxonRepository,
-        RepositoryInterface $taxonRepository
+        RepositoryInterface $taxonRepository,
+        RepositoryInterface $currencyRepository,
+        RepositoryInterface $channelRepository,
+        RepositoryInterface $channelPricingRepository
     ) {
         $this->productFactory = $productFactory;
         $this->productTaxonFactory = $productTaxonFactory;
+        $this->channelPricingFactory = $channelPricingFactory;
+        $this->slugGenerator = $slugGenerator;
         $this->productRepository = $productRepository;
         $this->productTaxonRepository = $productTaxonRepository;
         $this->taxonRepository = $taxonRepository;
+        $this->currencyRepository = $currencyRepository;
+        $this->channelRepository = $channelRepository;
+        $this->channelPricingRepository = $channelPricingRepository;
     }
 
     /**
@@ -69,23 +113,27 @@ final class ProductProjector
         $product = $this->provideProduct($event->code());
         $productVariant = $this->provideProductVariant($event->code(), $product);
 
-        $this->handleCreatedAt($event->createdAt(), $product, $productVariant);
+        $this->handleNameAndDescription($event->name(), $event->description(), $product);
         $this->handleEnabled($event->enabled(), $product);
+        $this->handleChannels($event->prices(), $product);
+        $this->handleChannelPricings($event->prices(), $productVariant);
         $this->handleMainTaxon($event->mainTaxon(), $product);
         $this->handleProductTaxons($event->taxons(), $product);
+        $this->handleCreatedAt($event->createdAt(), $product, $productVariant);
 
         $this->productRepository->add($product);
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param string $name
+     * @param string $description
      * @param ProductInterface $product
-     * @param ProductVariantInterface $productVariant
      */
-    private function handleCreatedAt(\DateTime $createdAt, ProductInterface $product, ProductVariantInterface $productVariant)
+    private function handleNameAndDescription($name, $description, ProductInterface $product)
     {
-        $product->setCreatedAt($createdAt);
-        $productVariant->setCreatedAt($createdAt);
+        $product->setName($name ?: $product->getCode());
+        $product->setSlug($this->slugGenerator->generate($product->getCode() . ($name ? ' ' . $name : '')));
+        $product->setDescription($description);
     }
 
     /**
@@ -95,6 +143,67 @@ final class ProductProjector
     private function handleEnabled($enabled, ProductInterface $product)
     {
         $product->setEnabled($enabled);
+    }
+
+    /**
+     * @param array $prices
+     * @param ProductInterface $product
+     */
+    private function handleChannels(array $prices, ProductInterface $product)
+    {
+        foreach ($product->getChannels() as $channel) {
+            $product->removeChannel($channel);
+        }
+
+        /** @var ChannelInterface[] $channels */
+        $channels = [];
+        foreach ($prices as $price) {
+            /** @var CurrencyInterface $currency */
+            $currency = $this->currencyRepository->findOneBy(['code' => $price['currency']]);
+
+            $channels = array_unique(array_merge(
+                $channels,
+                $this->channelRepository->findBy(['baseCurrency' => $currency])
+            ));
+        }
+
+        foreach ($channels as $channel) {
+            $product->addChannel($channel);
+        }
+    }
+
+    /**
+     * @param array $prices
+     * @param ProductVariantInterface $productVariant
+     */
+    private function handleChannelPricings(array $prices, ProductVariantInterface $productVariant)
+    {
+        foreach ($productVariant->getChannelPricings() as $channelPricing) {
+            $productVariant->removeChannelPricing($channelPricing);
+        }
+
+        foreach ($prices as $price) {
+            /** @var CurrencyInterface $currency */
+            $currency = $this->currencyRepository->findOneBy(['code' => $price['currency']]);
+
+            /** @var ChannelInterface[] $channels */
+            $channels = $this->channelRepository->findBy(['baseCurrency' => $currency]);
+
+            foreach ($channels as $channel) {
+                /** @var ChannelPricingInterface|null $channelPricing */
+                $channelPricing = $this->channelPricingRepository->findOneBy(['productVariant' => $productVariant, 'channelCode' => $channel->getCode()]);
+
+                if (null === $channelPricing) {
+                    $channelPricing = $this->channelPricingFactory->createNew();
+                    $channelPricing->setChannelCode($channel->getCode());
+                    $channelPricing->setProductVariant($productVariant);
+                }
+
+                $channelPricing->setPrice($price['amount'] * 100);
+
+                $productVariant->addChannelPricing($channelPricing);
+            }
+        }
     }
 
     /**
@@ -126,6 +235,17 @@ final class ProductProjector
 
             $product->addProductTaxon($productTaxon);
         }
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     * @param ProductInterface $product
+     * @param ProductVariantInterface $productVariant
+     */
+    private function handleCreatedAt(\DateTime $createdAt, ProductInterface $product, ProductVariantInterface $productVariant)
+    {
+        $product->setCreatedAt($createdAt);
+        $productVariant->setCreatedAt($createdAt);
     }
 
     /**

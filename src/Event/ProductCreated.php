@@ -10,6 +10,16 @@ final class ProductCreated
     private $code;
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
      * @var bool
      */
     private $enabled;
@@ -25,28 +35,42 @@ final class ProductCreated
     private $taxons;
 
     /**
+     * @var array
+     */
+    private $prices;
+
+    /**
      * @var \DateTime
      */
     private $createdAt;
 
     /**
      * @param string $code
+     * @param string $name
+     * @param string $description
      * @param bool $enabled
      * @param string|null $mainTaxon
      * @param array $taxons
+     * @param array $prices
      * @param \DateTime $createdAt
      */
     public function __construct(
         $code,
+        $name,
+        $description,
         $enabled,
         $mainTaxon,
         array $taxons,
+        array $prices,
         \DateTime $createdAt
     ) {
         $this->code = $code;
+        $this->name = $name;
+        $this->description = $description;
         $this->enabled = $enabled;
         $this->mainTaxon = $mainTaxon;
         $this->taxons = $taxons;
+        $this->prices = $prices;
         $this->createdAt = $createdAt;
     }
 
@@ -56,6 +80,22 @@ final class ProductCreated
     public function code()
     {
         return $this->code;
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function description()
+    {
+        return $this->description;
     }
 
     /**
@@ -80,6 +120,14 @@ final class ProductCreated
     public function taxons()
     {
         return $this->taxons;
+    }
+
+    /**
+     * @return array
+     */
+    public function prices()
+    {
+        return $this->prices;
     }
 
     /**
