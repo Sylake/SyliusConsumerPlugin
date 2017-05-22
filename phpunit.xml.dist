@@ -4,8 +4,13 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.6/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="vendor/autoload.php"
+         bootstrap="tests/Application/app/autoload.php"
 >
+    <php>
+        <server name="KERNEL_CLASS_PATH" value="tests/Application/app/AppKernel.php" />
+        <server name="KERNEL_DIR" value="tests/Application/app/" />
+    </php>
+
     <testsuites>
         <testsuite name="SyliusConsumerPlugin Test Suite">
             <directory>tests</directory>
