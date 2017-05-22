@@ -50,7 +50,18 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
      */
     public function it_adds_new_association_type_from_akeneo_message()
     {
-        $this->consumer->execute(new AMQPMessage('{"type":"akeneo_association_type_created","payload":{"code":"SUBSTITUTION","labels":{"de_DE":"Ersatz","en_US":"Substitution","fr_FR":"Remplacement"}},"recordedOn":"2017-05-22 12:51:29"}'));
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_association_type_created",
+            "payload": {
+                "code": "SUBSTITUTION",
+                "labels": {
+                    "de_DE": "Ersatz",
+                    "en_US": "Substitution",
+                    "fr_FR": "Remplacement"
+                }
+            },
+            "recordedOn": "2017-05-22 12:51:29"
+        }'));
 
         /** @var ProductAssociationTypeInterface|null $associationType */
         $associationType = $this->associationTypeRepository->findOneBy(['code' => 'SUBSTITUTION']);
@@ -66,8 +77,31 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
      */
     public function it_updates_existing_association_type_from_akeneo_message()
     {
-        $this->consumer->execute(new AMQPMessage('{"type":"akeneo_association_type_created","payload":{"code":"SUBSTITUTION","labels":{"de_DE":"Ersatz","en_US":"Substitution","fr_FR":"Remplacement"}},"recordedOn":"2017-05-22 12:51:29"}'));
-        $this->consumer->execute(new AMQPMessage('{"type":"akeneo_association_type_created","payload":{"code":"SUBSTITUTION","labels":{"de_DE":"Ersatz (updated)","en_US":"Substitution (updated)","fr_FR":"Remplacement (updated)"}},"recordedOn":"2017-05-22 12:51:30"}'));
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_association_type_created",
+            "payload": {
+                "code": "SUBSTITUTION",
+                "labels": {
+                    "de_DE": "Ersatz",
+                    "en_US": "Substitution",
+                    "fr_FR": "Remplacement"
+                }
+            },
+            "recordedOn": "2017-05-22 12:51:29"
+        }'));
+        
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_association_type_created",
+            "payload": {
+                "code": "SUBSTITUTION",
+                "labels": {
+                    "de_DE": "Ersatz (updated)",
+                    "en_US": "Substitution (updated)",
+                    "fr_FR": "Remplacement (updated)"
+                }
+            },
+            "recordedOn": "2017-05-22 12:51:29"
+        }'));
 
         /** @var ProductAssociationTypeInterface|null $associationType */
         $associationType = $this->associationTypeRepository->findOneBy(['code' => 'SUBSTITUTION']);
