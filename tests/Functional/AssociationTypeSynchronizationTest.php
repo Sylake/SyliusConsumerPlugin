@@ -62,6 +62,23 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
     }
 
     /**
+     * @test
+     */
+    public function it_updates_existing_association_type_from_akeneo_message()
+    {
+        $this->consumer->execute(new AMQPMessage('{"type":"akeneo_association_type_created","payload":{"code":"SUBSTITUTION","labels":{"de_DE":"Ersatz","en_US":"Substitution","fr_FR":"Remplacement"}},"recordedOn":"2017-05-22 12:51:29"}'));
+        $this->consumer->execute(new AMQPMessage('{"type":"akeneo_association_type_created","payload":{"code":"SUBSTITUTION","labels":{"de_DE":"Ersatz (updated)","en_US":"Substitution (updated)","fr_FR":"Remplacement (updated)"}},"recordedOn":"2017-05-22 12:51:30"}'));
+
+        /** @var ProductAssociationTypeInterface|null $associationType */
+        $associationType = $this->associationTypeRepository->findOneBy(['code' => 'SUBSTITUTION']);
+
+        Assert::assertNotNull($associationType);
+        Assert::assertSame('Ersatz (updated)', $associationType->getTranslation('de_DE')->getName());
+        Assert::assertSame('Substitution (updated)', $associationType->getTranslation('en_US')->getName());
+        Assert::assertSame('Remplacement (updated)', $associationType->getTranslation('fr_FR')->getName());
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function tearDown()
