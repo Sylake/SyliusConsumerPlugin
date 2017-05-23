@@ -285,6 +285,10 @@ final class ProductProjector
             /** @var TaxonInterface $taxon */
             $taxon = $this->taxonRepository->findOneBy(['code' => $taxonCode]);
 
+            if (null === $taxon) {
+                continue;
+            }
+
             $productTaxon = $this->provideProductTaxon($product, $taxon);
 
             $product->addProductTaxon($productTaxon);
@@ -304,6 +308,10 @@ final class ProductProjector
         foreach ($attributes as $attributeCode => $attributeValueValue) {
             /** @var AttributeInterface $attribute */
             $attribute = $this->attributeRepository->findOneBy(['code' => $attributeCode]);
+
+            if (null === $attribute) {
+                continue;
+            }
 
             $attributeValue = $this->provideAttributeValue($product, $attribute);
 
@@ -326,6 +334,10 @@ final class ProductProjector
         foreach ($associations as $associationTypeCode => $productsCodes) {
             /** @var ProductAssociationTypeInterface $associationType */
             $associationType = $this->associationTypeRepository->findOneBy(['code' => $associationTypeCode]);
+
+            if (null === $associationType) {
+                continue;
+            }
 
             $association = $this->provideAssociation($product, $associationType);
 
@@ -394,7 +406,7 @@ final class ProductProjector
      *
      * @return ProductTaxonInterface
      */
-    private function provideProductTaxon(ProductInterface $product, $taxon)
+    private function provideProductTaxon(ProductInterface $product, TaxonInterface $taxon)
     {
         $productTaxon = $this->productTaxonRepository->findOneBy(['product' => $product, 'taxon' => $taxon]);
 
