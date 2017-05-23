@@ -341,6 +341,10 @@ final class ProductProjector
 
             $association = $this->provideAssociation($product, $associationType);
 
+            foreach ($association->getAssociatedProducts() as $associatedProduct) {
+                $association->removeAssociatedProduct($associatedProduct);
+            }
+
             foreach ($productsCodes as $productCode) {
                 /** @var ProductInterface|null $relatedProduct */
                 $relatedProduct = $this->productRepository->findOneBy(['code' => $productCode]);
