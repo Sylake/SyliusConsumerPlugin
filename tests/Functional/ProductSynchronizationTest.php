@@ -2,6 +2,7 @@
 
 namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
@@ -10,6 +11,7 @@ use PHPUnit\Framework\Assert;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
+use Sylius\Component\Product\Model\ProductAssociationInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -578,6 +580,89 @@ final class ProductSynchronizationTest extends KernelTestCase
     }
 
     /**
+     * @test
+     */
+    public function it_adds_a_new_product_with_associations()
+    {
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_association_type_created",
+            "payload": {
+                "code": "SUBSTITUTION",
+                "labels": {"en_US": "Substitution"}
+            },
+            "recordedOn": "2017-05-22 12:51:29"
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_created",
+            "payload": {
+                "identifier": "AKNTS_WPXS",
+                "family": "tshirts",
+                "groups": [],
+                "variant_group": "akeneo_tshirt",
+                "categories": ["goodies", "tshirts"],
+                "enabled": true,
+                "values": {
+                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
+                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "main_color": [{"locale": null, "scope": null, "data": "white"}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt white and purple with short sleeve"}],
+                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
+                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
+                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
+                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
+                    "picture": [{"locale": null, "scope": null, "data": null}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "updated": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            },
+            "recordedOn": "2017-05-22 10:13:34"
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_created",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "family": "tshirts",
+                "groups": [],
+                "variant_group": "akeneo_tshirt",
+                "categories": ["goodies", "tshirts"],
+                "enabled": true,
+                "values": {
+                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
+                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
+                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
+                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
+                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
+                    "picture": [{"locale": null, "scope": null, "data": null}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "updated": "2017-04-18T16:12:55+02:00",
+                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
+            },
+            "recordedOn": "2017-05-22 10:13:34"
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+
+        $association = $this->getProductAssociation($product, 'SUBSTITUTION');
+
+        Assert::assertNotNull($association);
+        $this->assertArraysAreEqual(['AKNTS_WPXS'], $association->getAssociatedProducts()->map(function (ProductInterface $product) {
+            return $product->getCode();
+        })->toArray());
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function tearDown()
@@ -593,5 +678,22 @@ final class ProductSynchronizationTest extends KernelTestCase
         foreach ($expectedArray as $expectedElement) {
             Assert::assertTrue(in_array($expectedElement, $actualArray, true));
         }
+    }
+
+    /**
+     * @param ProductInterface $product
+     * @param string $code
+     *
+     * @return ProductAssociationInterface|null
+     */
+    private function getProductAssociation(ProductInterface $product, $code)
+    {
+        foreach ($product->getAssociations() as $association) {
+            if ($association->getType()->getCode() === $code) {
+                return $association;
+            }
+        }
+
+        return null;
     }
 }

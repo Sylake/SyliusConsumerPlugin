@@ -450,7 +450,7 @@ final class ProductProjector
     private function provideAssociation(ProductInterface $product, ProductAssociationTypeInterface $associationType)
     {
         /** @var ProductAssociationInterface $association */
-        $association = $this->associationRepository->findOneBy(['associationType' => $associationType, 'onwer' => $product]);
+        $association = $this->associationRepository->findOneBy(['type' => $associationType, 'owner' => $product]);
 
         if (null === $association) {
             $association = $this->associationFactory->createNew();
