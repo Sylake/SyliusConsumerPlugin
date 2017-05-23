@@ -2,13 +2,15 @@
 
 namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\Assert;
+use Sylius\Bundle\FixturesBundle\Fixture\FixtureInterface;
+use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Model\ProductAssociationInterface;
@@ -803,6 +805,74 @@ final class ProductSynchronizationTest extends KernelTestCase
     }
 
     /**
+     * @test
+     */
+    public function it_adds_a_new_product_with_channels_and_pricing()
+    {
+        /** @var FixtureInterface $localeFixture */
+        $localeFixture = static::$kernel->getContainer()->get('sylius.fixture.locale');
+        $localeFixture->load(['locales' => []]);
+
+        /** @var FixtureInterface $currencyFixture */
+        $currencyFixture = static::$kernel->getContainer()->get('sylius.fixture.currency');
+        $currencyFixture->load(['currencies' => ['EUR', 'USD', 'GBP']]);
+
+        /** @var FixtureInterface $channelFixture */
+        $channelFixture = static::$kernel->getContainer()->get('sylius.fixture.channel');
+        $channelFixture->load(['custom' => [
+            ['code' => 'EUR_1', 'default_tax_zone' => null, 'currencies' => ['EUR']],
+            ['code' => 'EUR_2', 'default_tax_zone' => null, 'currencies' => ['EUR']],
+            ['code' => 'USD_1', 'default_tax_zone' => null, 'currencies' => ['USD']],
+            ['code' => 'GBP_1', 'default_tax_zone' => null, 'currencies' => ['GBP']],
+        ]]);
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_created",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "family": "tshirts",
+                "groups": [],
+                "variant_group": "akeneo_tshirt",
+                "categories": ["goodies", "tshirts"],
+                "enabled": true,
+                "values": {
+                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
+                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
+                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
+                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
+                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
+                    "picture": [{"locale": null, "scope": null, "data": null}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "updated": "2017-04-18T16:12:55+02:00",
+                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
+            },
+            "recordedOn": "2017-05-22 10:13:34"
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        $this->assertArraysAreEqual(['EUR_1', 'EUR_2', 'USD_1'], $product->getChannels()->map(function (ChannelInterface $channel) {
+            return $channel->getCode();
+        })->toArray());
+
+        /** @var ProductVariantInterface[] $productVariants */
+        $productVariants = $product->getVariants()->toArray();
+        $productVariant = current($productVariants);
+
+        Assert::assertSame(1000, $productVariant->getChannelPricingForChannel($this->getChannelByCode('EUR_1'))->getPrice());
+        Assert::assertSame(1000, $productVariant->getChannelPricingForChannel($this->getChannelByCode('EUR_2'))->getPrice());
+        Assert::assertSame(1400, $productVariant->getChannelPricingForChannel($this->getChannelByCode('USD_1'))->getPrice());
+        Assert::assertNull($productVariant->getChannelPricingForChannel($this->getChannelByCode('GBP_1')));
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function tearDown()
@@ -839,5 +909,15 @@ final class ProductSynchronizationTest extends KernelTestCase
         }
 
         return null;
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return ChannelInterface|null
+     */
+    private function getChannelByCode($code)
+    {
+        return static::$kernel->getContainer()->get('sylius.repository.channel')->findOneBy(['code' => $code]);
     }
 }
