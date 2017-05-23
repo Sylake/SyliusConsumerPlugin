@@ -285,6 +285,10 @@ final class ProductProjector
             /** @var TaxonInterface $taxon */
             $taxon = $this->taxonRepository->findOneBy(['code' => $taxonCode]);
 
+            if (null === $taxon) {
+                continue;
+            }
+
             $productTaxon = $this->provideProductTaxon($product, $taxon);
 
             $product->addProductTaxon($productTaxon);
@@ -304,6 +308,10 @@ final class ProductProjector
         foreach ($attributes as $attributeCode => $attributeValueValue) {
             /** @var AttributeInterface $attribute */
             $attribute = $this->attributeRepository->findOneBy(['code' => $attributeCode]);
+
+            if (null === $attribute) {
+                continue;
+            }
 
             $attributeValue = $this->provideAttributeValue($product, $attribute);
 
@@ -327,7 +335,15 @@ final class ProductProjector
             /** @var ProductAssociationTypeInterface $associationType */
             $associationType = $this->associationTypeRepository->findOneBy(['code' => $associationTypeCode]);
 
+            if (null === $associationType) {
+                continue;
+            }
+
             $association = $this->provideAssociation($product, $associationType);
+
+            foreach ($association->getAssociatedProducts() as $associatedProduct) {
+                $association->removeAssociatedProduct($associatedProduct);
+            }
 
             foreach ($productsCodes as $productCode) {
                 /** @var ProductInterface|null $relatedProduct */
@@ -394,7 +410,7 @@ final class ProductProjector
      *
      * @return ProductTaxonInterface
      */
-    private function provideProductTaxon(ProductInterface $product, $taxon)
+    private function provideProductTaxon(ProductInterface $product, TaxonInterface $taxon)
     {
         $productTaxon = $this->productTaxonRepository->findOneBy(['product' => $product, 'taxon' => $taxon]);
 
@@ -438,7 +454,7 @@ final class ProductProjector
     private function provideAssociation(ProductInterface $product, ProductAssociationTypeInterface $associationType)
     {
         /** @var ProductAssociationInterface $association */
-        $association = $this->associationRepository->findOneBy(['associationType' => $associationType, 'onwer' => $product]);
+        $association = $this->associationRepository->findOneBy(['type' => $associationType, 'owner' => $product]);
 
         if (null === $association) {
             $association = $this->associationFactory->createNew();
