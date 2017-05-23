@@ -230,7 +230,108 @@ final class ProductSynchronizationTest extends KernelTestCase
 
         Assert::assertNotNull($product);
         Assert::assertSame('tshirts', $product->getMainTaxon()->getCode());
-        Assert::assertSame(['goodies', 'tshirts'], $product->getTaxons()->map(function (TaxonInterface $taxon) {
+        $this->assertArraysAreEqual(['goodies', 'tshirts'], $product->getTaxons()->map(function (TaxonInterface $taxon) {
+            return $taxon->getCode();
+        })->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_updates_an_existing_product_with_taxons()
+    {
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_category_created",
+            "payload": {
+                "code": "master",
+                "parent": null,
+                "labels": {"en_US": "Master catalog"}
+            },
+            "recordedOn": "2017-05-22 14:24:40"
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_category_created",
+            "payload": {
+                "code": "tshirts",
+                "parent": "master",
+                "labels": {"en_US": "T-Shirts"}
+            },
+            "recordedOn": "2017-05-22 14:24:40"
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_category_created",
+            "payload": {
+                "code": "goodies",
+                "parent": "master",
+                "labels": {"en_US": "Goodies"}
+            },
+            "recordedOn": "2017-05-22 14:24:40"
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_created",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "family": "tshirts",
+                "groups": [],
+                "variant_group": "akeneo_tshirt",
+                "categories": ["goodies", "tshirts"],
+                "enabled": true,
+                "values": {
+                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
+                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
+                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
+                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
+                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
+                    "picture": [{"locale": null, "scope": null, "data": null}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "updated": "2017-04-18T16:12:55+02:00",
+                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
+            },
+            "recordedOn": "2017-05-22 10:13:34"
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_created",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "family": null,
+                "groups": [],
+                "variant_group": "akeneo_tshirt",
+                "categories": ["goodies"],
+                "enabled": true,
+                "values": {
+                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
+                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
+                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
+                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
+                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
+                    "picture": [{"locale": null, "scope": null, "data": null}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "updated": "2017-04-18T16:12:55+02:00",
+                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
+            },
+            "recordedOn": "2017-05-22 10:13:34"
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertNull($product->getMainTaxon());
+        $this->assertArraysAreEqual(['goodies'], $product->getTaxons()->map(function (TaxonInterface $taxon) {
             return $taxon->getCode();
         })->toArray());
     }
@@ -242,5 +343,14 @@ final class ProductSynchronizationTest extends KernelTestCase
     {
         $this->entityManager->clear();
         $this->entityManager = null;
+    }
+
+    private function assertArraysAreEqual(array $expectedArray, array $actualArray)
+    {
+        Assert::assertSame(count($expectedArray), count($actualArray));
+
+        foreach ($expectedArray as $expectedElement) {
+            Assert::assertTrue(in_array($expectedElement, $actualArray, true));
+        }
     }
 }
