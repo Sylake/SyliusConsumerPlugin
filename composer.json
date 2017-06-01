@@ -21,8 +21,10 @@
         "sylius/sylius": "^1.0.0@beta"
     },
     "require-dev": {
+        "matthiasnoback/symfony-dependency-injection-test": "^1.0",
         "phpspec/phpspec": "^3.2",
-        "phpunit/phpunit": "^5.6"
+        "phpunit/phpunit": "^5.6",
+        "symfony/symfony": "^3.2, <3.3"
     },
     "autoload": {
         "psr-4": {
