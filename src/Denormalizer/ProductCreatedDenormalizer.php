@@ -148,7 +148,7 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
      */
     private function getAttribute(array $payload, $attributeName, $attributeKey)
     {
-        if (!isset($payload['values'][$attributeKey][0]['data'])) {
+        if (!isset($payload['values'][$attributeKey][0]) || !array_key_exists('data', $payload['values'][$attributeKey][0])) {
             throw new \InvalidArgumentException(sprintf(
                 'Cannot find %s attribute (used key: payload.%s.0.data). Payload: %s',
                 $attributeName,
