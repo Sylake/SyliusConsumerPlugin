@@ -19,6 +19,19 @@ final class SylakeSyliusConsumerExtension extends Extension implements PrependEx
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $loader->load('services.xml');
+
+        $container->setParameter(
+            'sylake_sylius_consumer.denormalizer.product.name_attribute',
+            $config['denormalizer']['product']['name_attribute']
+        );
+        $container->setParameter(
+            'sylake_sylius_consumer.denormalizer.product.description_attribute',
+            $config['denormalizer']['product']['description_attribute']
+        );
+        $container->setParameter(
+            'sylake_sylius_consumer.denormalizer.product.price_attribute',
+            $config['denormalizer']['product']['price_attribute']
+        );
     }
 
     /**

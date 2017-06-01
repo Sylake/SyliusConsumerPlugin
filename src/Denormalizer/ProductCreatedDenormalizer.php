@@ -12,18 +12,45 @@ use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 final class ProductCreatedDenormalizer extends AkeneoDenormalizer
 {
     /**
+     * @var string
+     */
+    private $nameAttribute;
+
+    /**
+     * @var string
+     */
+    private $descriptionAttribute;
+
+    /**
+     * @var string
+     */
+    private $priceAttribute;
+
+    /**
+     * @param string $nameAttribute
+     * @param string $descriptionAttribute
+     * @param string $priceAttribute
+     */
+    public function __construct($nameAttribute, $descriptionAttribute, $priceAttribute)
+    {
+        $this->nameAttribute = $nameAttribute;
+        $this->descriptionAttribute = $descriptionAttribute;
+        $this->priceAttribute = $priceAttribute;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function denormalizePayload(array $payload)
     {
         return new ProductCreated(
             $payload['identifier'],
-            $payload['values']['name'][0]['data'],
-            $payload['values']['description'][0]['data'],
+            $this->getName($payload),
+            $this->getDescription($payload),
             $payload['enabled'],
             $payload['family'],
             $payload['categories'],
-            $payload['values']['price'][0]['data'],
+            $this->getPrices($payload),
             $this->getAttributes($payload),
             $this->getAssociations($payload),
             \DateTime::createFromFormat(\DateTime::W3C, $payload['created'])
@@ -80,5 +107,56 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
         }
 
         return $associations;
+    }
+
+    /**
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    private function getName(array $payload)
+    {
+        return $this->getAttribute($payload, 'name', $this->nameAttribute);
+    }
+
+    /**
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    private function getDescription(array $payload)
+    {
+        return $this->getAttribute($payload, 'description', $this->descriptionAttribute);
+    }
+
+    /**
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    private function getPrices(array $payload)
+    {
+        return $this->getAttribute($payload, 'price', $this->priceAttribute);
+    }
+
+    /**
+     * @param array $payload
+     * @param string $attributeName
+     * @param string $attributeKey
+     *
+     * @return mixed
+     */
+    private function getAttribute(array $payload, $attributeName, $attributeKey)
+    {
+        if (!isset($payload['values'][$attributeKey][0]['data'])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Cannot find %s attribute (used key: payload.%s.0.data). Payload: %s',
+                $attributeName,
+                $attributeKey,
+                json_encode($payload)
+            ));
+        }
+
+        return $payload['values'][$attributeKey][0]['data'];
     }
 }

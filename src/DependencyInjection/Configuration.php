@@ -15,6 +15,25 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sylake_sylius_consumer');
 
+        $rootNode
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('denormalizer')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('product')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('name_attribute')->defaultValue('name')->end()
+                                ->scalarNode('description_attribute')->defaultValue('description')->end()
+                                ->scalarNode('price_attribute')->defaultValue('price')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 }
