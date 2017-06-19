@@ -11,6 +11,7 @@ use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductTaxonInterface;
+use Sylius\Component\Core\Model\ProductTranslationInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Currency\Model\CurrencyInterface;
@@ -19,6 +20,7 @@ use Sylius\Component\Product\Generator\SlugGeneratorInterface;
 use Sylius\Component\Product\Model\ProductAssociationInterface;
 use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\Component\Resource\Model\TranslationInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class ProductProjector
@@ -49,9 +51,9 @@ final class ProductProjector
     private $associationFactory;
 
     /**
-     * @var SlugGeneratorInterface
+     * @var ProductSlugGeneratorInterface
      */
-    private $slugGenerator;
+    private $productSlugGenerator;
 
     /**
      * @var RepositoryInterface
@@ -109,7 +111,7 @@ final class ProductProjector
      * @param FactoryInterface $channelPricingFactory
      * @param FactoryInterface $attributeValueFactory
      * @param FactoryInterface $associationFactory
-     * @param SlugGeneratorInterface $slugGenerator
+     * @param ProductSlugGeneratorInterface $productSlugGenerator
      * @param RepositoryInterface $productRepository
      * @param RepositoryInterface $productTaxonRepository
      * @param RepositoryInterface $taxonRepository
@@ -127,7 +129,7 @@ final class ProductProjector
         FactoryInterface $channelPricingFactory,
         FactoryInterface $attributeValueFactory,
         FactoryInterface $associationFactory,
-        SlugGeneratorInterface $slugGenerator,
+        ProductSlugGeneratorInterface $productSlugGenerator,
         RepositoryInterface $productRepository,
         RepositoryInterface $productTaxonRepository,
         RepositoryInterface $taxonRepository,
@@ -144,7 +146,7 @@ final class ProductProjector
         $this->channelPricingFactory = $channelPricingFactory;
         $this->attributeValueFactory = $attributeValueFactory;
         $this->associationFactory = $associationFactory;
-        $this->slugGenerator = $slugGenerator;
+        $this->productSlugGenerator = $productSlugGenerator;
         $this->productRepository = $productRepository;
         $this->productTaxonRepository = $productTaxonRepository;
         $this->taxonRepository = $taxonRepository;
@@ -174,6 +176,7 @@ final class ProductProjector
         $this->handleAttributes($event->attributes(), $product);
         $this->handleAssociations($event->associations(), $product);
         $this->handleCreatedAt($event->createdAt(), $product, $productVariant);
+        $this->handleSlug($product);
 
         $this->productRepository->add($product);
     }
@@ -186,7 +189,6 @@ final class ProductProjector
     private function handleNameAndDescription($name, $description, ProductInterface $product)
     {
         $product->setName($name ?: $product->getCode());
-        $product->setSlug($this->slugGenerator->generate($product->getCode() . ($name ? ' ' . $name : '')));
         $product->setDescription($description);
     }
 
@@ -369,6 +371,17 @@ final class ProductProjector
     {
         $product->setCreatedAt($createdAt);
         $productVariant->setCreatedAt($createdAt);
+    }
+
+    /**
+     * @param ProductInterface $product
+     */
+    private function handleSlug(ProductInterface $product)
+    {
+        foreach ($product->getTranslations() as $productTranslation) {
+            /** @var ProductTranslationInterface|TranslationInterface $productTranslation */
+            $productTranslation->setSlug($this->productSlugGenerator->generate($product, $productTranslation->getLocale()));
+        }
     }
 
     /**
