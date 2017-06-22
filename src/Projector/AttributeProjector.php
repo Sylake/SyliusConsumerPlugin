@@ -2,6 +2,7 @@
 
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
+use Psr\Log\LoggerInterface;
 use Sylake\SyliusConsumerPlugin\Event\AttributeCreated;
 use Sylius\Component\Attribute\AttributeType\TextAttributeType;
 use Sylius\Component\Attribute\Factory\AttributeFactoryInterface;
@@ -21,20 +22,29 @@ final class AttributeProjector
     private $repository;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param AttributeFactoryInterface $factory
      * @param RepositoryInterface $repository
+     * @param LoggerInterface $logger
      */
-    public function __construct(AttributeFactoryInterface $factory, RepositoryInterface $repository)
+    public function __construct(AttributeFactoryInterface $factory, RepositoryInterface $repository, LoggerInterface $logger)
     {
         $this->factory = $factory;
         $this->repository = $repository;
+        $this->logger = $logger;
     }
 
     /**
      * @param AttributeCreated $event
      */
-    public function handleAttributeCreated(AttributeCreated $event)
+    public function __invoke(AttributeCreated $event)
     {
+        $this->logger->debug(sprintf('Projecting attribute with code "%s".', $event->code()));
+
         /** @var ProductAttributeInterface|null $attribute */
         $attribute = $this->repository->findOneBy(['code' => $event->code()]);
         if (null === $attribute) {
