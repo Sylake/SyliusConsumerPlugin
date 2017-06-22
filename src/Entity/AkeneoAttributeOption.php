@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Sylake\SyliusConsumerPlugin\Entity;
 
 use Sylake\SyliusConsumerPlugin\Model\Translations;
+use Sylius\Component\Resource\Model\ResourceInterface;
 
-class AkeneoAttributeOption
+class AkeneoAttributeOption implements ResourceInterface
 {
     /** @var string */
     private $code;
@@ -22,6 +23,12 @@ class AkeneoAttributeOption
         $this->code = $code;
         $this->attributeCode = $attributeCode;
         $this->labels = $labels->toArray();
+    }
+
+    /** {@inheritdoc} */
+    public function getId(): string
+    {
+        return $this->code . ':' . $this->attributeCode;
     }
 
     public function getCode(): string

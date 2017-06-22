@@ -5,12 +5,26 @@
         <service id="sylake_sylius_consumer.projector.product_slug_generator" class="Sylake\SyliusConsumerPlugin\Projector\ProductSlugGenerator">
             <argument type="service" id="sylius.generator.slug" />
         </service>
+        <service id="sylake_sylius_consumer.repository.akeneo_attribute_option" class="Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service">
+                <service class="Doctrine\ORM\Mapping\ClassMetadata">
+                    <factory service="doctrine.orm.default_entity_manager" method="getClassMetadata" />
+                    <argument>Sylake\SyliusConsumerPlugin\Entity\AkeneoAttributeOption</argument>
+                </service>
+            </argument>
+        </service>
 
         <service class="Sylake\SyliusConsumerPlugin\Projector\AttributeProjector">
             <argument type="service" id="sylius.factory.product_attribute" />
             <argument type="service" id="sylius.repository.product_attribute" />
             <argument type="service" id="monolog.logger" />
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeCreated" method="__invoke" />
+        </service>
+        <service class="Sylake\SyliusConsumerPlugin\Projector\AttributeOptionProjector">
+            <argument type="service" id="sylake_sylius_consumer.repository.akeneo_attribute_option" />
+            <argument type="service" id="monolog.logger" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeOptionCreated" method="__invoke" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Projector\AssociationTypeProjector">
             <argument type="service" id="sylius.factory.product_association_type" />
