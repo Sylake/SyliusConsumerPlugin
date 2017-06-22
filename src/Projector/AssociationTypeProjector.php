@@ -2,6 +2,7 @@
 
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
+use Psr\Log\LoggerInterface;
 use Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated;
 use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
@@ -20,20 +21,29 @@ final class AssociationTypeProjector
     private $repository;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param FactoryInterface $factory
      * @param RepositoryInterface $repository
+     * @param LoggerInterface $logger
      */
-    public function __construct(FactoryInterface $factory, RepositoryInterface $repository)
+    public function __construct(FactoryInterface $factory, RepositoryInterface $repository, LoggerInterface $logger)
     {
         $this->factory = $factory;
         $this->repository = $repository;
+        $this->logger = $logger;
     }
 
     /**
      * @param AssociationTypeCreated $event
      */
-    public function handleAssociationTypeCreated(AssociationTypeCreated $event)
+    public function __invoke(AssociationTypeCreated $event)
     {
+        $this->logger->debug(sprintf('Projecting association type with code "%s".', $event->code()));
+
         /** @var ProductAssociationTypeInterface|null $associationType */
         $associationType = $this->repository->findOneBy(['code' => $event->code()]);
         if (null === $associationType) {

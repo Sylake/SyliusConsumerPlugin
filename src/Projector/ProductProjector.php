@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
+use Psr\Log\LoggerInterface;
 use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
 use Sylius\Component\Attribute\Model\AttributeInterface;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
@@ -106,6 +107,11 @@ final class ProductProjector
     private $associationRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param ProductFactoryInterface $productFactory
      * @param FactoryInterface $productTaxonFactory
      * @param FactoryInterface $channelPricingFactory
@@ -122,6 +128,7 @@ final class ProductProjector
      * @param RepositoryInterface $attributeValueRepository
      * @param RepositoryInterface $associationTypeRepository
      * @param RepositoryInterface $associationRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ProductFactoryInterface $productFactory,
@@ -139,7 +146,8 @@ final class ProductProjector
         RepositoryInterface $attributeRepository,
         RepositoryInterface $attributeValueRepository,
         RepositoryInterface $associationTypeRepository,
-        RepositoryInterface $associationRepository
+        RepositoryInterface $associationRepository,
+        LoggerInterface $logger
     ) {
         $this->productFactory = $productFactory;
         $this->productTaxonFactory = $productTaxonFactory;
@@ -157,13 +165,16 @@ final class ProductProjector
         $this->attributeValueRepository = $attributeValueRepository;
         $this->associationTypeRepository = $associationTypeRepository;
         $this->associationRepository = $associationRepository;
+        $this->logger = $logger;
     }
 
     /**
      * @param ProductCreated $event
      */
-    public function handleProductCreated(ProductCreated $event)
+    public function __invoke(ProductCreated $event)
     {
+        $this->logger->debug(sprintf('Projecting product with code "%s".', $event->code()));
+
         $product = $this->provideProduct($event->code());
         $productVariant = $this->provideProductVariant($event->code(), $product);
 
@@ -214,6 +225,10 @@ final class ProductProjector
         /** @var ChannelInterface[] $channels */
         $channels = [];
         foreach ($prices as $price) {
+            if (null === $price['amount']) {
+                continue;
+            }
+
             /** @var CurrencyInterface $currency */
             $currency = $this->currencyRepository->findOneBy(['code' => $price['currency']]);
 
@@ -239,6 +254,10 @@ final class ProductProjector
         }
 
         foreach ($prices as $price) {
+            if (null === $price['amount']) {
+                continue;
+            }
+
             /** @var CurrencyInterface $currency */
             $currency = $this->currencyRepository->findOneBy(['code' => $price['currency']]);
 

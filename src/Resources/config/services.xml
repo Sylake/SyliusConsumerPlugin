@@ -9,12 +9,14 @@
         <service id="sylake_sylius_consumer.projector.attribute" class="Sylake\SyliusConsumerPlugin\Projector\AttributeProjector">
             <argument type="service" id="sylius.factory.product_attribute" />
             <argument type="service" id="sylius.repository.product_attribute" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeCreated" method="handleAttributeCreated" />
+            <argument type="service" id="monolog.logger" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeCreated" method="__invoke" />
         </service>
         <service id="sylake_sylius_consumer.projector.association_type" class="Sylake\SyliusConsumerPlugin\Projector\AssociationTypeProjector">
             <argument type="service" id="sylius.factory.product_association_type" />
             <argument type="service" id="sylius.repository.product_association_type" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated" method="handleAssociationTypeCreated" />
+            <argument type="service" id="monolog.logger" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated" method="__invoke" />
         </service>
         <service id="sylake_sylius_consumer.projector.product" class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
             <argument type="service" id="sylius.factory.product" />
@@ -33,13 +35,15 @@
             <argument type="service" id="sylius.repository.product_attribute_value" />
             <argument type="service" id="sylius.repository.product_association_type" />
             <argument type="service" id="sylius.repository.product_association" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductCreated" method="handleProductCreated" />
+            <argument type="service" id="monolog.logger" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductCreated" method="__invoke" />
         </service>
         <service id="sylake_sylius_consumer.projector.taxon" class="Sylake\SyliusConsumerPlugin\Projector\TaxonProjector">
             <argument type="service" id="sylius.factory.taxon" />
             <argument type="service" id="sylius.repository.taxon" />
             <argument type="service" id="sylius.generator.taxon_slug" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\TaxonCreated" method="handleTaxonCreated" />
+            <argument type="service" id="monolog.logger" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\TaxonCreated" method="__invoke" />
         </service>
 
         <service id="sylake_sylius_consumer.denormalizer.attribute" class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeCreatedDenormalizer">

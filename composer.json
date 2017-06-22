@@ -14,10 +14,10 @@
         }
     ],
     "require": {
-        "php": "^5.6|^7.0",
+        "php": "^7.1",
 
         "php-amqplib/rabbitmq-bundle": "^1.12",
-        "sylius-labs/rabbitmq-simplebus-bundle": "^1.0.0@alpha",
+        "sylius-labs/rabbitmq-simplebus-bundle": "^1.0.0@beta",
         "sylius/sylius": "^1.0.0@beta"
     },
     "require-dev": {

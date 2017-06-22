@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;
@@ -11,7 +13,7 @@ abstract class AkeneoDenormalizer implements DenormalizerInterface
     /**
      * {@inheritdoc}
      */
-    final public function supports(AMQPMessage $message)
+    final public function supports(AMQPMessage $message): bool
     {
         try {
             $this->denormalize($message);
@@ -56,5 +58,5 @@ abstract class AkeneoDenormalizer implements DenormalizerInterface
     /**
      * @return string
      */
-    abstract protected function getSupportedMessageType();
+    abstract protected function getSupportedMessageType(): string;
 }
