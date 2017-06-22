@@ -18,7 +18,7 @@ final class AttributeCreatedDenormalizer extends AkeneoDenormalizer
     /**
      * {@inheritdoc}
      */
-    protected function getSupportedMessageType()
+    protected function getSupportedMessageType(): string
     {
         return MessageType::ATTRIBUTE_CREATED_MESSAGE_TYPE;
     }

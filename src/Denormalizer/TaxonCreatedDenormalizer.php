@@ -18,7 +18,7 @@ final class TaxonCreatedDenormalizer extends AkeneoDenormalizer
     /**
      * {@inheritdoc}
      */
-    protected function getSupportedMessageType()
+    protected function getSupportedMessageType(): string
     {
         return MessageType::CATEGORY_CREATED_MESSAGE_TYPE;
     }

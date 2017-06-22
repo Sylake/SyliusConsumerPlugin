@@ -60,7 +60,7 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
     /**
      * {@inheritdoc}
      */
-    protected function getSupportedMessageType()
+    protected function getSupportedMessageType(): string
     {
         return MessageType::PRODUCT_CREATED_MESSAGE_TYPE;
     }
