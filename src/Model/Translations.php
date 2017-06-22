@@ -30,6 +30,11 @@ final class Translations implements \IteratorAggregate
         $this->translations = $translations;
     }
 
+    public function toArray(): array
+    {
+        return $this->translations;
+    }
+
     /**
      * {@inheritdoc}
      */

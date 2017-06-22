@@ -6,19 +6,19 @@
             <argument type="service" id="sylius.generator.slug" />
         </service>
 
-        <service id="sylake_sylius_consumer.projector.attribute" class="Sylake\SyliusConsumerPlugin\Projector\AttributeProjector">
+        <service class="Sylake\SyliusConsumerPlugin\Projector\AttributeProjector">
             <argument type="service" id="sylius.factory.product_attribute" />
             <argument type="service" id="sylius.repository.product_attribute" />
             <argument type="service" id="monolog.logger" />
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeCreated" method="__invoke" />
         </service>
-        <service id="sylake_sylius_consumer.projector.association_type" class="Sylake\SyliusConsumerPlugin\Projector\AssociationTypeProjector">
+        <service class="Sylake\SyliusConsumerPlugin\Projector\AssociationTypeProjector">
             <argument type="service" id="sylius.factory.product_association_type" />
             <argument type="service" id="sylius.repository.product_association_type" />
             <argument type="service" id="monolog.logger" />
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated" method="__invoke" />
         </service>
-        <service id="sylake_sylius_consumer.projector.product" class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
+        <service class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
             <argument type="service" id="sylius.factory.product" />
             <argument type="service" id="sylius.factory.product_taxon" />
             <argument type="service" id="sylius.factory.channel_pricing" />
@@ -38,7 +38,7 @@
             <argument type="service" id="monolog.logger" />
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductCreated" method="__invoke" />
         </service>
-        <service id="sylake_sylius_consumer.projector.taxon" class="Sylake\SyliusConsumerPlugin\Projector\TaxonProjector">
+        <service class="Sylake\SyliusConsumerPlugin\Projector\TaxonProjector">
             <argument type="service" id="sylius.factory.taxon" />
             <argument type="service" id="sylius.repository.taxon" />
             <argument type="service" id="sylius.generator.taxon_slug" />
@@ -46,19 +46,22 @@
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\TaxonCreated" method="__invoke" />
         </service>
 
-        <service id="sylake_sylius_consumer.denormalizer.attribute" class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service id="sylake_sylius_consumer.denormalizer.association_type" class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeOptionCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service id="sylake_sylius_consumer.denormalizer.product" class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeCreatedDenormalizer">
+            <tag name="rabbitmq_simplebus.amqp_denormalizer" />
+        </service>
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductCreatedDenormalizer">
             <argument>%sylake_sylius_consumer.denormalizer.product.name_attribute%</argument>
             <argument>%sylake_sylius_consumer.denormalizer.product.description_attribute%</argument>
             <argument>%sylake_sylius_consumer.denormalizer.product.price_attribute%</argument>
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service id="sylake_sylius_consumer.denormalizer.taxon" class="Sylake\SyliusConsumerPlugin\Denormalizer\TaxonCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\TaxonCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
     </services>
