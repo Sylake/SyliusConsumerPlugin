@@ -214,6 +214,10 @@ final class ProductProjector
         /** @var ChannelInterface[] $channels */
         $channels = [];
         foreach ($prices as $price) {
+            if (null === $price['amount']) {
+                continue;
+            }
+
             /** @var CurrencyInterface $currency */
             $currency = $this->currencyRepository->findOneBy(['code' => $price['currency']]);
 
@@ -239,6 +243,10 @@ final class ProductProjector
         }
 
         foreach ($prices as $price) {
+            if (null === $price['amount']) {
+                continue;
+            }
+
             /** @var CurrencyInterface $currency */
             $currency = $this->currencyRepository->findOneBy(['code' => $price['currency']]);
 
