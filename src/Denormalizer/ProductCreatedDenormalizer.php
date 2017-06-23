@@ -51,7 +51,7 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
             $payload['family'],
             $payload['categories'],
             $this->getPrices($payload),
-            $this->getAttributes($payload),
+            $payload['values'],
             $this->getAssociations($payload),
             \DateTime::createFromFormat(\DateTime::W3C, $payload['created'])
         );
@@ -63,35 +63,6 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
     protected function getSupportedMessageType(): string
     {
         return MessageType::PRODUCT_CREATED_MESSAGE_TYPE;
-    }
-
-    /**
-     * @param array $payload
-     *
-     * @return array
-     */
-    private function getAttributes(array $payload)
-    {
-        $attributes = [];
-        foreach ($payload['values'] as $attributeCode => $value) {
-            $value = $value[0]['data'];
-
-            if (is_array($value)) {
-                $hasNestedArrays = !array_reduce($value, function ($acc, $value) {
-                    return $acc && !is_array($value);
-                }, true);
-
-                if ($hasNestedArrays) {
-                    continue;
-                }
-
-                $value = implode(', ', $value);
-            }
-
-            $attributes[$attributeCode] = $value;
-        }
-
-        return $attributes;
     }
 
     /**

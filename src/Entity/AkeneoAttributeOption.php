@@ -13,22 +13,22 @@ class AkeneoAttributeOption implements ResourceInterface
     private $code;
 
     /** @var string */
-    private $attributeCode;
+    private $attribute;
 
     /** @var array */
     private $labels;
 
-    public function __construct(string $code, string $attributeCode, Translations $labels)
+    public function __construct(string $code, string $attribute, Translations $labels)
     {
         $this->code = $code;
-        $this->attributeCode = $attributeCode;
+        $this->attribute = $attribute;
         $this->labels = $labels->toArray();
     }
 
     /** {@inheritdoc} */
     public function getId(): string
     {
-        return $this->code . ':' . $this->attributeCode;
+        return $this->code . ':' . $this->attribute;
     }
 
     public function getCode(): string
@@ -41,14 +41,14 @@ class AkeneoAttributeOption implements ResourceInterface
         $this->code = $code;
     }
 
-    public function getAttributeCode(): string
+    public function getAttribute(): string
     {
-        return $this->attributeCode;
+        return $this->attribute;
     }
 
-    public function setAttributeCode(string $attributeCode): void
+    public function setAttribute(string $attribute): void
     {
-        $this->attributeCode = $attributeCode;
+        $this->attribute = $attribute;
     }
 
     public function getLabels(): array
