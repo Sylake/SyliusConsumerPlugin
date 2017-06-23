@@ -13,7 +13,9 @@ use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
+use Sylius\Component\Locale\Model\Locale;
 use Sylius\Component\Product\Model\ProductAssociationInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -48,6 +50,23 @@ final class ProductSynchronizationTest extends KernelTestCase
         $this->consumer = static::$kernel->getContainer()->get('rabbitmq_simplebus.consumer');
 
         (new ORMPurger($this->entityManager))->purge();
+
+        /** @var FixtureInterface $localeFixture */
+        $localeFixture = static::$kernel->getContainer()->get('sylius.fixture.locale');
+        $localeFixture->load(['locales' => ['de_DE']]);
+
+        /** @var FixtureInterface $currencyFixture */
+        $currencyFixture = static::$kernel->getContainer()->get('sylius.fixture.currency');
+        $currencyFixture->load(['currencies' => ['EUR', 'USD', 'GBP']]);
+
+        /** @var FixtureInterface $channelFixture */
+        $channelFixture = static::$kernel->getContainer()->get('sylius.fixture.channel');
+        $channelFixture->load(['custom' => [
+            ['code' => 'EUR_1', 'default_tax_zone' => null, 'currencies' => ['EUR']],
+            ['code' => 'EUR_2', 'default_tax_zone' => null, 'currencies' => ['EUR']],
+            ['code' => 'USD_1', 'default_tax_zone' => null, 'currencies' => ['USD']],
+            ['code' => 'GBP_1', 'default_tax_zone' => null, 'currencies' => ['GBP']],
+        ]]);
     }
 
     /**
@@ -73,7 +92,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                     "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
                     "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
                     "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}],
                     "picture": [{"locale": null, "scope": null, "data": null}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
@@ -117,7 +136,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                     "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
                     "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
                     "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}],
                     "picture": [{"locale": null, "scope": null, "data": null}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
@@ -145,7 +164,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                     "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
                     "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
                     "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description (updated)"}],
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description (updated)"}],
                     "picture": [{"locale": null, "scope": null, "data": null}]
                 },
                 "created": "2017-04-18T16:12:58+02:00",
@@ -412,6 +431,45 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_attribute_option_created",
+            "payload": {
+                "code": "black",
+                "attribute": "main_color",
+                "sort_order": 0,
+                "labels": {
+                    "de_DE": "Schwarz",
+                    "en_US": "Black"
+                }
+            }
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_attribute_option_created",
+            "payload": {
+                "code": "crewneck",
+                "attribute": "tshirt_style",
+                "sort_order": 0,
+                "labels": {
+                    "de_DE": "Rundhalsausschnitt",
+                    "en_US": "Crewneck"
+                }
+            }
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_attribute_option_created",
+            "payload": {
+                "code": "short_sleeve",
+                "attribute": "tshirt_style",
+                "sort_order": 0,
+                "labels": {
+                    "de_DE": "Kurzarm",
+                    "en_US": "Short sleeve"
+                }
+            }
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_created",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -443,8 +501,10 @@ final class ProductSynchronizationTest extends KernelTestCase
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame('black', $product->getAttributeByCodeAndLocale('main_color')->getValue());
-        Assert::assertSame('crewneck, short_sleeve', $product->getAttributeByCodeAndLocale('tshirt_style')->getValue());
+        Assert::assertSame('Black', $product->getAttributeByCodeAndLocale('main_color', 'en_US')->getValue());
+        Assert::assertSame('Schwarz', $product->getAttributeByCodeAndLocale('main_color', 'de_DE')->getValue());
+        Assert::assertSame('Crewneck, Short sleeve', $product->getAttributeByCodeAndLocale('tshirt_style', 'en_US')->getValue());
+        Assert::assertSame('Rundhalsausschnitt, Kurzarm', $product->getAttributeByCodeAndLocale('tshirt_style', 'de_DE')->getValue());
     }
 
     /**
@@ -577,8 +637,8 @@ final class ProductSynchronizationTest extends KernelTestCase
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame('red', $product->getAttributeByCodeAndLocale('main_color')->getValue());
-        Assert::assertNull($product->getAttributeByCodeAndLocale('tshirt_style'));
+        Assert::assertSame('red', $product->getAttributeByCodeAndLocale('main_color', 'en_US')->getValue());
+        Assert::assertNull($product->getAttributeByCodeAndLocale('tshirt_style', 'en_US'));
     }
 
     /**
@@ -809,23 +869,6 @@ final class ProductSynchronizationTest extends KernelTestCase
      */
     public function it_adds_a_new_product_with_channels_and_pricing()
     {
-        /** @var FixtureInterface $localeFixture */
-        $localeFixture = static::$kernel->getContainer()->get('sylius.fixture.locale');
-        $localeFixture->load(['locales' => []]);
-
-        /** @var FixtureInterface $currencyFixture */
-        $currencyFixture = static::$kernel->getContainer()->get('sylius.fixture.currency');
-        $currencyFixture->load(['currencies' => ['EUR', 'USD', 'GBP']]);
-
-        /** @var FixtureInterface $channelFixture */
-        $channelFixture = static::$kernel->getContainer()->get('sylius.fixture.channel');
-        $channelFixture->load(['custom' => [
-            ['code' => 'EUR_1', 'default_tax_zone' => null, 'currencies' => ['EUR']],
-            ['code' => 'EUR_2', 'default_tax_zone' => null, 'currencies' => ['EUR']],
-            ['code' => 'USD_1', 'default_tax_zone' => null, 'currencies' => ['USD']],
-            ['code' => 'GBP_1', 'default_tax_zone' => null, 'currencies' => ['GBP']],
-        ]]);
-
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_created",
             "payload": {
@@ -877,23 +920,6 @@ final class ProductSynchronizationTest extends KernelTestCase
      */
     public function it_updates_an_existing_product_with_channels_and_pricing()
     {
-        /** @var FixtureInterface $localeFixture */
-        $localeFixture = static::$kernel->getContainer()->get('sylius.fixture.locale');
-        $localeFixture->load(['locales' => []]);
-
-        /** @var FixtureInterface $currencyFixture */
-        $currencyFixture = static::$kernel->getContainer()->get('sylius.fixture.currency');
-        $currencyFixture->load(['currencies' => ['EUR', 'USD', 'GBP']]);
-
-        /** @var FixtureInterface $channelFixture */
-        $channelFixture = static::$kernel->getContainer()->get('sylius.fixture.channel');
-        $channelFixture->load(['custom' => [
-            ['code' => 'EUR_1', 'default_tax_zone' => null, 'currencies' => ['EUR']],
-            ['code' => 'EUR_2', 'default_tax_zone' => null, 'currencies' => ['EUR']],
-            ['code' => 'USD_1', 'default_tax_zone' => null, 'currencies' => ['USD']],
-            ['code' => 'GBP_1', 'default_tax_zone' => null, 'currencies' => ['GBP']],
-        ]]);
-
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_created",
             "payload": {

@@ -68,12 +68,12 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
         /** @var AkeneoAttributeOption|null $akeneoAttributeOption */
         $akeneoAttributeOption = $this->akeneoAttributeOptionRepository->findOneBy([
             'code' => 'high',
-            'attributeCode' => 'product_positioning',
+            'attribute' => 'product_positioning',
         ]);
 
         Assert::assertNotNull($akeneoAttributeOption);
         Assert::assertSame('high', $akeneoAttributeOption->getCode());
-        Assert::assertSame('product_positioning', $akeneoAttributeOption->getAttributeCode());
+        Assert::assertSame('product_positioning', $akeneoAttributeOption->getAttribute());
         Assert::assertSame([
             'de_DE' => 'Hoch',
             'en_GB' => 'High',
@@ -114,12 +114,12 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
         /** @var AkeneoAttributeOption|null $akeneoAttributeOption */
         $akeneoAttributeOption = $this->akeneoAttributeOptionRepository->findOneBy([
             'code' => 'high',
-            'attributeCode' => 'product_positioning',
+            'attribute' => 'product_positioning',
         ]);
 
         Assert::assertNotNull($akeneoAttributeOption);
         Assert::assertSame('high', $akeneoAttributeOption->getCode());
-        Assert::assertSame('product_positioning', $akeneoAttributeOption->getAttributeCode());
+        Assert::assertSame('product_positioning', $akeneoAttributeOption->getAttribute());
         Assert::assertSame([
             'de_DE' => 'Hoch (updated)',
             'en_GB' => 'High (updated)',

@@ -30,13 +30,13 @@ final class AttributeOptionProjector
         ));
 
         /** @var AkeneoAttributeOption|null $akeneoAttributeOption */
-        $akeneoAttributeOption = $this->repository->findOneBy(['code' => $event->code(), 'attributeCode' => $event->attributeCode()]);
+        $akeneoAttributeOption = $this->repository->findOneBy(['code' => $event->code(), 'attribute' => $event->attributeCode()]);
         if (null === $akeneoAttributeOption) {
             $akeneoAttributeOption = new AkeneoAttributeOption($event->code(), $event->attributeCode(), $event->labels());
         }
 
         $akeneoAttributeOption->setCode($event->code());
-        $akeneoAttributeOption->setAttributeCode($event->attributeCode());
+        $akeneoAttributeOption->setAttribute($event->attributeCode());
         $akeneoAttributeOption->setLabels($event->labels());
 
         $this->repository->add($akeneoAttributeOption);
