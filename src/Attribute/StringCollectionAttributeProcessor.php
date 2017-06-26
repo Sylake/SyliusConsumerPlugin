@@ -53,7 +53,7 @@ final class StringCollectionAttributeProcessor implements AttributeProcessorInte
     private function supports(Attribute $attribute): bool
     {
         return is_array($attribute->data()) && array_reduce($attribute->data(), function (bool $accumulator, $value): bool {
-            return $accumulator && is_string($value);
+            return $accumulator && is_string($value) && !empty($value);
         }, true);
     }
 }

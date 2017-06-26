@@ -505,6 +505,8 @@ final class ProductSynchronizationTest extends KernelTestCase
         Assert::assertSame('Schwarz', $product->getAttributeByCodeAndLocale('main_color', 'de_DE')->getValue());
         Assert::assertSame('Crewneck, Short sleeve', $product->getAttributeByCodeAndLocale('tshirt_style', 'en_US')->getValue());
         Assert::assertSame('Rundhalsausschnitt, Kurzarm', $product->getAttributeByCodeAndLocale('tshirt_style', 'de_DE')->getValue());
+        Assert::assertNull($product->getAttributeByCodeAndLocale('picture', 'en_US'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('picture', 'de_DE'));
     }
 
     /**
@@ -639,6 +641,8 @@ final class ProductSynchronizationTest extends KernelTestCase
         Assert::assertNotNull($product);
         Assert::assertSame('red', $product->getAttributeByCodeAndLocale('main_color', 'en_US')->getValue());
         Assert::assertNull($product->getAttributeByCodeAndLocale('tshirt_style', 'en_US'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('picture', 'en_US'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('picture', 'de_DE'));
     }
 
     /**
