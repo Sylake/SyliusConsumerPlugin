@@ -48,6 +48,6 @@ final class StringAttributeProcessor implements AttributeProcessorInterface
 
     private function supports(Attribute $attribute): bool
     {
-        return is_string($attribute->data()) || null === $attribute->data();
+        return is_string($attribute->data()) && !empty($attribute->data());
     }
 }
