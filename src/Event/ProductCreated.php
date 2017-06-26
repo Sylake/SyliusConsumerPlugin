@@ -10,22 +10,12 @@ final class ProductCreated
     private $code;
 
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
      * @var bool
      */
     private $enabled;
 
     /**
-     * @var string|null
+     * @var ?string
      */
     private $mainTaxon;
 
@@ -33,11 +23,6 @@ final class ProductCreated
      * @var array
      */
     private $taxons;
-
-    /**
-     * @var array
-     */
-    private $prices;
 
     /**
      * @var array
@@ -50,122 +35,59 @@ final class ProductCreated
     private $associations;
 
     /**
-     * @var \DateTime
+     * @var ?\DateTime
      */
     private $createdAt;
 
-    /**
-     * @param string $code
-     * @param string $name
-     * @param string $description
-     * @param bool $enabled
-     * @param string|null $mainTaxon
-     * @param array $taxons
-     * @param array $prices
-     * @param array $attributes
-     * @param array $associations
-     * @param \DateTime $createdAt
-     */
     public function __construct(
-        $code,
-        $name,
-        $description,
-        $enabled,
-        $mainTaxon,
+        string $code,
+        bool $enabled,
+        ?string $mainTaxon,
         array $taxons,
-        array $prices,
         array $attributes,
         array $associations,
-        \DateTime $createdAt
+        ?\DateTime $createdAt
     ) {
         $this->code = $code;
-        $this->name = $name;
-        $this->description = $description;
         $this->enabled = $enabled;
         $this->mainTaxon = $mainTaxon;
         $this->taxons = $taxons;
-        $this->prices = $prices;
         $this->attributes = $attributes;
         $this->associations = $associations;
         $this->createdAt = $createdAt;
     }
 
-    /**
-     * @return string
-     */
-    public function code()
+    public function code(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return string
-     */
-    public function name()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function description()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return bool
-     */
-    public function enabled()
+    public function enabled(): bool
     {
         return $this->enabled;
     }
 
-    /**
-     * @return string|null
-     */
-    public function mainTaxon()
+    public function mainTaxon(): ?string
     {
         return $this->mainTaxon;
     }
 
-    /**
-     * @return array
-     */
-    public function taxons()
+    public function taxons(): array
     {
         return $this->taxons;
     }
 
-    /**
-     * @return array
-     */
-    public function prices()
-    {
-        return $this->prices;
-    }
-
-    /**
-     * @return array
-     */
-    public function attributes()
+    public function attributes(): array
     {
         return $this->attributes;
     }
 
-    /**
-     * @return array
-     */
-    public function associations()
+    public function associations(): array
     {
         return $this->associations;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function createdAt()
+    public function createdAt(): ?\DateTime
     {
         return $this->createdAt;
     }

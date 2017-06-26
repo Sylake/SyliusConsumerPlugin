@@ -118,9 +118,6 @@
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductCreatedDenormalizer">
-            <argument>%sylake_sylius_consumer.denormalizer.product.name_attribute%</argument>
-            <argument>%sylake_sylius_consumer.denormalizer.product.description_attribute%</argument>
-            <argument>%sylake_sylius_consumer.denormalizer.product.price_attribute%</argument>
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Denormalizer\TaxonCreatedDenormalizer">
