@@ -20,6 +20,7 @@ final class ExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('sylake_sylius_consumer.denormalizer.product.name_attribute', 'name');
         $this->assertContainerBuilderHasParameter('sylake_sylius_consumer.denormalizer.product.description_attribute', 'description');
         $this->assertContainerBuilderHasParameter('sylake_sylius_consumer.denormalizer.product.price_attribute', 'price');
+        $this->assertContainerBuilderHasParameter('sylake_sylius_consumer.denormalizer.product.image_attribute', 'images');
     }
 
     /**
