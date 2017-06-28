@@ -15,11 +15,6 @@ final class ProductCreated
     private $enabled;
 
     /**
-     * @var ?string
-     */
-    private $mainTaxon;
-
-    /**
      * @var array
      */
     private $taxons;
@@ -42,7 +37,6 @@ final class ProductCreated
     public function __construct(
         string $code,
         bool $enabled,
-        ?string $mainTaxon,
         array $taxons,
         array $attributes,
         array $associations,
@@ -50,7 +44,6 @@ final class ProductCreated
     ) {
         $this->code = $code;
         $this->enabled = $enabled;
-        $this->mainTaxon = $mainTaxon;
         $this->taxons = $taxons;
         $this->attributes = $attributes;
         $this->associations = $associations;
@@ -65,11 +58,6 @@ final class ProductCreated
     public function enabled(): bool
     {
         return $this->enabled;
-    }
-
-    public function mainTaxon(): ?string
-    {
-        return $this->mainTaxon;
     }
 
     public function taxons(): array

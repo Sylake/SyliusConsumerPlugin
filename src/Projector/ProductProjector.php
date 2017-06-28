@@ -119,7 +119,7 @@ final class ProductProjector
         $productVariant = $this->provideProductVariant($event->code(), $product);
 
         $this->handleEnabled($event->enabled(), $product);
-        $this->handleMainTaxon($event->mainTaxon(), $product);
+        $this->handleMainTaxon($event->taxons(), $product);
         $this->handleProductTaxons($event->taxons(), $product);
         $this->handleAttributes($event->attributes(), $product);
         $this->handleAssociations($event->associations(), $product);
@@ -134,8 +134,15 @@ final class ProductProjector
         $product->setEnabled($enabled);
     }
 
-    private function handleMainTaxon(?string $mainTaxonCode, ProductInterface $product): void
+    /**
+     * Set main taxon to be the first most specific taxon.
+     */
+    private function handleMainTaxon(array $taxonCodes, ProductInterface $product): void
     {
+        $mainTaxonCode = array_reduce($taxonCodes, function (string $mainTaxonCode, string $taxonCode): string {
+            return 0 === strpos($taxonCode, $mainTaxonCode) ? $taxonCode : $mainTaxonCode;
+        }, current($taxonCodes));
+
         $mainTaxon = $this->taxonRepository->findOneBy(['code' => $mainTaxonCode]);
 
         $product->setMainTaxon($mainTaxon);
