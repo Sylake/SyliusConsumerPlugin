@@ -20,6 +20,6 @@ final class TaxonUpdatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::CATEGORY_CREATED_MESSAGE_TYPE;
+        return MessageType::CATEGORY_UPDATED_MESSAGE_TYPE;
     }
 }

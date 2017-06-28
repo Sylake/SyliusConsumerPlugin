@@ -28,7 +28,7 @@ final class ProductUpdatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::PRODUCT_CREATED_MESSAGE_TYPE;
+        return MessageType::PRODUCT_UPDATED_MESSAGE_TYPE;
     }
 
     private function getAssociations(array $payload): array

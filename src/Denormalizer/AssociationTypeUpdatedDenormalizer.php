@@ -20,6 +20,6 @@ final class AssociationTypeUpdatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::ASSOCIATION_TYPE_CREATED_MESSAGE_TYPE;
+        return MessageType::ASSOCIATION_TYPE_UPDATED_MESSAGE_TYPE;
     }
 }
