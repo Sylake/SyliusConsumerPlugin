@@ -83,7 +83,7 @@
             <argument type="service" id="sylius.factory.product_association_type" />
             <argument type="service" id="sylius.repository.product_association_type" />
             <argument type="service" id="monolog.logger" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated" method="__invoke" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AssociationTypeUpdated" method="__invoke" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
             <argument type="service" id="sylius.factory.product" />
@@ -114,7 +114,7 @@
         <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeOptionCreatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductCreatedDenormalizer">

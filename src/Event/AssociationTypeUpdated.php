@@ -4,7 +4,7 @@ namespace Sylake\SyliusConsumerPlugin\Event;
 
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 
-final class AssociationTypeCreated
+final class AssociationTypeUpdated
 {
     /**
      * @var string

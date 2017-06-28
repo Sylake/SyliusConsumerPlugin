@@ -651,7 +651,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_adds_a_new_product_with_associations()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_created",
+            "type": "akeneo_association_type_updated",
             "payload": {
                 "code": "SUBSTITUTION",
                 "labels": {"en_US": "Substitution"}
@@ -660,7 +660,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_created",
+            "type": "akeneo_association_type_updated",
             "payload": {
                 "code": "CROSS_SELL",
                 "labels": {"en_US": "Cross sell"}
@@ -750,7 +750,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_updates_an_existing_product_with_associations()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_created",
+            "type": "akeneo_association_type_updated",
             "payload": {
                 "code": "SUBSTITUTION",
                 "labels": {"en_US": "Substitution"}
@@ -759,7 +759,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_created",
+            "type": "akeneo_association_type_updated",
             "payload": {
                 "code": "CROSS_SELL",
                 "labels": {"en_US": "Cross sell"}
