@@ -191,7 +191,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_adds_a_new_product_with_taxons()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "master",
                 "parent": null,
@@ -201,7 +201,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "master__goodies",
                 "parent": "master",
@@ -211,7 +211,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "master__goodies__tshirts",
                 "parent": "master__goodies",
@@ -264,7 +264,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_updates_an_existing_product_with_taxons()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "master",
                 "parent": null,
@@ -274,7 +274,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "master__goodies",
                 "parent": "master",
@@ -284,7 +284,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "master__goodies__tshirts",
                 "parent": "master__goodies",

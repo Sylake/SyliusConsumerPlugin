@@ -4,12 +4,12 @@ namespace spec\Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpSpec\ObjectBehavior;
-use Sylake\SyliusConsumerPlugin\Event\TaxonCreated;
+use Sylake\SyliusConsumerPlugin\Event\TaxonUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizationFailedException;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
-final class TaxonCreatedDenormalizerSpec extends ObjectBehavior
+final class TaxonUpdatedDenormalizerSpec extends ObjectBehavior
 {
     function it_is_a_denormalizer()
     {
@@ -31,7 +31,7 @@ final class TaxonCreatedDenormalizerSpec extends ObjectBehavior
         $this->supports($messageWithPayloadOnly)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithPayloadOnly]);
 
-        $messageWithTypeOnly = new AMQPMessage(json_encode(['type' => 'akeneo_category_created']));
+        $messageWithTypeOnly = new AMQPMessage(json_encode(['type' => 'akeneo_category_updated']));
 
         $this->supports($messageWithTypeOnly)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithTypeOnly]);
@@ -40,7 +40,7 @@ final class TaxonCreatedDenormalizerSpec extends ObjectBehavior
     function it_supports_messages_with_payload_and_specific_type_with_parent()
     {
         $supportedMessage = new AMQPMessage(json_encode([
-            'type' => 'akeneo_category_created',
+            'type' => 'akeneo_category_updated',
             'payload' => [
                 'code' => 'SUBCATEGORY',
                 'parent' => 'CATEGORY',
@@ -52,7 +52,7 @@ final class TaxonCreatedDenormalizerSpec extends ObjectBehavior
         ]));
 
         $this->supports($supportedMessage)->shouldReturn(true);
-        $this->denormalize($supportedMessage)->shouldBeLike(new TaxonCreated(
+        $this->denormalize($supportedMessage)->shouldBeLike(new TaxonUpdated(
             'SUBCATEGORY',
             'CATEGORY',
             new Translations(['en_US' => 'Subcategory', 'pl_PL' => 'Podkategoria'])
@@ -62,7 +62,7 @@ final class TaxonCreatedDenormalizerSpec extends ObjectBehavior
     function it_supports_messages_with_payload_and_specific_type_without_parent()
     {
         $supportedMessage = new AMQPMessage(json_encode([
-            'type' => 'akeneo_category_created',
+            'type' => 'akeneo_category_updated',
             'payload' => [
                 'code' => 'SUBCATEGORY',
                 'parent' => null,
@@ -74,7 +74,7 @@ final class TaxonCreatedDenormalizerSpec extends ObjectBehavior
         ]));
 
         $this->supports($supportedMessage)->shouldReturn(true);
-        $this->denormalize($supportedMessage)->shouldBeLike(new TaxonCreated(
+        $this->denormalize($supportedMessage)->shouldBeLike(new TaxonUpdated(
             'SUBCATEGORY',
             null,
             new Translations(['en_US' => 'Subcategory', 'pl_PL' => 'Podkategoria'])

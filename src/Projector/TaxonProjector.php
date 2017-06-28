@@ -3,7 +3,7 @@
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Psr\Log\LoggerInterface;
-use Sylake\SyliusConsumerPlugin\Event\TaxonCreated;
+use Sylake\SyliusConsumerPlugin\Event\TaxonUpdated;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -50,9 +50,9 @@ final class TaxonProjector
     }
 
     /**
-     * @param TaxonCreated $event
+     * @param TaxonUpdated $event
      */
-    public function __invoke(TaxonCreated $event)
+    public function __invoke(TaxonUpdated $event)
     {
         $this->logger->debug(sprintf('Projecting taxon with code "%s".', $event->code()));
 
