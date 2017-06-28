@@ -8,5 +8,5 @@ final class MessageType
     const ATTRIBUTE_CREATED_MESSAGE_TYPE = 'akeneo_attribute_updated';
     const ATTRIBUTE_OPTION_CREATED_MESSAGE_TYPE = 'akeneo_attribute_option_updated';
     const CATEGORY_CREATED_MESSAGE_TYPE = 'akeneo_category_updated';
-    const PRODUCT_CREATED_MESSAGE_TYPE = 'akeneo_product_created';
+    const PRODUCT_CREATED_MESSAGE_TYPE = 'akeneo_product_updated';
 }

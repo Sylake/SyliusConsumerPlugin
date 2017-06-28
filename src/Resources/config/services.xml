@@ -98,7 +98,7 @@
             <argument type="service" id="sylius.repository.locale" />
             <argument type="service" id="sylake_sylius_consumer.attribute.attribute_processor" />
             <argument type="service" id="monolog.logger" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductCreated" method="__invoke" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductUpdated" method="__invoke" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Projector\TaxonProjector">
             <argument type="service" id="sylius.factory.taxon" />
@@ -117,7 +117,7 @@
         <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Denormalizer\TaxonUpdatedDenormalizer">

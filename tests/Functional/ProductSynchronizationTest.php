@@ -75,7 +75,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_adds_a_new_product_with_basic_product_information()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -119,7 +119,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_updates_an_existing_product_with_basic_product_information()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -147,7 +147,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -221,7 +221,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -294,7 +294,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -322,7 +322,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": null,
@@ -470,7 +470,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -581,7 +581,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -609,7 +609,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -669,7 +669,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_WPXS",
                 "family": "tshirts",
@@ -697,7 +697,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -768,7 +768,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_WPXS",
                 "family": "tshirts",
@@ -796,7 +796,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -827,7 +827,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -874,7 +874,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_adds_a_new_product_with_channels_and_pricing()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -925,7 +925,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_updates_an_existing_product_with_channels_and_pricing()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",
@@ -953,7 +953,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_created",
+            "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "family": "tshirts",

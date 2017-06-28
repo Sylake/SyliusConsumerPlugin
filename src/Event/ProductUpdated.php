@@ -2,7 +2,7 @@
 
 namespace Sylake\SyliusConsumerPlugin\Event;
 
-final class ProductCreated
+final class ProductUpdated
 {
     /**
      * @var string
