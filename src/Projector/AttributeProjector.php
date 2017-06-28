@@ -3,7 +3,7 @@
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Psr\Log\LoggerInterface;
-use Sylake\SyliusConsumerPlugin\Event\AttributeCreated;
+use Sylake\SyliusConsumerPlugin\Event\AttributeUpdated;
 use Sylius\Component\Attribute\AttributeType\TextAttributeType;
 use Sylius\Component\Attribute\Factory\AttributeFactoryInterface;
 use Sylius\Component\Product\Model\ProductAttributeInterface;
@@ -39,9 +39,9 @@ final class AttributeProjector
     }
 
     /**
-     * @param AttributeCreated $event
+     * @param AttributeUpdated $event
      */
-    public function __invoke(AttributeCreated $event)
+    public function __invoke(AttributeUpdated $event)
     {
         $this->logger->debug(sprintf('Projecting attribute with code "%s".', $event->code()));
 

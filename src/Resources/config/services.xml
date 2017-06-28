@@ -72,7 +72,7 @@
             <argument type="service" id="sylius.factory.product_attribute" />
             <argument type="service" id="sylius.repository.product_attribute" />
             <argument type="service" id="monolog.logger" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeCreated" method="__invoke" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeUpdated" method="__invoke" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Projector\AttributeOptionProjector">
             <argument type="service" id="sylake_sylius_consumer.repository.akeneo_attribute_option" />
@@ -108,7 +108,7 @@
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\TaxonCreated" method="__invoke" />
         </service>
 
-        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeOptionCreatedDenormalizer">

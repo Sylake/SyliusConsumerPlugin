@@ -4,12 +4,12 @@ namespace spec\Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpSpec\ObjectBehavior;
-use Sylake\SyliusConsumerPlugin\Event\AttributeCreated;
+use Sylake\SyliusConsumerPlugin\Event\AttributeUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizationFailedException;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
-final class AttributeCreatedDenormalizerSpec extends ObjectBehavior
+final class AttributeUpdatedDenormalizerSpec extends ObjectBehavior
 {
     function it_is_a_denormalizer()
     {
@@ -31,7 +31,7 @@ final class AttributeCreatedDenormalizerSpec extends ObjectBehavior
         $this->supports($messageWithPayloadOnly)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithPayloadOnly]);
 
-        $messageWithTypeOnly = new AMQPMessage(json_encode(['type' => 'akeneo_attribute_created']));
+        $messageWithTypeOnly = new AMQPMessage(json_encode(['type' => 'akeneo_attribute_updated']));
 
         $this->supports($messageWithTypeOnly)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithTypeOnly]);
@@ -40,7 +40,7 @@ final class AttributeCreatedDenormalizerSpec extends ObjectBehavior
     function it_supports_messages_with_payload_and_specific_type()
     {
         $supportedMessage = new AMQPMessage(json_encode([
-            'type' => 'akeneo_attribute_created',
+            'type' => 'akeneo_attribute_updated',
             'payload' => [
                 'code' => 'COLOR',
                 'labels' => [
@@ -51,7 +51,7 @@ final class AttributeCreatedDenormalizerSpec extends ObjectBehavior
         ]));
 
         $this->supports($supportedMessage)->shouldReturn(true);
-        $this->denormalize($supportedMessage)->shouldBeLike(new AttributeCreated(
+        $this->denormalize($supportedMessage)->shouldBeLike(new AttributeUpdated(
             'COLOR',
             new Translations(['en_US' => 'Color', 'pl_PL' => 'Kolor'])
         ));

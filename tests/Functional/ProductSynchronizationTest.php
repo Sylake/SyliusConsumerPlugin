@@ -365,7 +365,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_adds_a_new_product_with_attributes()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_created",
+            "type": "akeneo_attribute_updated",
             "payload": {
                 "code": "main_color",
                 "type": "pim_catalog_simpleselect",
@@ -398,7 +398,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_created",
+            "type": "akeneo_attribute_updated",
             "payload": {
                 "code": "tshirt_style",
                 "type": "pim_catalog_simpleselect",
@@ -515,7 +515,7 @@ final class ProductSynchronizationTest extends KernelTestCase
     public function it_updates_an_existing_product_with_attributes()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_created",
+            "type": "akeneo_attribute_updated",
             "payload": {
                 "code": "main_color",
                 "type": "pim_catalog_simpleselect",
@@ -548,7 +548,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_created",
+            "type": "akeneo_attribute_updated",
             "payload": {
                 "code": "tshirt_style",
                 "type": "pim_catalog_simpleselect",
