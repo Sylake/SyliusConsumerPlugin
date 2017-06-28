@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
-use Sylake\SyliusConsumerPlugin\Event\AttributeOptionCreated;
+use Sylake\SyliusConsumerPlugin\Event\AttributeOptionUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 
-final class AttributeOptionCreatedDenormalizer extends AkeneoDenormalizer
+final class AttributeOptionUpdatedDenormalizer extends AkeneoDenormalizer
 {
     /**
      * {@inheritdoc}
      */
     protected function denormalizePayload(array $payload)
     {
-        return new AttributeOptionCreated($payload['code'], $payload['attribute'], new Translations($payload['labels']));
+        return new AttributeOptionUpdated($payload['code'], $payload['attribute'], new Translations($payload['labels']));
     }
 
     /**

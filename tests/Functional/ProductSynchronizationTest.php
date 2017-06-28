@@ -431,7 +431,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_created",
+            "type": "akeneo_attribute_option_updated",
             "payload": {
                 "code": "black",
                 "attribute": "main_color",
@@ -444,7 +444,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_created",
+            "type": "akeneo_attribute_option_updated",
             "payload": {
                 "code": "crewneck",
                 "attribute": "tshirt_style",
@@ -457,7 +457,7 @@ final class ProductSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_created",
+            "type": "akeneo_attribute_option_updated",
             "payload": {
                 "code": "short_sleeve",
                 "attribute": "tshirt_style",

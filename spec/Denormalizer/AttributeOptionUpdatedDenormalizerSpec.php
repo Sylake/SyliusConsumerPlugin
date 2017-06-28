@@ -4,12 +4,12 @@ namespace spec\Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpSpec\ObjectBehavior;
-use Sylake\SyliusConsumerPlugin\Event\AttributeOptionCreated;
+use Sylake\SyliusConsumerPlugin\Event\AttributeOptionUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizationFailedException;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
-final class AttributeOptionCreatedDenormalizerSpec extends ObjectBehavior
+final class AttributeOptionUpdatedDenormalizerSpec extends ObjectBehavior
 {
     function it_is_a_denormalizer()
     {
@@ -31,7 +31,7 @@ final class AttributeOptionCreatedDenormalizerSpec extends ObjectBehavior
         $this->supports($messageWithPayloadOnly)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithPayloadOnly]);
 
-        $messageWithTypeOnly = new AMQPMessage(json_encode(['type' => 'akeneo_attribute_option_created']));
+        $messageWithTypeOnly = new AMQPMessage(json_encode(['type' => 'akeneo_attribute_option_updated']));
 
         $this->supports($messageWithTypeOnly)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithTypeOnly]);
@@ -40,7 +40,7 @@ final class AttributeOptionCreatedDenormalizerSpec extends ObjectBehavior
     function it_supports_messages_with_payload_and_specific_type()
     {
         $supportedMessage = new AMQPMessage(json_encode([
-            'type' => 'akeneo_attribute_option_created',
+            'type' => 'akeneo_attribute_option_updated',
             'payload' => [
                 'code' => 'GREEN',
                 'attribute' => 'COLOR',
@@ -52,7 +52,7 @@ final class AttributeOptionCreatedDenormalizerSpec extends ObjectBehavior
         ]));
 
         $this->supports($supportedMessage)->shouldReturn(true);
-        $this->denormalize($supportedMessage)->shouldBeLike(new AttributeOptionCreated(
+        $this->denormalize($supportedMessage)->shouldBeLike(new AttributeOptionUpdated(
             'GREEN',
             'COLOR',
             new Translations(['en_US' => 'Green', 'pl_PL' => 'Zielony'])
