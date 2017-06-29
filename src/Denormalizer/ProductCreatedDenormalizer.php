@@ -16,7 +16,6 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
         return new ProductCreated(
             $payload['identifier'],
             $payload['enabled'],
-            $payload['family'],
             $payload['categories'],
             $payload['values'],
             $this->getAssociations($payload),

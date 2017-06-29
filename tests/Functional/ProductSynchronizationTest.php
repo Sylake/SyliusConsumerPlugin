@@ -203,9 +203,9 @@ final class ProductSynchronizationTest extends KernelTestCase
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_category_created",
             "payload": {
-                "code": "tshirts",
+                "code": "master__goodies",
                 "parent": "master",
-                "labels": {"en_US": "T-Shirts"}
+                "labels": {"en_US": "Goodies"}
             },
             "recordedOn": "2017-05-22 14:24:40"
         }'));
@@ -213,9 +213,9 @@ final class ProductSynchronizationTest extends KernelTestCase
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_category_created",
             "payload": {
-                "code": "goodies",
-                "parent": "master",
-                "labels": {"en_US": "Goodies"}
+                "code": "master__goodies__tshirts",
+                "parent": "master__goodies",
+                "labels": {"en_US": "T-Shirts"}
             },
             "recordedOn": "2017-05-22 14:24:40"
         }'));
@@ -227,7 +227,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "family": "tshirts",
                 "groups": [],
                 "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": ["master__goodies", "master__goodies__tshirts"],
                 "enabled": true,
                 "values": {
                     "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
@@ -252,8 +252,8 @@ final class ProductSynchronizationTest extends KernelTestCase
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame('tshirts', $product->getMainTaxon()->getCode());
-        $this->assertArraysAreEqual(['goodies', 'tshirts'], $product->getTaxons()->map(function (TaxonInterface $taxon) {
+        Assert::assertSame('master__goodies__tshirts', $product->getMainTaxon()->getCode());
+        $this->assertArraysAreEqual(['master__goodies', 'master__goodies__tshirts'], $product->getTaxons()->map(function (TaxonInterface $taxon) {
             return $taxon->getCode();
         })->toArray());
     }
@@ -276,9 +276,9 @@ final class ProductSynchronizationTest extends KernelTestCase
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_category_created",
             "payload": {
-                "code": "tshirts",
+                "code": "master__goodies",
                 "parent": "master",
-                "labels": {"en_US": "T-Shirts"}
+                "labels": {"en_US": "Goodies"}
             },
             "recordedOn": "2017-05-22 14:24:40"
         }'));
@@ -286,9 +286,9 @@ final class ProductSynchronizationTest extends KernelTestCase
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_category_created",
             "payload": {
-                "code": "goodies",
-                "parent": "master",
-                "labels": {"en_US": "Goodies"}
+                "code": "master__goodies__tshirts",
+                "parent": "master__goodies",
+                "labels": {"en_US": "T-Shirts"}
             },
             "recordedOn": "2017-05-22 14:24:40"
         }'));
@@ -300,7 +300,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "family": "tshirts",
                 "groups": [],
                 "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": ["master__goodies", "master__goodies__tshirts"],
                 "enabled": true,
                 "values": {
                     "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
@@ -328,7 +328,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "family": null,
                 "groups": [],
                 "variant_group": "akeneo_tshirt",
-                "categories": ["goodies"],
+                "categories": ["master__goodies"],
                 "enabled": true,
                 "values": {
                     "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
@@ -353,8 +353,8 @@ final class ProductSynchronizationTest extends KernelTestCase
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertNull($product->getMainTaxon());
-        $this->assertArraysAreEqual(['goodies'], $product->getTaxons()->map(function (TaxonInterface $taxon) {
+        Assert::assertSame('master__goodies', $product->getMainTaxon()->getCode());
+        $this->assertArraysAreEqual(['master__goodies'], $product->getTaxons()->map(function (TaxonInterface $taxon) {
             return $taxon->getCode();
         })->toArray());
     }
