@@ -2,17 +2,17 @@
 
 namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
-use Sylake\SyliusConsumerPlugin\Event\TaxonCreated;
+use Sylake\SyliusConsumerPlugin\Event\TaxonUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 
-final class TaxonCreatedDenormalizer extends AkeneoDenormalizer
+final class TaxonUpdatedDenormalizer extends AkeneoDenormalizer
 {
     /**
      * {@inheritdoc}
      */
     protected function denormalizePayload(array $payload)
     {
-        return new TaxonCreated($payload['code'], $payload['parent'], new Translations($payload['labels']));
+        return new TaxonUpdated($payload['code'], $payload['parent'], new Translations($payload['labels']));
     }
 
     /**
@@ -20,6 +20,6 @@ final class TaxonCreatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::CATEGORY_CREATED_MESSAGE_TYPE;
+        return MessageType::CATEGORY_UPDATED_MESSAGE_TYPE;
     }
 }

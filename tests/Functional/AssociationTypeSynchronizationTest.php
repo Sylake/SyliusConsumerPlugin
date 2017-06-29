@@ -51,7 +51,7 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
     public function it_adds_new_association_type_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_created",
+            "type": "akeneo_association_type_updated",
             "payload": {
                 "code": "SUBSTITUTION",
                 "labels": {
@@ -78,7 +78,7 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
     public function it_updates_existing_association_type_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_created",
+            "type": "akeneo_association_type_updated",
             "payload": {
                 "code": "SUBSTITUTION",
                 "labels": {
@@ -89,9 +89,9 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
             },
             "recordedOn": "2017-05-22 12:51:29"
         }'));
-        
+
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_created",
+            "type": "akeneo_association_type_updated",
             "payload": {
                 "code": "SUBSTITUTION",
                 "labels": {

@@ -6,7 +6,7 @@ namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Psr\Log\LoggerInterface;
 use Sylake\SyliusConsumerPlugin\Attribute\AttributeProcessorInterface;
-use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
+use Sylake\SyliusConsumerPlugin\Event\ProductUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Attributes;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductTaxonInterface;
@@ -111,7 +111,7 @@ final class ProductProjector
         $this->logger = $logger;
     }
 
-    public function __invoke(ProductCreated $event): void
+    public function __invoke(ProductUpdated $event): void
     {
         $this->logger->debug(sprintf('Projecting product with code "%s".', $event->code()));
 

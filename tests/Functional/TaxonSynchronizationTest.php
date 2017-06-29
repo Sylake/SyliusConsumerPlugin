@@ -51,7 +51,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
     public function it_adds_new_taxon_without_parent_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "master",
                 "parent": null,
@@ -83,7 +83,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
     public function it_adds_new_taxon_with_parent_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "master",
                 "parent": null,
@@ -97,7 +97,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "audio_video",
                 "parent": "master",
@@ -129,7 +129,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
     public function it_updates_existing_taxon_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "master",
                 "parent": null,
@@ -143,7 +143,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "audio_video",
                 "parent": "master",
@@ -157,7 +157,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_created",
+            "type": "akeneo_category_updated",
             "payload": {
                 "code": "audio_video",
                 "parent": null,

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
-use Sylake\SyliusConsumerPlugin\Event\ProductCreated;
+use Sylake\SyliusConsumerPlugin\Event\ProductUpdated;
 
-final class ProductCreatedDenormalizer extends AkeneoDenormalizer
+final class ProductUpdatedDenormalizer extends AkeneoDenormalizer
 {
     /**
      * {@inheritdoc}
      */
-    protected function denormalizePayload(array $payload): ProductCreated
+    protected function denormalizePayload(array $payload): ProductUpdated
     {
-        return new ProductCreated(
+        return new ProductUpdated(
             $payload['identifier'],
             $payload['enabled'],
             $payload['categories'],
@@ -28,7 +28,7 @@ final class ProductCreatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::PRODUCT_CREATED_MESSAGE_TYPE;
+        return MessageType::PRODUCT_UPDATED_MESSAGE_TYPE;
     }
 
     private function getAssociations(array $payload): array

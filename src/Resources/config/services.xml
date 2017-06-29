@@ -72,18 +72,18 @@
             <argument type="service" id="sylius.factory.product_attribute" />
             <argument type="service" id="sylius.repository.product_attribute" />
             <argument type="service" id="monolog.logger" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeCreated" method="__invoke" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeUpdated" method="__invoke" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Projector\AttributeOptionProjector">
             <argument type="service" id="sylake_sylius_consumer.repository.akeneo_attribute_option" />
             <argument type="service" id="monolog.logger" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeOptionCreated" method="__invoke" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AttributeOptionUpdated" method="__invoke" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Projector\AssociationTypeProjector">
             <argument type="service" id="sylius.factory.product_association_type" />
             <argument type="service" id="sylius.repository.product_association_type" />
             <argument type="service" id="monolog.logger" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated" method="__invoke" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\AssociationTypeUpdated" method="__invoke" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
             <argument type="service" id="sylius.factory.product" />
@@ -98,29 +98,29 @@
             <argument type="service" id="sylius.repository.locale" />
             <argument type="service" id="sylake_sylius_consumer.attribute.attribute_processor" />
             <argument type="service" id="monolog.logger" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductCreated" method="__invoke" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductUpdated" method="__invoke" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Projector\TaxonProjector">
             <argument type="service" id="sylius.factory.taxon" />
             <argument type="service" id="sylius.repository.taxon" />
             <argument type="service" id="sylius.generator.taxon_slug" />
             <argument type="service" id="monolog.logger" />
-            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\TaxonCreated" method="__invoke" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\TaxonUpdated" method="__invoke" />
         </service>
 
-        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeOptionCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AttributeOptionUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\AssociationTypeUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
-        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\TaxonCreatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\TaxonUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
     </services>

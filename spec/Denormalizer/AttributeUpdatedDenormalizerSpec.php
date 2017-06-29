@@ -4,12 +4,12 @@ namespace spec\Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpSpec\ObjectBehavior;
-use Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated;
+use Sylake\SyliusConsumerPlugin\Event\AttributeUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizationFailedException;
 use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizerInterface;
 
-final class AssociationTypeCreatedDenormalizerSpec extends ObjectBehavior
+final class AttributeUpdatedDenormalizerSpec extends ObjectBehavior
 {
     function it_is_a_denormalizer()
     {
@@ -31,7 +31,7 @@ final class AssociationTypeCreatedDenormalizerSpec extends ObjectBehavior
         $this->supports($messageWithPayloadOnly)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithPayloadOnly]);
 
-        $messageWithTypeOnly = new AMQPMessage(json_encode(['type' => 'akeneo_association_type_created']));
+        $messageWithTypeOnly = new AMQPMessage(json_encode(['type' => 'akeneo_attribute_updated']));
 
         $this->supports($messageWithTypeOnly)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithTypeOnly]);
@@ -40,20 +40,20 @@ final class AssociationTypeCreatedDenormalizerSpec extends ObjectBehavior
     function it_supports_messages_with_payload_and_specific_type()
     {
         $supportedMessage = new AMQPMessage(json_encode([
-            'type' => 'akeneo_association_type_created',
+            'type' => 'akeneo_attribute_updated',
             'payload' => [
-                'code' => 'CROSS_SELL',
+                'code' => 'COLOR',
                 'labels' => [
-                    'en_US' => 'Cross sell',
-                    'fr_FR' => 'Vente croisée',
+                    'en_US' => 'Color',
+                    'pl_PL' => 'Kolor',
                 ],
             ],
         ]));
 
         $this->supports($supportedMessage)->shouldReturn(true);
-        $this->denormalize($supportedMessage)->shouldBeLike(new AssociationTypeCreated(
-            'CROSS_SELL',
-            new Translations(['en_US' => 'Cross sell', 'fr_FR' => 'Vente croisée'])
+        $this->denormalize($supportedMessage)->shouldBeLike(new AttributeUpdated(
+            'COLOR',
+            new Translations(['en_US' => 'Color', 'pl_PL' => 'Kolor'])
         ));
     }
 }

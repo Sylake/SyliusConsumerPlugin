@@ -2,17 +2,17 @@
 
 namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
-use Sylake\SyliusConsumerPlugin\Event\AttributeCreated;
+use Sylake\SyliusConsumerPlugin\Event\AssociationTypeUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 
-final class AttributeCreatedDenormalizer extends AkeneoDenormalizer
+final class AssociationTypeUpdatedDenormalizer extends AkeneoDenormalizer
 {
     /**
      * {@inheritdoc}
      */
     protected function denormalizePayload(array $payload)
     {
-        return new AttributeCreated($payload['code'], new Translations($payload['labels']));
+        return new AssociationTypeUpdated($payload['code'], new Translations($payload['labels']));
     }
 
     /**
@@ -20,6 +20,6 @@ final class AttributeCreatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::ATTRIBUTE_CREATED_MESSAGE_TYPE;
+        return MessageType::ASSOCIATION_TYPE_UPDATED_MESSAGE_TYPE;
     }
 }

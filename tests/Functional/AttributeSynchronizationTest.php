@@ -52,7 +52,7 @@ final class AttributeSynchronizationTest extends KernelTestCase
     public function it_adds_new_attribute_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_created",
+            "type": "akeneo_attribute_updated",
             "payload": {
                 "code": "main_color",
                 "type": "pim_catalog_simpleselect",
@@ -103,7 +103,7 @@ final class AttributeSynchronizationTest extends KernelTestCase
     public function it_updates_existing_attribute_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_created",
+            "type": "akeneo_attribute_updated",
             "payload": {
                 "code": "main_color",
                 "type": "pim_catalog_simpleselect",
@@ -140,7 +140,7 @@ final class AttributeSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_created",
+            "type": "akeneo_attribute_updated",
             "payload": {
                 "code": "main_color",
                 "type": "pim_catalog_simpleselect",

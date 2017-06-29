@@ -3,7 +3,7 @@
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Psr\Log\LoggerInterface;
-use Sylake\SyliusConsumerPlugin\Event\AssociationTypeCreated;
+use Sylake\SyliusConsumerPlugin\Event\AssociationTypeUpdated;
 use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -38,9 +38,9 @@ final class AssociationTypeProjector
     }
 
     /**
-     * @param AssociationTypeCreated $event
+     * @param AssociationTypeUpdated $event
      */
-    public function __invoke(AssociationTypeCreated $event)
+    public function __invoke(AssociationTypeUpdated $event)
     {
         $this->logger->debug(sprintf('Projecting association type with code "%s".', $event->code()));
 

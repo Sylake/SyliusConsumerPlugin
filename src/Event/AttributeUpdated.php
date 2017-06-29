@@ -4,7 +4,7 @@ namespace Sylake\SyliusConsumerPlugin\Event;
 
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 
-final class AttributeCreated
+final class AttributeUpdated
 {
     /**
      * @var string

@@ -4,7 +4,7 @@ namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Psr\Log\LoggerInterface;
 use Sylake\SyliusConsumerPlugin\Entity\AkeneoAttributeOption;
-use Sylake\SyliusConsumerPlugin\Event\AttributeOptionCreated;
+use Sylake\SyliusConsumerPlugin\Event\AttributeOptionUpdated;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class AttributeOptionProjector
@@ -21,7 +21,7 @@ final class AttributeOptionProjector
         $this->logger = $logger;
     }
 
-    public function __invoke(AttributeOptionCreated $event): void
+    public function __invoke(AttributeOptionUpdated $event): void
     {
         $this->logger->debug(sprintf(
             'Projecting attribute option with code "%s" for attribute with code "%s".',

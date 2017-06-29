@@ -53,7 +53,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
     public function it_adds_new_akeneo_attribute_option_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_created",
+            "type": "akeneo_attribute_option_updated",
             "payload": {
                 "code": "high",
                 "attribute": "product_positioning",
@@ -86,7 +86,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
     public function it_updates_existing_akeneo_attribute_option_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_created",
+            "type": "akeneo_attribute_option_updated",
             "payload": {
                 "code": "high",
                 "attribute": "product_positioning",
@@ -99,7 +99,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_created",
+            "type": "akeneo_attribute_option_updated",
             "payload": {
                 "code": "high",
                 "attribute": "product_positioning",
