@@ -32,6 +32,10 @@ final class SylakeSyliusConsumerExtension extends Extension implements PrependEx
             'sylake_sylius_consumer.denormalizer.product.price_attribute',
             $config['denormalizer']['product']['price_attribute']
         );
+        $container->setParameter(
+            'sylake_sylius_consumer.denormalizer.product.image_attribute',
+            $config['denormalizer']['product']['image_attribute']
+        );
     }
 
     /**

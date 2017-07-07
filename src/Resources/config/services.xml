@@ -50,6 +50,13 @@
                 </service>
             </argument>
             <argument type="service">
+                <service class="Sylake\SyliusConsumerPlugin\Attribute\ImageAttributeProcessor">
+                    <argument type="service" id="sylius.factory.product_image" />
+                    <argument type="service" id="sylius.repository.product_image" />
+                    <argument>%sylake_sylius_consumer.denormalizer.product.image_attribute%</argument>
+                </service>
+            </argument>
+            <argument type="service">
                 <service class="Sylake\SyliusConsumerPlugin\Attribute\UnitAttributeProcessor">
                     <argument type="service" id="sylake_sylius_consumer.attribute.attribute_value_provider" />
                 </service>

@@ -9,6 +9,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\Assert;
 use Sylius\Bundle\FixturesBundle\Fixture\FixtureInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
+use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
@@ -183,6 +184,123 @@ final class ProductSynchronizationTest extends KernelTestCase
         Assert::assertSame('T-Shirt description (updated)', $product->getTranslation('en_US')->getDescription());
         Assert::assertEquals(\DateTime::createFromFormat(\DateTime::W3C, '2017-04-18T16:12:58+02:00'), $product->getCreatedAt());
         Assert::assertFalse($product->isEnabled());
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_a_new_product_with_images()
+    {
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "family": "tshirts",
+                "groups": [],
+                "variant_group": "akeneo_tshirt",
+                "categories": ["goodies", "tshirts"],
+                "enabled": true,
+                "values": {
+                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
+                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
+                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
+                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}],
+                    "picture": [{"locale": null, "scope": null, "data": null}],
+                    "images": [{"locale": null, "scope": null, "data": "8\/7\/5\/3\/8753d08e04e7ecdda77ef77573cd42bbfb029dcb_image.jpg"}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "updated": "2017-04-18T16:12:55+02:00",
+                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
+            },
+            "recordedOn": "2017-05-22 10:13:34"
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+
+        $akeneoProductImages = $product->getImagesByType('akeneo')->toArray();
+        $akeneoProductImage = current($akeneoProductImages);
+
+        Assert::assertNotFalse($akeneoProductImage);
+        Assert::assertSame('8/7/5/3/8753d08e04e7ecdda77ef77573cd42bbfb029dcb_image.jpg', $akeneoProductImage->getPath());
+        Assert::assertSame('akeneo', $akeneoProductImage->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function it_updates_an_existing_product_with_images()
+    {
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "family": "tshirts",
+                "groups": [],
+                "variant_group": "akeneo_tshirt",
+                "categories": ["goodies", "tshirts"],
+                "enabled": true,
+                "values": {
+                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
+                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
+                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
+                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}],
+                    "picture": [{"locale": null, "scope": null, "data": null}],
+                    "images": [{"locale": null, "scope": null, "data": "8\/7\/5\/3\/8753d08e04e7ecdda77ef77573cd42bbfb029dcb_image.jpg"}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "updated": "2017-04-18T16:12:55+02:00",
+                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
+            },
+            "recordedOn": "2017-05-22 10:13:34"
+        }'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "family": "tshirts",
+                "groups": [],
+                "variant_group": "akeneo_tshirt",
+                "categories": ["goodies", "tshirts"],
+                "enabled": false,
+                "values": {
+                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
+                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve (updated)"}],
+                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
+                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
+                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description (updated)"}],
+                    "picture": [{"locale": null, "scope": null, "data": null}],
+                    "images": [{"locale": null, "scope": null, "data": null}]
+                },
+                "created": "2017-04-18T16:12:58+02:00",
+                "updated": "2017-04-18T16:12:55+02:00",
+                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
+            },
+            "recordedOn": "2017-05-22 10:13:34"
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertSame([], $product->getImagesByType('akeneo')->toArray());
     }
 
     /**
