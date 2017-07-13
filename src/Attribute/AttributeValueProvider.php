@@ -41,7 +41,11 @@ final class AttributeValueProvider implements AttributeValueProviderInterface
         }
 
         /** @var AttributeValueInterface $attributeValue */
-        $attributeValue = $this->attributeValueRepository->findOneBy(['attribute' => $attribute, 'subject' => $product]);
+        $attributeValue = $this->attributeValueRepository->findOneBy([
+            'attribute' => $attribute,
+            'subject' => $product,
+            'localeCode' => $locale,
+        ]);
 
         if (null === $attributeValue) {
             $attributeValue = $this->attributeValueFactory->createNew();
