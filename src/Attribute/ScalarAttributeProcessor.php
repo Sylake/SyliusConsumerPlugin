@@ -55,6 +55,6 @@ final class ScalarAttributeProcessor implements AttributeProcessorInterface
 
     private function supports(Attribute $attribute): bool
     {
-        return is_scalar($attribute->data()) && (null !== $attribute->data() || '' !== $attribute->data());
+        return is_scalar($attribute->data()) && null !== $attribute->data() && '' !== $attribute->data();
     }
 }
