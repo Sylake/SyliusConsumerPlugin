@@ -305,8 +305,8 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame(12, $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
-        Assert::assertSame(12, $product->getAttributeByCodeAndLocale('megapixels', 'de_DE')->getValue());
+        Assert::assertSame('12', $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
+        Assert::assertSame('12', $product->getAttributeByCodeAndLocale('megapixels', 'de_DE')->getValue());
 
         $this->consume('{
             "type": "akeneo_product_updated",
@@ -327,7 +327,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame(9, $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
+        Assert::assertSame('9', $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
         Assert::assertNull($product->getAttributeByCodeAndLocale('megapixels', 'de_DE'));
     }
 
@@ -357,8 +357,8 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame(12.3, $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
-        Assert::assertSame(12.3, $product->getAttributeByCodeAndLocale('megapixels', 'de_DE')->getValue());
+        Assert::assertSame('12.3', $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
+        Assert::assertSame('12.3', $product->getAttributeByCodeAndLocale('megapixels', 'de_DE')->getValue());
 
         $this->consume('{
             "type": "akeneo_product_updated",
@@ -379,7 +379,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame(9.7, $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
+        Assert::assertSame('9.7', $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
         Assert::assertNull($product->getAttributeByCodeAndLocale('megapixels', 'de_DE'));
     }
 
