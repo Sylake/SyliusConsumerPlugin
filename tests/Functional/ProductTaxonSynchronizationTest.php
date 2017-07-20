@@ -17,7 +17,7 @@ final class ProductTaxonSynchronizationTest extends ProductSynchronizationTestCa
     /**
      * @test
      */
-    public function it_adds_a_new_product_with_taxons()
+    public function it_adds_and_updates_a_product_with_taxons()
     {
         $this->consumeTaxon('master', null, ['en_US' => 'Master catalog']);
         $this->consumeTaxon('master__goodies', 'master', ['en_US' => 'Goodies']);
@@ -45,30 +45,6 @@ final class ProductTaxonSynchronizationTest extends ProductSynchronizationTestCa
         $this->assertArraysAreEqual(['master__goodies', 'master__goodies__tshirts'], $product->getTaxons()->map(function (TaxonInterface $taxon) {
             return $taxon->getCode();
         })->toArray());
-    }
-
-    /**
-     * @test
-     */
-    public function it_updates_an_existing_product_with_taxons()
-    {
-        $this->consumeTaxon('master', null, ['en_US' => 'Master catalog']);
-        $this->consumeTaxon('master__goodies', 'master', ['en_US' => 'Goodies']);
-        $this->consumeTaxon('master__goodies__tshirts', 'master__goodies', ['en_US' => 'T-Shirts']);
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_updated",
-            "payload": {
-                "identifier": "AKNTS_BPXS",
-                "categories": ["master__goodies", "master__goodies__tshirts"],
-                "enabled": true,
-                "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
-                },
-                "created": "2017-04-18T16:12:55+02:00",
-                "associations": {}
-            }
-        }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",

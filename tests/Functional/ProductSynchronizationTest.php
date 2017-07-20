@@ -16,7 +16,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
     /**
      * @test
      */
-    public function it_adds_a_new_product_with_basic_product_information()
+    public function it_adds_and_updates_a_product_with_basic_product_information()
     {
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -29,7 +29,6 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
                     "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
         }'));
@@ -43,27 +42,6 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
         Assert::assertSame('T-Shirt description', $product->getTranslation('en_US')->getDescription());
         Assert::assertEquals(\DateTime::createFromFormat(\DateTime::W3C, '2017-04-18T16:12:55+02:00'), $product->getCreatedAt());
         Assert::assertTrue($product->isEnabled());
-    }
-
-    /**
-     * @test
-     */
-    public function it_updates_an_existing_product_with_basic_product_information()
-    {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_updated",
-            "payload": {
-                "identifier": "AKNTS_BPXS",
-                "categories": [],
-                "enabled": true,
-                "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
-                },
-                "created": "2017-04-18T16:12:55+02:00",
-                "associations": {}
-            }
-        }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",

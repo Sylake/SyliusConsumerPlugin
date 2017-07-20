@@ -49,43 +49,19 @@ final class AttributeSynchronizationTest extends KernelTestCase
     /**
      * @test
      */
-    public function it_adds_new_attribute_from_akeneo_message()
+    public function it_adds_and_updates_an_attribute_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_attribute_updated",
             "payload": {
                 "code": "main_color",
                 "type": "pim_catalog_simpleselect",
-                "group": "color",
-                "unique": false,
-                "useable_as_grid_filter": true,
-                "allowed_extensions": [],
-                "metric_family": null,
-                "default_metric_unit": null,
-                "reference_data_name": null,
-                "available_locales": [],
-                "max_characters": null,
-                "validation_rule": null,
-                "validation_regexp": null,
-                "wysiwyg_enabled": null,
-                "number_min": null,
-                "number_max": null,
-                "decimals_allowed": null,
-                "negative_allowed": null,
-                "date_min": null,
-                "date_max": null,
-                "max_file_size": null,
-                "minimum_input_length": null,
-                "sort_order": 1,
-                "localizable": false,
-                "scopable": false,
                 "labels": {
                     "de_DE": "Hauptfarbe",
                     "en_US": "Main color",
                     "fr_FR": "Couleur principale"
                 }
-            },
-            "recordedOn": "2017-05-22 14:16:59"
+            }
         }'));
 
         /** @var ProductAttributeInterface|null $attribute */
@@ -95,85 +71,18 @@ final class AttributeSynchronizationTest extends KernelTestCase
         Assert::assertSame('Hauptfarbe', $attribute->getTranslation('de_DE')->getName());
         Assert::assertSame('Main color', $attribute->getTranslation('en_US')->getName());
         Assert::assertSame('Couleur principale', $attribute->getTranslation('fr_FR')->getName());
-    }
-
-    /**
-     * @test
-     */
-    public function it_updates_existing_attribute_from_akeneo_message()
-    {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_updated",
-            "payload": {
-                "code": "main_color",
-                "type": "pim_catalog_simpleselect",
-                "group": "color",
-                "unique": false,
-                "useable_as_grid_filter": true,
-                "allowed_extensions": [],
-                "metric_family": null,
-                "default_metric_unit": null,
-                "reference_data_name": null,
-                "available_locales": [],
-                "max_characters": null,
-                "validation_rule": null,
-                "validation_regexp": null,
-                "wysiwyg_enabled": null,
-                "number_min": null,
-                "number_max": null,
-                "decimals_allowed": null,
-                "negative_allowed": null,
-                "date_min": null,
-                "date_max": null,
-                "max_file_size": null,
-                "minimum_input_length": null,
-                "sort_order": 1,
-                "localizable": false,
-                "scopable": false,
-                "labels": {
-                    "de_DE": "Hauptfarbe",
-                    "en_US": "Main color",
-                    "fr_FR": "Couleur principale"
-                }
-            },
-            "recordedOn": "2017-05-22 14:16:59"
-        }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_attribute_updated",
             "payload": {
                 "code": "main_color",
                 "type": "pim_catalog_simpleselect",
-                "group": "color",
-                "unique": false,
-                "useable_as_grid_filter": true,
-                "allowed_extensions": [],
-                "metric_family": null,
-                "default_metric_unit": null,
-                "reference_data_name": null,
-                "available_locales": [],
-                "max_characters": null,
-                "validation_rule": null,
-                "validation_regexp": null,
-                "wysiwyg_enabled": null,
-                "number_min": null,
-                "number_max": null,
-                "decimals_allowed": null,
-                "negative_allowed": null,
-                "date_min": null,
-                "date_max": null,
-                "max_file_size": null,
-                "minimum_input_length": null,
-                "sort_order": 1,
-                "localizable": false,
-                "scopable": false,
                 "labels": {
                     "de_DE": "Hauptfarbe (updated)",
                     "en_US": "Main color (updated)",
                     "fr_FR": "Couleur principale (updated)"
                 }
-            },
-            "recordedOn": "2017-05-22 14:16:59"
+            }
         }'));
 
         /** @var ProductAssociationTypeInterface|null $attribute */

@@ -17,7 +17,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
     /**
      * @test
      */
-    public function it_adds_a_new_product_with_associations()
+    public function it_adds_and_updates_a_product_with_associations()
     {
         $this->consumeAssociationType('SUBSTITUTION', ['en_US' => 'Substitution']);
         $this->consumeAssociationType('CROSS_SELL', ['en_US' => 'Cross sell']);
@@ -68,46 +68,6 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
         $this->assertArraysAreEqual(['AKNTS_WPXS'], $crossSellAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
             return $product->getCode();
         })->toArray());
-    }
-
-    /**
-     * @test
-     */
-    public function it_updates_an_existing_product_with_associations()
-    {
-        $this->consumeAssociationType('SUBSTITUTION', ['en_US' => 'Substitution']);
-        $this->consumeAssociationType('CROSS_SELL', ['en_US' => 'Cross sell']);
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_updated",
-            "payload": {
-                "identifier": "AKNTS_WPXS",
-                "categories": [],
-                "enabled": true,
-                "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt white and purple with short sleeve"}]
-                },
-                "created": "2017-04-18T16:12:55+02:00",
-                "associations": {}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_updated",
-            "payload": {
-                "identifier": "AKNTS_BPXS",
-                "categories": [],
-                "enabled": true,
-                "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
-                },
-                "created": "2017-04-18T16:12:55+02:00",
-                "associations": {
-                    "SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]},
-                    "CROSS_SELL": {"groups": [], "products": ["AKNTS_WPXS"]}
-                }
-            }
-        }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",

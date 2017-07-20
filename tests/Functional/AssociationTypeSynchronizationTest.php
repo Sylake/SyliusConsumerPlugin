@@ -48,7 +48,7 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
     /**
      * @test
      */
-    public function it_adds_new_association_type_from_akeneo_message()
+    public function it_adds_and_updates_an_association_type_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_association_type_updated",
@@ -59,8 +59,7 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
                     "en_US": "Substitution",
                     "fr_FR": "Remplacement"
                 }
-            },
-            "recordedOn": "2017-05-22 12:51:29"
+            }
         }'));
 
         /** @var ProductAssociationTypeInterface|null $associationType */
@@ -70,25 +69,6 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
         Assert::assertSame('Ersatz', $associationType->getTranslation('de_DE')->getName());
         Assert::assertSame('Substitution', $associationType->getTranslation('en_US')->getName());
         Assert::assertSame('Remplacement', $associationType->getTranslation('fr_FR')->getName());
-    }
-
-    /**
-     * @test
-     */
-    public function it_updates_existing_association_type_from_akeneo_message()
-    {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_updated",
-            "payload": {
-                "code": "SUBSTITUTION",
-                "labels": {
-                    "de_DE": "Ersatz",
-                    "en_US": "Substitution",
-                    "fr_FR": "Remplacement"
-                }
-            },
-            "recordedOn": "2017-05-22 12:51:29"
-        }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_association_type_updated",
@@ -99,8 +79,7 @@ final class AssociationTypeSynchronizationTest extends KernelTestCase
                     "en_US": "Substitution (updated)",
                     "fr_FR": "Remplacement (updated)"
                 }
-            },
-            "recordedOn": "2017-05-22 12:51:29"
+            }
         }'));
 
         /** @var ProductAssociationTypeInterface|null $associationType */

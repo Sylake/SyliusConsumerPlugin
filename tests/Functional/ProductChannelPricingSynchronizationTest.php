@@ -18,7 +18,7 @@ final class ProductChannelPricingSynchronizationTest extends ProductSynchronizat
     /**
      * @test
      */
-    public function it_adds_a_new_product_with_channels_and_pricing()
+    public function it_adds_and_updates_a_product_with_channels_and_pricing()
     {
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -54,30 +54,6 @@ final class ProductChannelPricingSynchronizationTest extends ProductSynchronizat
         Assert::assertSame(1000, $productVariant->getChannelPricingForChannel($this->getChannelByCode('EUR_2'))->getPrice());
         Assert::assertSame(1400, $productVariant->getChannelPricingForChannel($this->getChannelByCode('USD_1'))->getPrice());
         Assert::assertNull($productVariant->getChannelPricingForChannel($this->getChannelByCode('GBP_1')));
-    }
-
-    /**
-     * @test
-     */
-    public function it_updates_an_existing_product_with_channels_and_pricing()
-    {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_updated",
-            "payload": {
-                "identifier": "AKNTS_BPXS",
-                "categories": [],
-                "enabled": true,
-                "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "price": [{"locale": null, "scope": null, "data": [
-                        {"amount": 10, "currency": "EUR"}, 
-                        {"amount": 14, "currency": "USD"}
-                    ]}]
-                },
-                "created": "2017-04-18T16:12:55+02:00",
-                "associations": {}
-            }
-        }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
