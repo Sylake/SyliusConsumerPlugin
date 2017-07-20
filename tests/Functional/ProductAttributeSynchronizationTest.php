@@ -282,6 +282,58 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     /**
      * @test
      */
+    public function it_adds_and_updates_an_integer_attribute(): void
+    {
+        $this->consumeAttribute('megapixels', 'pim_catalog_number', ['en_US' => 'Megapixels']);
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "megapixels": [{"locale": null, "scope": null, "data": 12}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertSame(12, $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
+        Assert::assertSame(12, $product->getAttributeByCodeAndLocale('megapixels', 'de_DE')->getValue());
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "megapixels": [{"locale": "en_US", "scope": null, "data": 9}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertSame(9, $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
+        Assert::assertNull($product->getAttributeByCodeAndLocale('megapixels', 'de_DE'));
+    }
+
+    /**
+     * @test
+     */
     public function it_updates_an_existing_product_with_attributes()
     {
         $this->consumeAttribute('main_color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
