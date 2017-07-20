@@ -123,6 +123,61 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     /**
      * @test
      */
+    public function it_adds_and_updates_a_multiple_simple_select_attribute(): void
+    {
+        $this->consumeAttribute('color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
+
+        $this->consumeAttributeOption('color', 'black', ['en_US' => 'Black', 'de_DE' => 'Schwarz']);
+        $this->consumeAttributeOption('color', 'red', ['en_US' => 'Red', 'de_DE' => 'Rot']);
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "color": [{"locale": null, "scope": null, "data": ["black", "red"]}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertSame('Black, Red', $product->getAttributeByCodeAndLocale('color', 'en_US')->getValue());
+        Assert::assertSame('Schwarz, Rot', $product->getAttributeByCodeAndLocale('color', 'de_DE')->getValue());
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "color": [{"locale": "en_US", "scope": null, "data": ["black"]}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertSame('Black', $product->getAttributeByCodeAndLocale('color', 'en_US')->getValue());
+        Assert::assertNull($product->getAttributeByCodeAndLocale('color', 'de_DE'));
+    }
+
+    /**
+     * @test
+     */
     public function it_updates_an_existing_product_with_attributes()
     {
         $this->consumeAttribute('main_color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
