@@ -38,10 +38,41 @@ final class ImageAttributeProcessor implements AttributeProcessorInterface
             return [];
         }
 
-        foreach ($product->getImagesByType('akeneo') as $productImage) {
+        $currentImages = $product->getImagesByType('akeneo')->toArray();
+        $processedImages = $this->processImages($product, $attribute);
+
+        $compareImages = function (ProductImageInterface $a, ProductImageInterface $b): int {
+            return $a->getId() <=> $b->getId();
+        };
+
+        $productImageToAdd = array_udiff(
+            $processedImages,
+            $currentImages,
+            $compareImages
+        );
+        foreach ($productImageToAdd as $productImage) {
+            $product->addImage($productImage);
+        }
+
+        $productImageToRemove = array_udiff(
+            $currentImages,
+            $processedImages,
+            $compareImages
+        );
+        foreach ($productImageToRemove as $productImage) {
             $product->removeImage($productImage);
         }
 
+        return [];
+    }
+
+    private function supports(Attribute $attribute): bool
+    {
+        return $this->imageAttribute === $attribute->attribute() && (null === $attribute->data() || is_string($attribute->data()));
+    }
+
+    private function processImages(ProductInterface $product, Attribute $attribute): array
+    {
         if (null === $attribute->data()) {
             return [];
         }
@@ -60,13 +91,6 @@ final class ImageAttributeProcessor implements AttributeProcessorInterface
             $productImage->setPath($attribute->data());
         }
 
-        $product->addImage($productImage);
-
-        return [];
-    }
-
-    private function supports(Attribute $attribute): bool
-    {
-        return $this->imageAttribute === $attribute->attribute() && (null === $attribute->data() || is_string($attribute->data()));
+        return [$productImage];
     }
 }
