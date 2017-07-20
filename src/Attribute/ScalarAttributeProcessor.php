@@ -8,7 +8,7 @@ use Sylake\SyliusConsumerPlugin\Model\Attribute;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 
-final class StringAttributeProcessor implements AttributeProcessorInterface
+final class ScalarAttributeProcessor implements AttributeProcessorInterface
 {
     /** @var AttributeValueProviderInterface */
     private $attributeValueProvider;
@@ -37,17 +37,24 @@ final class StringAttributeProcessor implements AttributeProcessorInterface
             return;
         }
 
-        $attributeValue->setValue(null === $attribute->data() ? '' : $this->attributeOptionResolver->resolve(
-            $attribute->attribute(),
-            $attribute->locale(),
-            $attribute->data()
-        ));
+        $attributeValue->setValue($this->getValue($attribute));
 
         $product->addAttribute($attributeValue);
     }
 
+    private function getValue(Attribute $attribute)
+    {
+        $value = $attribute->data();
+
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        return $this->attributeOptionResolver->resolve($attribute->attribute(), $attribute->locale(), $value);
+    }
+
     private function supports(Attribute $attribute): bool
     {
-        return is_string($attribute->data()) && !empty($attribute->data());
+        return is_scalar($attribute->data()) && (null !== $attribute->data() || '' !== $attribute->data());
     }
 }

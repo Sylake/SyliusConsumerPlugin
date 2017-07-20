@@ -253,8 +253,8 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertTrue($product->getAttributeByCodeAndLocale('subtitle', 'en_US')->getValue());
-        Assert::assertTrue($product->getAttributeByCodeAndLocale('subtitle', 'de_DE')->getValue());
+        Assert::assertTrue($product->getAttributeByCodeAndLocale('awesome_cert', 'en_US')->getValue());
+        Assert::assertTrue($product->getAttributeByCodeAndLocale('awesome_cert', 'de_DE')->getValue());
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -275,8 +275,8 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertFalse($product->getAttributeByCodeAndLocale('subtitle', 'en_US')->getValue());
-        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'de_DE'));
+        Assert::assertFalse($product->getAttributeByCodeAndLocale('awesome_cert', 'en_US')->getValue());
+        Assert::assertNull($product->getAttributeByCodeAndLocale('awesome_cert', 'de_DE'));
     }
 
     /**
