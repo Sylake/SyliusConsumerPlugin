@@ -11,12 +11,12 @@ use Sylius\Component\Core\Model\ProductInterface;
 /**
  * @author Kamil Kokot <kamil@kokot.me>
  */
-final class ProductSynchronizationTest extends ProductSynchronizationTestCase
+final class ProductImageSynchronizationTest extends ProductSynchronizationTestCase
 {
     /**
      * @test
      */
-    public function it_adds_a_new_product_with_basic_product_information()
+    public function it_adds_a_new_product_with_images()
     {
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -26,10 +26,9 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
                 "enabled": true,
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
+                    "images": [{"locale": null, "scope": null, "data": "8\/7\/5\/3\/8753d08e04e7ecdda77ef77573cd42bbfb029dcb_image.jpg"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
         }'));
@@ -38,17 +37,19 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame('Akeneo T-Shirt black and purple with short sleeve', $product->getTranslation('en_US')->getName());
-        Assert::assertSame('aknts-bpxs-akeneo-t-shirt-black-and-purple-with-short-sleeve', $product->getTranslation('en_US')->getSlug());
-        Assert::assertSame('T-Shirt description', $product->getTranslation('en_US')->getDescription());
-        Assert::assertEquals(\DateTime::createFromFormat(\DateTime::W3C, '2017-04-18T16:12:55+02:00'), $product->getCreatedAt());
-        Assert::assertTrue($product->isEnabled());
+
+        $akeneoProductImages = $product->getImagesByType('akeneo')->toArray();
+        $akeneoProductImage = current($akeneoProductImages);
+
+        Assert::assertNotFalse($akeneoProductImage);
+        Assert::assertSame('8/7/5/3/8753d08e04e7ecdda77ef77573cd42bbfb029dcb_image.jpg', $akeneoProductImage->getPath());
+        Assert::assertSame('akeneo', $akeneoProductImage->getType());
     }
 
     /**
      * @test
      */
-    public function it_updates_an_existing_product_with_basic_product_information()
+    public function it_updates_an_existing_product_with_images()
     {
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -58,7 +59,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
                 "enabled": true,
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
+                    "images": [{"locale": null, "scope": null, "data": "8\/7\/5\/3\/8753d08e04e7ecdda77ef77573cd42bbfb029dcb_image.jpg"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
@@ -70,10 +71,10 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
             "payload": {
                 "identifier": "AKNTS_BPXS",
                 "categories": [],
-                "enabled": false,
+                "enabled": true,
                 "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve (updated)"}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description (updated)"}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "images": [{"locale": null, "scope": null, "data": null}]
                 },
                 "created": "2017-04-18T16:12:58+02:00",
                 "associations": {}
@@ -84,10 +85,6 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame('Akeneo T-Shirt black and purple with short sleeve (updated)', $product->getTranslation('en_US')->getName());
-        Assert::assertSame('aknts-bpxs-akeneo-t-shirt-black-and-purple-with-short-sleeve-updated', $product->getTranslation('en_US')->getSlug());
-        Assert::assertSame('T-Shirt description (updated)', $product->getTranslation('en_US')->getDescription());
-        Assert::assertEquals(\DateTime::createFromFormat(\DateTime::W3C, '2017-04-18T16:12:58+02:00'), $product->getCreatedAt());
-        Assert::assertFalse($product->isEnabled());
+        Assert::assertSame([], $product->getImagesByType('akeneo')->toArray());
     }
 }
