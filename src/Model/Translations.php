@@ -7,7 +7,7 @@ final class Translations implements \IteratorAggregate
     /**
      * @var array
      */
-    private $translations;
+    private $translations = [];
 
     /**
      * @param array $translations
@@ -29,9 +29,9 @@ final class Translations implements \IteratorAggregate
                     gettype($translation)
                 ));
             }
-        }
 
-        $this->translations = $translations;
+            $this->translations[$locale] = $translation;
+        }
     }
 
     public function toArray(): array

@@ -13,16 +13,20 @@ final class TranslationsTest extends TestCase
      */
     public function it_represents_translations()
     {
-        $translations = [
+        $translations = new Translations([
             'en' => 'Tree',
             'pl_PL' => 'Drzewo',
-        ];
+            'de_DE' => null,
+        ]);
 
         $traversedTranslations = [];
-        foreach (new Translations($translations) as $locale => $translation) {
+        foreach ($translations as $locale => $translation) {
             $traversedTranslations[$locale] = $translation;
         }
 
-        Assert::assertSame($translations, $traversedTranslations);
+        Assert::assertSame([
+            'en' => 'Tree',
+            'pl_PL' => 'Drzewo',
+        ], $traversedTranslations);
     }
 }
