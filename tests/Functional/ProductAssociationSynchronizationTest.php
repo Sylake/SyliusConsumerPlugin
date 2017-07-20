@@ -62,7 +62,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {
                     "SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]},
-                    "CROSS_SELL": {"groups": [], "products": ["AKNTS_WPXS"]}
+                    "CROSS_SELL": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS"]}
                 }
             }
         }');
@@ -79,7 +79,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
 
         $crossSellAssociation = $this->getProductAssociation($product, 'CROSS_SELL');
         Assert::assertNotNull($crossSellAssociation);
-        $this->assertArraysAreEqual(['AKNTS_WPXS'], $crossSellAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
+        $this->assertArraysAreEqual(['AKNTS_WPXS', 'AKNTS_PBXS'], $crossSellAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
             return $product->getCode();
         })->toArray());
 
