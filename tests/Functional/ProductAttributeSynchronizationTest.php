@@ -414,14 +414,10 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     /**
      * @test
      */
-    public function it_updates_an_existing_product_with_attributes()
+    public function it_removes_attributes_no_longer_existing_in_a_product()
     {
-        $this->consumeAttribute('main_color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
-        $this->consumeAttribute('tshirt_style', 'pim_catalog_simpleselect', ['en_US' => 'T-Shirt style']);
         $this->consumeAttribute('subtitle', 'pim_catalog_text', ['en_US' => 'Subtitle']);
 
-        $this->consumeAttributeOption('main_color', 'black', ['en_US' => 'Black', 'de_DE' => 'Schwarz']);
-
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
@@ -429,24 +425,6 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "categories": [],
                 "enabled": true,
                 "values": {
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "subtitle": [{"locale": "de_DE", "scope": null, "data": "German subtitle"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}]
-                },
-                "created": "2017-04-18T16:12:55+02:00",
-                "associations": {}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_product_updated",
-            "payload": {
-                "identifier": "AKNTS_BPXS",
-                "categories": [],
-                "enabled": true,
-                "values": {
-                    "main_color": [{"locale": null, "scope": null, "data": "red"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "subtitle": [{"locale": "en_US", "scope": null, "data": "English subtitle"}]
                 },
@@ -459,15 +437,28 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-
-        Assert::assertSame('red', $product->getAttributeByCodeAndLocale('main_color', 'en_US')->getValue());
-
-        Assert::assertNull($product->getAttributeByCodeAndLocale('tshirt_style', 'en_US'));
-
-        Assert::assertNull($product->getAttributeByCodeAndLocale('picture', 'en_US'));
-        Assert::assertNull($product->getAttributeByCodeAndLocale('picture', 'de_DE'));
-
         Assert::assertSame('English subtitle', $product->getAttributeByCodeAndLocale('subtitle', 'en_US')->getValue());
+        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'de_DE'));
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'en_US'));
         Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'de_DE'));
     }
 }
