@@ -18,7 +18,7 @@ final class ProductImageSynchronizationTest extends ProductSynchronizationTestCa
      */
     public function it_adds_and_updates_a_product_with_images()
     {
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -31,7 +31,7 @@ final class ProductImageSynchronizationTest extends ProductSynchronizationTestCa
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -45,7 +45,7 @@ final class ProductImageSynchronizationTest extends ProductSynchronizationTestCa
         Assert::assertSame('8/7/5/3/8753d08e04e7ecdda77ef77573cd42bbfb029dcb_image.jpg', $akeneoProductImage->getPath());
         Assert::assertSame('akeneo', $akeneoProductImage->getType());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -58,7 +58,7 @@ final class ProductImageSynchronizationTest extends ProductSynchronizationTestCa
                 "created": "2017-04-18T16:12:58+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);

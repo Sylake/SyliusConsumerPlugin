@@ -18,7 +18,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
      */
     public function it_adds_and_updates_a_product_with_basic_product_information()
     {
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -31,7 +31,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -43,7 +43,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
         Assert::assertEquals(\DateTime::createFromFormat(\DateTime::W3C, '2017-04-18T16:12:55+02:00'), $product->getCreatedAt());
         Assert::assertTrue($product->isEnabled());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -56,7 +56,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
                 "created": "2017-04-18T16:12:58+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);

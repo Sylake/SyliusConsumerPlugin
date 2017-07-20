@@ -20,7 +20,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     {
         $this->consumeAttribute('subtitle', 'pim_catalog_text', ['en_US' => 'Subtitle']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -33,7 +33,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -42,7 +42,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('subtitle', 'en_US')->getValue());
         Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('subtitle', 'de_DE')->getValue());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -55,7 +55,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -72,7 +72,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     {
         $this->consumeAttribute('short_description', 'pim_catalog_textarea', ['en_US' => 'Short description']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -85,7 +85,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -94,7 +94,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('short_description', 'en_US')->getValue());
         Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('short_description', 'de_DE')->getValue());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -107,7 +107,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -127,7 +127,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $this->consumeAttributeOption('color', 'black', ['en_US' => 'Black', 'de_DE' => 'Schwarz']);
         $this->consumeAttributeOption('color', 'red', ['en_US' => 'Red', 'de_DE' => 'Rot']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -140,7 +140,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -149,7 +149,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         Assert::assertSame('Black', $product->getAttributeByCodeAndLocale('color', 'en_US')->getValue());
         Assert::assertSame('Schwarz', $product->getAttributeByCodeAndLocale('color', 'de_DE')->getValue());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -162,7 +162,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -182,7 +182,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $this->consumeAttributeOption('color', 'black', ['en_US' => 'Black', 'de_DE' => 'Schwarz']);
         $this->consumeAttributeOption('color', 'red', ['en_US' => 'Red', 'de_DE' => 'Rot']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -195,7 +195,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -204,7 +204,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         Assert::assertSame('Black, Red', $product->getAttributeByCodeAndLocale('color', 'en_US')->getValue());
         Assert::assertSame('Schwarz, Rot', $product->getAttributeByCodeAndLocale('color', 'de_DE')->getValue());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -217,7 +217,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -234,7 +234,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     {
         $this->consumeAttribute('awesome_cert', 'pim_catalog_boolean', ['en_US' => 'Certificate of awesomeness']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -247,7 +247,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -256,7 +256,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         Assert::assertTrue($product->getAttributeByCodeAndLocale('awesome_cert', 'en_US')->getValue());
         Assert::assertTrue($product->getAttributeByCodeAndLocale('awesome_cert', 'de_DE')->getValue());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -269,7 +269,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -286,7 +286,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     {
         $this->consumeAttribute('megapixels', 'pim_catalog_number', ['en_US' => 'Megapixels']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -299,7 +299,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -308,7 +308,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         Assert::assertSame(12, $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
         Assert::assertSame(12, $product->getAttributeByCodeAndLocale('megapixels', 'de_DE')->getValue());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -321,7 +321,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -338,7 +338,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     {
         $this->consumeAttribute('megapixels', 'pim_catalog_number', ['en_US' => 'Megapixels']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -351,7 +351,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -360,7 +360,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         Assert::assertSame(12.3, $product->getAttributeByCodeAndLocale('megapixels', 'en_US')->getValue());
         Assert::assertSame(12.3, $product->getAttributeByCodeAndLocale('megapixels', 'de_DE')->getValue());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -373,7 +373,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -388,7 +388,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
      */
     public function it_ignores_unexisting_attributes()
     {
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -401,7 +401,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -418,7 +418,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     {
         $this->consumeAttribute('subtitle', 'pim_catalog_text', ['en_US' => 'Subtitle']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -431,7 +431,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -448,7 +448,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     {
         $this->consumeAttribute('subtitle', 'pim_catalog_text', ['en_US' => 'Subtitle']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -461,7 +461,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -478,7 +478,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     {
         $this->consumeAttribute('subtitle', 'pim_catalog_text', ['en_US' => 'Subtitle']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -491,7 +491,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -500,7 +500,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         Assert::assertSame('English subtitle', $product->getAttributeByCodeAndLocale('subtitle', 'en_US')->getValue());
         Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'de_DE'));
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -512,7 +512,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);

@@ -22,7 +22,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
         $this->consumeAssociationType('SUBSTITUTION', ['en_US' => 'Substitution']);
         $this->consumeAssociationType('CROSS_SELL', ['en_US' => 'Cross sell']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_WPXS",
@@ -34,9 +34,9 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -51,7 +51,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
                     "CROSS_SELL": {"groups": [], "products": ["AKNTS_WPXS"]}
                 }
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -69,7 +69,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
             return $product->getCode();
         })->toArray());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -83,7 +83,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
                     "SUBSTITUTION": {"groups": [], "products": []}
                 }
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);

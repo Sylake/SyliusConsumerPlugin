@@ -23,7 +23,7 @@ final class ProductTaxonSynchronizationTest extends ProductSynchronizationTestCa
         $this->consumeTaxon('master__goodies', 'master', ['en_US' => 'Goodies']);
         $this->consumeTaxon('master__goodies__tshirts', 'master__goodies', ['en_US' => 'T-Shirts']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -35,7 +35,7 @@ final class ProductTaxonSynchronizationTest extends ProductSynchronizationTestCa
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -46,7 +46,7 @@ final class ProductTaxonSynchronizationTest extends ProductSynchronizationTestCa
             return $taxon->getCode();
         })->toArray());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -58,7 +58,7 @@ final class ProductTaxonSynchronizationTest extends ProductSynchronizationTestCa
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
