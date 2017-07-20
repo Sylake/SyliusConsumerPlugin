@@ -39,6 +39,20 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
         $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
+                "identifier": "AKNTS_PBXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt white and purple with short sleeve"}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }');
+
+        $this->consume('{
+            "type": "akeneo_product_updated",
+            "payload": {
                 "identifier": "AKNTS_BPXS",
                 "categories": [],
                 "enabled": true,
@@ -59,7 +73,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
 
         $substitutionAssociation = $this->getProductAssociation($product, 'SUBSTITUTION');
         Assert::assertNotNull($substitutionAssociation);
-        $this->assertArraysAreEqual(['AKNTS_WPXS'], $substitutionAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
+        $this->assertArraysAreEqual(['AKNTS_WPXS', 'AKNTS_PBXS'], $substitutionAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
             return $product->getCode();
         })->toArray());
 
@@ -80,7 +94,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
                 },
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {
-                    "SUBSTITUTION": {"groups": [], "products": []}
+                    "SUBSTITUTION": {"groups": [], "products": ["AKNTS_PBXS"]}
                 }
             }
         }');
@@ -91,7 +105,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
 
         $substitutionAssociation = $this->getProductAssociation($product, 'SUBSTITUTION');
         Assert::assertNotNull($substitutionAssociation);
-        $this->assertArraysAreEqual([], $substitutionAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
+        $this->assertArraysAreEqual(['AKNTS_PBXS'], $substitutionAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
             return $product->getCode();
         })->toArray());
 

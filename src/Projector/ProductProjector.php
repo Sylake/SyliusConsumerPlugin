@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
+use Doctrine\Common\Collections\Collection;
 use Psr\Log\LoggerInterface;
 use Sylake\SyliusConsumerPlugin\Attribute\AttributeProcessorInterface;
 use Sylake\SyliusConsumerPlugin\Event\ProductUpdated;
@@ -185,9 +186,39 @@ final class ProductProjector
 
     private function handleAssociations(array $associations, ProductInterface $product): void
     {
-        foreach ($product->getAssociations() as $association) {
-            $product->removeAssociation($association);
+        /** @var Collection|ProductAssociationInterface[] $currentProductAssociations */
+        $currentProductAssociations = $product->getAssociations();
+        $currentProductAssociations = $currentProductAssociations->toArray();
+
+        $processedProductAssociations = $this->processAssociations($associations, $product);
+
+        $compareProductAssociations = function (ProductAssociationInterface $a, ProductAssociationInterface $b): int {
+            return $a->getId() <=> $b->getId();
+        };
+
+        $productAssociationToAdd = array_udiff(
+            $processedProductAssociations,
+            $currentProductAssociations,
+            $compareProductAssociations
+        );
+        foreach ($productAssociationToAdd as $productAssociation) {
+            $product->addAssociation($productAssociation);
         }
+
+        $productAssociationToRemove = array_udiff(
+            $currentProductAssociations,
+            $processedProductAssociations,
+            $compareProductAssociations
+        );
+        foreach ($productAssociationToRemove as $productAssociation) {
+            $product->removeAssociation($productAssociation);
+        }
+    }
+
+    private function processAssociations(array $associations, ProductInterface $product): array
+    {
+        /** @var ProductAssociationInterface[] $productAssociations */
+        $productAssociations = [];
 
         foreach ($associations as $associationTypeCode => $productsCodes) {
             /** @var ProductAssociationTypeInterface $associationType */
@@ -214,8 +245,24 @@ final class ProductProjector
                 $association->addAssociatedProduct($relatedProduct);
             }
 
-            $product->addAssociation($association);
+            $productAssociations[] = $association;
         }
+
+        return $productAssociations;
+    }
+
+    private function provideAssociation(ProductInterface $product, ProductAssociationTypeInterface $associationType): ProductAssociationInterface
+    {
+        /** @var ProductAssociationInterface $association */
+        $association = $this->associationRepository->findOneBy(['type' => $associationType, 'owner' => $product]);
+
+        if (null === $association) {
+            $association = $this->associationFactory->createNew();
+            $association->setOwner($product);
+            $association->setType($associationType);
+        }
+
+        return $association;
     }
 
     private function handleCreatedAt(\DateTime $createdAt, ProductInterface $product, ProductVariantInterface $productVariant): void
@@ -266,19 +313,5 @@ final class ProductProjector
         }
 
         return $productTaxon;
-    }
-
-    private function provideAssociation(ProductInterface $product, ProductAssociationTypeInterface $associationType): ProductAssociationInterface
-    {
-        /** @var ProductAssociationInterface $association */
-        $association = $this->associationRepository->findOneBy(['type' => $associationType, 'owner' => $product]);
-
-        if (null === $association) {
-            $association = $this->associationFactory->createNew();
-            $association->setOwner($product);
-            $association->setType($associationType);
-        }
-
-        return $association;
     }
 }
