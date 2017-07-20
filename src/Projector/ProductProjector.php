@@ -151,9 +151,36 @@ final class ProductProjector
 
     private function handleProductTaxons(array $taxonCodes, ProductInterface $product): void
     {
-        foreach ($product->getProductTaxons() as $productTaxon) {
+        $currentProductTaxons = $product->getProductTaxons()->toArray();
+        $processedProductTaxons = $this->processProductTaxons($taxonCodes, $product);
+
+        $compareProductTaxons = function (ProductTaxonInterface $a, ProductTaxonInterface $b): int {
+            return $a->getId() <=> $b->getId();
+        };
+
+        $productTaxonToAdd = array_udiff(
+            $processedProductTaxons,
+            $currentProductTaxons,
+            $compareProductTaxons
+        );
+        foreach ($productTaxonToAdd as $productTaxon) {
+            $product->addProductTaxon($productTaxon);
+        }
+
+        $productTaxonToRemove = array_udiff(
+            $currentProductTaxons,
+            $processedProductTaxons,
+            $compareProductTaxons
+        );
+        foreach ($productTaxonToRemove as $productTaxon) {
             $product->removeProductTaxon($productTaxon);
         }
+    }
+
+    private function processProductTaxons(array $taxonCodes, ProductInterface $product): array
+    {
+        /** @var ProductTaxonInterface[] $productTaxons */
+        $productTaxons = [];
 
         foreach ($taxonCodes as $taxonCode) {
             /** @var TaxonInterface $taxon */
@@ -163,10 +190,24 @@ final class ProductProjector
                 continue;
             }
 
-            $productTaxon = $this->provideProductTaxon($product, $taxon);
-
-            $product->addProductTaxon($productTaxon);
+            $productTaxons[] = $this->provideProductTaxon($product, $taxon);
         }
+
+        return $productTaxons;
+    }
+
+    private function provideProductTaxon(ProductInterface $product, TaxonInterface $taxon): ProductTaxonInterface
+    {
+        $productTaxon = $this->productTaxonRepository->findOneBy(['product' => $product, 'taxon' => $taxon]);
+
+        if (null === $productTaxon) {
+            /** @var ProductTaxonInterface $productTaxon */
+            $productTaxon = $this->productTaxonFactory->createNew();
+            $productTaxon->setTaxon($taxon);
+            $productTaxon->setProduct($product);
+        }
+
+        return $productTaxon;
     }
 
     private function handleAttributes(array $attributes, ProductInterface $product): void
@@ -299,19 +340,5 @@ final class ProductProjector
         $productVariant->setCode($code);
 
         return $productVariant;
-    }
-
-    private function provideProductTaxon(ProductInterface $product, TaxonInterface $taxon): ProductTaxonInterface
-    {
-        $productTaxon = $this->productTaxonRepository->findOneBy(['product' => $product, 'taxon' => $taxon]);
-
-        if (null === $productTaxon) {
-            /** @var ProductTaxonInterface $productTaxon */
-            $productTaxon = $this->productTaxonFactory->createNew();
-            $productTaxon->setTaxon($taxon);
-            $productTaxon->setProduct($product);
-        }
-
-        return $productTaxon;
     }
 }
