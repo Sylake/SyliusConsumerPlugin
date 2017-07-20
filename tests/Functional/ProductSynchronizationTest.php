@@ -79,28 +79,16 @@ final class ProductSynchronizationTest extends KernelTestCase
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
                 "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -123,56 +111,30 @@ final class ProductSynchronizationTest extends KernelTestCase
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": false,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve (updated)"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description (updated)"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description (updated)"}]
                 },
                 "created": "2017-04-18T16:12:58+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -195,29 +157,15 @@ final class ProductSynchronizationTest extends KernelTestCase
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}],
                     "images": [{"locale": null, "scope": null, "data": "8\/7\/5\/3\/8753d08e04e7ecdda77ef77573cd42bbfb029dcb_image.jpg"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -242,58 +190,30 @@ final class ProductSynchronizationTest extends KernelTestCase
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}],
                     "images": [{"locale": null, "scope": null, "data": "8\/7\/5\/3\/8753d08e04e7ecdda77ef77573cd42bbfb029dcb_image.jpg"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
-                "enabled": false,
+                "categories": [],
+                "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve (updated)"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description (updated)"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}],
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "images": [{"locale": null, "scope": null, "data": null}]
                 },
                 "created": "2017-04-18T16:12:58+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -314,8 +234,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "code": "master",
                 "parent": null,
                 "labels": {"en_US": "Master catalog"}
-            },
-            "recordedOn": "2017-05-22 14:24:40"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -324,8 +243,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "code": "master__goodies",
                 "parent": "master",
                 "labels": {"en_US": "Goodies"}
-            },
-            "recordedOn": "2017-05-22 14:24:40"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -334,36 +252,21 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "code": "master__goodies__tshirts",
                 "parent": "master__goodies",
                 "labels": {"en_US": "T-Shirts"}
-            },
-            "recordedOn": "2017-05-22 14:24:40"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
                 "categories": ["master__goodies", "master__goodies__tshirts"],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -387,8 +290,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "code": "master",
                 "parent": null,
                 "labels": {"en_US": "Master catalog"}
-            },
-            "recordedOn": "2017-05-22 14:24:40"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -397,8 +299,7 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "code": "master__goodies",
                 "parent": "master",
                 "labels": {"en_US": "Goodies"}
-            },
-            "recordedOn": "2017-05-22 14:24:40"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -407,64 +308,35 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "code": "master__goodies__tshirts",
                 "parent": "master__goodies",
                 "labels": {"en_US": "T-Shirts"}
-            },
-            "recordedOn": "2017-05-22 14:24:40"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
                 "categories": ["master__goodies", "master__goodies__tshirts"],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": null,
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
                 "categories": ["master__goodies"],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -487,32 +359,8 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "main_color",
                 "type": "pim_catalog_simpleselect",
-                "group": "color",
-                "unique": false,
-                "useable_as_grid_filter": true,
-                "allowed_extensions": [],
-                "metric_family": null,
-                "default_metric_unit": null,
-                "reference_data_name": null,
-                "available_locales": [],
-                "max_characters": null,
-                "validation_rule": null,
-                "validation_regexp": null,
-                "wysiwyg_enabled": null,
-                "number_min": null,
-                "number_max": null,
-                "decimals_allowed": null,
-                "negative_allowed": null,
-                "date_min": null,
-                "date_max": null,
-                "max_file_size": null,
-                "minimum_input_length": null,
-                "sort_order": 1,
-                "localizable": false,
-                "scopable": false,
                 "labels": {"en_US": "Main color"}
-            },
-            "recordedOn": "2017-05-22 14:16:59"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -520,32 +368,8 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "tshirt_style",
                 "type": "pim_catalog_simpleselect",
-                "group": "color",
-                "unique": false,
-                "useable_as_grid_filter": true,
-                "allowed_extensions": [],
-                "metric_family": null,
-                "default_metric_unit": null,
-                "reference_data_name": null,
-                "available_locales": [],
-                "max_characters": null,
-                "validation_rule": null,
-                "validation_regexp": null,
-                "wysiwyg_enabled": null,
-                "number_min": null,
-                "number_max": null,
-                "decimals_allowed": null,
-                "negative_allowed": null,
-                "date_min": null,
-                "date_max": null,
-                "max_file_size": null,
-                "minimum_input_length": null,
-                "sort_order": 1,
-                "localizable": false,
-                "scopable": false,
                 "labels": {"en_US": "T-Shirt style"}
-            },
-            "recordedOn": "2017-05-22 14:16:59"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -553,11 +377,7 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "black",
                 "attribute": "main_color",
-                "sort_order": 0,
-                "labels": {
-                    "de_DE": "Schwarz",
-                    "en_US": "Black"
-                }
+                "labels": {"de_DE": "Schwarz", "en_US": "Black"}
             }
         }'));
 
@@ -566,11 +386,7 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "crewneck",
                 "attribute": "tshirt_style",
-                "sort_order": 0,
-                "labels": {
-                    "de_DE": "Rundhalsausschnitt",
-                    "en_US": "Crewneck"
-                }
+                "labels": {"de_DE": "Rundhalsausschnitt", "en_US": "Crewneck"}
             }
         }'));
 
@@ -579,11 +395,7 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "short_sleeve",
                 "attribute": "tshirt_style",
-                "sort_order": 0,
-                "labels": {
-                    "de_DE": "Kurzarm",
-                    "en_US": "Short sleeve"
-                }
+                "labels": {"de_DE": "Kurzarm", "en_US": "Short sleeve"}
             }
         }'));
 
@@ -591,28 +403,17 @@ final class ProductSynchronizationTest extends KernelTestCase
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "additional_info": [{"locale": null, "scope": null, "data": null}],
                     "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -623,8 +424,8 @@ final class ProductSynchronizationTest extends KernelTestCase
         Assert::assertSame('Schwarz', $product->getAttributeByCodeAndLocale('main_color', 'de_DE')->getValue());
         Assert::assertSame('Crewneck, Short sleeve', $product->getAttributeByCodeAndLocale('tshirt_style', 'en_US')->getValue());
         Assert::assertSame('Rundhalsausschnitt, Kurzarm', $product->getAttributeByCodeAndLocale('tshirt_style', 'de_DE')->getValue());
-        Assert::assertNull($product->getAttributeByCodeAndLocale('picture', 'en_US'));
-        Assert::assertNull($product->getAttributeByCodeAndLocale('picture', 'de_DE'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('additional_info', 'en_US'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('additional_info', 'de_DE'));
     }
 
     /**
@@ -637,32 +438,8 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "main_color",
                 "type": "pim_catalog_simpleselect",
-                "group": "color",
-                "unique": false,
-                "useable_as_grid_filter": true,
-                "allowed_extensions": [],
-                "metric_family": null,
-                "default_metric_unit": null,
-                "reference_data_name": null,
-                "available_locales": [],
-                "max_characters": null,
-                "validation_rule": null,
-                "validation_regexp": null,
-                "wysiwyg_enabled": null,
-                "number_min": null,
-                "number_max": null,
-                "decimals_allowed": null,
-                "negative_allowed": null,
-                "date_min": null,
-                "date_max": null,
-                "max_file_size": null,
-                "minimum_input_length": null,
-                "sort_order": 1,
-                "localizable": false,
-                "scopable": false,
                 "labels": {"en_US": "Main color"}
-            },
-            "recordedOn": "2017-05-22 14:16:59"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -670,65 +447,17 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "tshirt_style",
                 "type": "pim_catalog_simpleselect",
-                "group": "color",
-                "unique": false,
-                "useable_as_grid_filter": true,
-                "allowed_extensions": [],
-                "metric_family": null,
-                "default_metric_unit": null,
-                "reference_data_name": null,
-                "available_locales": [],
-                "max_characters": null,
-                "validation_rule": null,
-                "validation_regexp": null,
-                "wysiwyg_enabled": null,
-                "number_min": null,
-                "number_max": null,
-                "decimals_allowed": null,
-                "negative_allowed": null,
-                "date_min": null,
-                "date_max": null,
-                "max_file_size": null,
-                "minimum_input_length": null,
-                "sort_order": 1,
-                "localizable": false,
-                "scopable": false,
                 "labels": {"en_US": "T-Shirt style"}
-            },
-            "recordedOn": "2017-05-22 14:16:59"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_attribute_updated",
             "payload": {
-                "code": "picture",
+                "code": "additional_info",
                 "type": "pim_catalog_text",
-                "group": "other",
-                "unique": false,
-                "useable_as_grid_filter": true,
-                "allowed_extensions": [],
-                "metric_family": null,
-                "default_metric_unit": null,
-                "reference_data_name": null,
-                "available_locales": [],
-                "max_characters": null,
-                "validation_rule": null,
-                "validation_regexp": null,
-                "wysiwyg_enabled": null,
-                "number_min": null,
-                "number_max": null,
-                "decimals_allowed": null,
-                "negative_allowed": null,
-                "date_min": null,
-                "date_max": null,
-                "max_file_size": null,
-                "minimum_input_length": null,
-                "sort_order": 1,
-                "localizable": false,
-                "scopable": false,
-                "labels": {"en_US": "Subtitle"}
-            },
-            "recordedOn": "2017-05-22 14:16:59"
+                "labels": {"en_US": "Additional information"}
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -736,89 +465,43 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "subtitle",
                 "type": "pim_catalog_text",
-                "group": "other",
-                "unique": false,
-                "useable_as_grid_filter": true,
-                "allowed_extensions": [],
-                "metric_family": null,
-                "default_metric_unit": null,
-                "reference_data_name": null,
-                "available_locales": [],
-                "max_characters": null,
-                "validation_rule": null,
-                "validation_regexp": null,
-                "wysiwyg_enabled": null,
-                "number_min": null,
-                "number_max": null,
-                "decimals_allowed": null,
-                "negative_allowed": null,
-                "date_min": null,
-                "date_max": null,
-                "max_file_size": null,
-                "minimum_input_length": null,
-                "sort_order": 1,
-                "localizable": false,
-                "scopable": false,
                 "labels": {"en_US": "Subtitle"}
-            },
-            "recordedOn": "2017-05-22 14:16:59"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "additional_info": [{"locale": null, "scope": null, "data": null}],
                     "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}],
-                    "subtitle": [{"locale": "de_DE", "scope": null, "data": "German subtitle"}]
+                    "subtitle": [{"locale": "de_DE", "scope": null, "data": "German subtitle"}],
+                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
+                    "additional_info": [{"locale": null, "scope": null, "data": null}],
                     "main_color": [{"locale": null, "scope": null, "data": "red"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}],
                     "subtitle": [{"locale": "en_US", "scope": null, "data": "English subtitle"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -847,8 +530,7 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "SUBSTITUTION",
                 "labels": {"en_US": "Substitution"}
-            },
-            "recordedOn": "2017-05-22 12:51:29"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -856,67 +538,38 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "CROSS_SELL",
                 "labels": {"en_US": "Cross sell"}
-            },
-            "recordedOn": "2017-05-22 12:51:29"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_WPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "white"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt white and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt white and purple with short sleeve"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
                 "associations": {}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
                 "associations": {
                     "SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]},
                     "CROSS_SELL": {"groups": [], "products": ["AKNTS_WPXS"]}
                 }
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -946,8 +599,7 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "SUBSTITUTION",
                 "labels": {"en_US": "Substitution"}
-            },
-            "recordedOn": "2017-05-22 12:51:29"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
@@ -955,95 +607,54 @@ final class ProductSynchronizationTest extends KernelTestCase
             "payload": {
                 "code": "CROSS_SELL",
                 "labels": {"en_US": "Cross sell"}
-            },
-            "recordedOn": "2017-05-22 12:51:29"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_WPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "white"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt white and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt white and purple with short sleeve"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
                 "associations": {}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
                 "associations": {
                     "SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]},
                     "CROSS_SELL": {"groups": [], "products": ["AKNTS_WPXS"]}
                 }
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": []}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {
+                    "SUBSTITUTION": {"groups": [], "products": []}
+                }
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -1069,28 +680,18 @@ final class ProductSynchronizationTest extends KernelTestCase
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "price": [{"locale": null, "scope": null, "data": [
+                        {"amount": 10, "currency": "EUR"}, 
+                        {"amount": 14, "currency": "USD"}
+                    ]}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
@@ -1120,56 +721,36 @@ final class ProductSynchronizationTest extends KernelTestCase
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 10, "currency": "EUR"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "price": [{"locale": null, "scope": null, "data": [
+                        {"amount": 10, "currency": "EUR"}, 
+                        {"amount": 14, "currency": "USD"}
+                    ]}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
-                "family": "tshirts",
-                "groups": [],
-                "variant_group": "akeneo_tshirt",
-                "categories": ["goodies", "tshirts"],
+                "categories": [],
                 "enabled": true,
                 "values": {
-                    "sku": [{"locale": null, "scope": null, "data": "AKNTS_BPXS"}],
-                    "clothing_size": [{"locale": null, "scope": null, "data": "xs"}],
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "secondary_color": [{"locale": null, "scope": null, "data": "purple"}],
-                    "tshirt_materials": [{"locale": null, "scope": null, "data": "cotton"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}],
-                    "price": [{"locale": null, "scope": null, "data": [{"amount": 9, "currency": "GBP"}, {"amount": 14, "currency": "USD"}]}],
-                    "description": [{"locale": "de_DE", "scope": "mobile", "data": "T-Shirt description"}],
-                    "picture": [{"locale": null, "scope": null, "data": null}]
+                    "price": [{"locale": null, "scope": null, "data": [
+                        {"amount": 9, "currency": "GBP"}, 
+                        {"amount": 14, "currency": "USD"}
+                    ]}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
-                "updated": "2017-04-18T16:12:55+02:00",
-                "associations": {"SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]}}
-            },
-            "recordedOn": "2017-05-22 10:13:34"
+                "associations": {}
+            }
         }'));
 
         /** @var ProductInterface|null $product */
