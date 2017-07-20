@@ -18,7 +18,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
      */
     public function it_adds_and_updates_a_text_attribute(): void
     {
-        $this->consumeAttribute('text_attribute', 'pim_catalog_text', ['en_US' => 'Text attribute']);
+        $this->consumeAttribute('subtitle', 'pim_catalog_text', ['en_US' => 'Subtitle']);
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -28,7 +28,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "enabled": true,
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "text_attribute": [{"locale": null, "scope": null, "data": "Foo bar (locale independent)"}]
+                    "subtitle": [{"locale": null, "scope": null, "data": "Foo bar (locale independent)"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
@@ -39,8 +39,8 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('text_attribute', 'en_US')->getValue());
-        Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('text_attribute', 'de_DE')->getValue());
+        Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('subtitle', 'en_US')->getValue());
+        Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('subtitle', 'de_DE')->getValue());
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -50,7 +50,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "enabled": true,
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "text_attribute": [{"locale": "en_US", "scope": null, "data": "Foo bar (en_US)"}]
+                    "subtitle": [{"locale": "en_US", "scope": null, "data": "Foo bar (en_US)"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
@@ -61,14 +61,14 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame('Foo bar (en_US)', $product->getAttributeByCodeAndLocale('text_attribute', 'en_US')->getValue());
-        Assert::assertNull($product->getAttributeByCodeAndLocale('text_attribute', 'de_DE'));
+        Assert::assertSame('Foo bar (en_US)', $product->getAttributeByCodeAndLocale('subtitle', 'en_US')->getValue());
+        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'de_DE'));
     }
 
     /**
      * @test
      */
-    public function it_adds_and_updates_a_single_simple_select_attribute(): void
+    public function it_adds_and_updates_a_simple_select_attribute(): void
     {
         $this->consumeAttribute('color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
 
@@ -123,9 +123,9 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     /**
      * @test
      */
-    public function it_adds_and_updates_a_multiple_simple_select_attribute(): void
+    public function it_adds_and_updates_a_multi_select_attribute(): void
     {
-        $this->consumeAttribute('color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
+        $this->consumeAttribute('color', 'pim_catalog_multiselect', ['en_US' => 'Main color']);
 
         $this->consumeAttributeOption('color', 'black', ['en_US' => 'Black', 'de_DE' => 'Schwarz']);
         $this->consumeAttributeOption('color', 'red', ['en_US' => 'Red', 'de_DE' => 'Rot']);
