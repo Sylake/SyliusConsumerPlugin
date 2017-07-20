@@ -38,12 +38,44 @@ final class ChannelAttributeProcessor implements AttributeProcessorInterface
             return [];
         }
 
-        foreach ($product->getChannels() as $channel) {
-            $product->removeChannel($channel);
+        $currentChannels = $product->getChannels()->toArray();
+        $processedChannels = $this->processChannels($attribute);
+
+        $compareChannels = function (ChannelInterface $a, ChannelInterface $b): int {
+            return $a->getId() <=> $b->getId();
+        };
+
+        $productChannelToAdd = array_udiff(
+            $processedChannels,
+            $currentChannels,
+            $compareChannels
+        );
+        foreach ($productChannelToAdd as $productChannel) {
+            $product->addChannel($productChannel);
         }
 
+        $productChannelToRemove = array_udiff(
+            $currentChannels,
+            $processedChannels,
+            $compareChannels
+        );
+        foreach ($productChannelToRemove as $productChannel) {
+            $product->removeChannel($productChannel);
+        }
+
+        return [];
+    }
+
+    private function supports(Attribute $attribute): bool
+    {
+        return $this->priceAttribute === $attribute->attribute() && is_array($attribute->data());
+    }
+
+    private function processChannels(Attribute $attribute): array
+    {
         /** @var ChannelInterface[] $channels */
         $channels = [];
+
         foreach ($attribute->data() as $price) {
             if (null === $price['amount']) {
                 continue;
@@ -58,15 +90,6 @@ final class ChannelAttributeProcessor implements AttributeProcessorInterface
             ));
         }
 
-        foreach ($channels as $channel) {
-            $product->addChannel($channel);
-        }
-
-        return [];
-    }
-
-    private function supports(Attribute $attribute): bool
-    {
-        return $this->priceAttribute === $attribute->attribute() && is_array($attribute->data());
+        return $channels;
     }
 }
