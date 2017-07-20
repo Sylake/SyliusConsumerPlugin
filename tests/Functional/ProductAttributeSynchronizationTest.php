@@ -414,6 +414,36 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     /**
      * @test
      */
+    public function it_ignores_null_attributes()
+    {
+        $this->consumeAttribute('subtitle', 'pim_catalog_text', ['en_US' => 'Subtitle']);
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "subtitle": [{"locale": null, "scope": null, "data": null}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'en_US'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'de_DE'));
+    }
+
+    /**
+     * @test
+     */
     public function it_removes_attributes_no_longer_existing_in_a_product()
     {
         $this->consumeAttribute('subtitle', 'pim_catalog_text', ['en_US' => 'Subtitle']);
