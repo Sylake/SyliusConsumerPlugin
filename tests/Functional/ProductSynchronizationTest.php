@@ -228,32 +228,9 @@ final class ProductSynchronizationTest extends KernelTestCase
      */
     public function it_adds_a_new_product_with_taxons()
     {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_updated",
-            "payload": {
-                "code": "master",
-                "parent": null,
-                "labels": {"en_US": "Master catalog"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_updated",
-            "payload": {
-                "code": "master__goodies",
-                "parent": "master",
-                "labels": {"en_US": "Goodies"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_updated",
-            "payload": {
-                "code": "master__goodies__tshirts",
-                "parent": "master__goodies",
-                "labels": {"en_US": "T-Shirts"}
-            }
-        }'));
+        $this->consumeTaxon('master', null, ['en_US' => 'Master catalog']);
+        $this->consumeTaxon('master__goodies', 'master', ['en_US' => 'Goodies']);
+        $this->consumeTaxon('master__goodies__tshirts', 'master__goodies', ['en_US' => 'T-Shirts']);
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -284,32 +261,9 @@ final class ProductSynchronizationTest extends KernelTestCase
      */
     public function it_updates_an_existing_product_with_taxons()
     {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_updated",
-            "payload": {
-                "code": "master",
-                "parent": null,
-                "labels": {"en_US": "Master catalog"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_updated",
-            "payload": {
-                "code": "master__goodies",
-                "parent": "master",
-                "labels": {"en_US": "Goodies"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_updated",
-            "payload": {
-                "code": "master__goodies__tshirts",
-                "parent": "master__goodies",
-                "labels": {"en_US": "T-Shirts"}
-            }
-        }'));
+        $this->consumeTaxon('master', null, ['en_US' => 'Master catalog']);
+        $this->consumeTaxon('master__goodies', 'master', ['en_US' => 'Goodies']);
+        $this->consumeTaxon('master__goodies__tshirts', 'master__goodies', ['en_US' => 'T-Shirts']);
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -354,50 +308,12 @@ final class ProductSynchronizationTest extends KernelTestCase
      */
     public function it_adds_a_new_product_with_attributes()
     {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_updated",
-            "payload": {
-                "code": "main_color",
-                "type": "pim_catalog_simpleselect",
-                "labels": {"en_US": "Main color"}
-            }
-        }'));
+        $this->consumeAttribute('main_color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
+        $this->consumeAttribute('tshirt_style', 'pim_catalog_simpleselect', ['en_US' => 'T-Shirt style']);
 
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_updated",
-            "payload": {
-                "code": "tshirt_style",
-                "type": "pim_catalog_simpleselect",
-                "labels": {"en_US": "T-Shirt style"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_updated",
-            "payload": {
-                "code": "black",
-                "attribute": "main_color",
-                "labels": {"de_DE": "Schwarz", "en_US": "Black"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_updated",
-            "payload": {
-                "code": "crewneck",
-                "attribute": "tshirt_style",
-                "labels": {"de_DE": "Rundhalsausschnitt", "en_US": "Crewneck"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_updated",
-            "payload": {
-                "code": "short_sleeve",
-                "attribute": "tshirt_style",
-                "labels": {"de_DE": "Kurzarm", "en_US": "Short sleeve"}
-            }
-        }'));
+        $this->consumeAttributeOption('main_color', 'black', ['en_US' => 'Black', 'de_DE' => 'Schwarz']);
+        $this->consumeAttributeOption('tshirt_style', 'crewneck', ['en_US' => 'Crewneck', 'de_DE' => 'Rundhalsausschnitt']);
+        $this->consumeAttributeOption('tshirt_style', 'short_sleeve', ['en_US' => 'Short sleeve', 'de_DE' => 'Kurzarm']);
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -406,9 +322,9 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "categories": [],
                 "enabled": true,
                 "values": {
-                    "additional_info": [{"locale": null, "scope": null, "data": null}],
                     "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "subtitle": [{"locale": "en_US", "scope": null, "data": "English subtitle"}],
                     "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
@@ -420,12 +336,15 @@ final class ProductSynchronizationTest extends KernelTestCase
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
+
         Assert::assertSame('Black', $product->getAttributeByCodeAndLocale('main_color', 'en_US')->getValue());
         Assert::assertSame('Schwarz', $product->getAttributeByCodeAndLocale('main_color', 'de_DE')->getValue());
+
         Assert::assertSame('Crewneck, Short sleeve', $product->getAttributeByCodeAndLocale('tshirt_style', 'en_US')->getValue());
         Assert::assertSame('Rundhalsausschnitt, Kurzarm', $product->getAttributeByCodeAndLocale('tshirt_style', 'de_DE')->getValue());
-        Assert::assertNull($product->getAttributeByCodeAndLocale('additional_info', 'en_US'));
-        Assert::assertNull($product->getAttributeByCodeAndLocale('additional_info', 'de_DE'));
+
+        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'en_US'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'de_DE'));
     }
 
     /**
@@ -433,41 +352,11 @@ final class ProductSynchronizationTest extends KernelTestCase
      */
     public function it_updates_an_existing_product_with_attributes()
     {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_updated",
-            "payload": {
-                "code": "main_color",
-                "type": "pim_catalog_simpleselect",
-                "labels": {"en_US": "Main color"}
-            }
-        }'));
+        $this->consumeAttribute('main_color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
+        $this->consumeAttribute('tshirt_style', 'pim_catalog_simpleselect', ['en_US' => 'T-Shirt style']);
+        $this->consumeAttribute('subtitle', 'pim_catalog_text', ['en_US' => 'Subtitle']);
 
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_updated",
-            "payload": {
-                "code": "tshirt_style",
-                "type": "pim_catalog_simpleselect",
-                "labels": {"en_US": "T-Shirt style"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_updated",
-            "payload": {
-                "code": "additional_info",
-                "type": "pim_catalog_text",
-                "labels": {"en_US": "Additional information"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_updated",
-            "payload": {
-                "code": "subtitle",
-                "type": "pim_catalog_text",
-                "labels": {"en_US": "Subtitle"}
-            }
-        }'));
+        $this->consumeAttributeOption('main_color', 'black', ['en_US' => 'Black', 'de_DE' => 'Schwarz']);
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -476,7 +365,6 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "categories": [],
                 "enabled": true,
                 "values": {
-                    "additional_info": [{"locale": null, "scope": null, "data": null}],
                     "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "subtitle": [{"locale": "de_DE", "scope": null, "data": "German subtitle"}],
@@ -494,7 +382,6 @@ final class ProductSynchronizationTest extends KernelTestCase
                 "categories": [],
                 "enabled": true,
                 "values": {
-                    "additional_info": [{"locale": null, "scope": null, "data": null}],
                     "main_color": [{"locale": null, "scope": null, "data": "red"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "subtitle": [{"locale": "en_US", "scope": null, "data": "English subtitle"}]
@@ -525,21 +412,8 @@ final class ProductSynchronizationTest extends KernelTestCase
      */
     public function it_adds_a_new_product_with_associations()
     {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_updated",
-            "payload": {
-                "code": "SUBSTITUTION",
-                "labels": {"en_US": "Substitution"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_updated",
-            "payload": {
-                "code": "CROSS_SELL",
-                "labels": {"en_US": "Cross sell"}
-            }
-        }'));
+        $this->consumeAssociationType('SUBSTITUTION', ['en_US' => 'Substitution']);
+        $this->consumeAssociationType('CROSS_SELL', ['en_US' => 'Cross sell']);
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -594,21 +468,8 @@ final class ProductSynchronizationTest extends KernelTestCase
      */
     public function it_updates_an_existing_product_with_associations()
     {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_updated",
-            "payload": {
-                "code": "SUBSTITUTION",
-                "labels": {"en_US": "Substitution"}
-            }
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_association_type_updated",
-            "payload": {
-                "code": "CROSS_SELL",
-                "labels": {"en_US": "Cross sell"}
-            }
-        }'));
+        $this->consumeAssociationType('SUBSTITUTION', ['en_US' => 'Substitution']);
+        $this->consumeAssociationType('CROSS_SELL', ['en_US' => 'Cross sell']);
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -818,5 +679,52 @@ final class ProductSynchronizationTest extends KernelTestCase
     private function getChannelByCode($code)
     {
         return static::$kernel->getContainer()->get('sylius.repository.channel')->findOneBy(['code' => $code]);
+    }
+
+    private function consumeAssociationType(string $code, array $labels): void
+    {
+        $this->consumer->execute(new AMQPMessage(sprintf('{
+            "type": "akeneo_association_type_updated",
+            "payload": {
+                "code": %s,
+                "labels": %s
+            }
+        }', json_encode($code), json_encode($labels))));
+    }
+
+    private function consumeAttribute(string $code, string $type, array $labels): void
+    {
+        $this->consumer->execute(new AMQPMessage(sprintf('{
+            "type": "akeneo_attribute_updated",
+            "payload": {
+                "code": %s,
+                "type": %s,
+                "labels": %s
+            }
+        }', json_encode($code), json_encode($type), json_encode($labels))));
+    }
+
+    private function consumeAttributeOption(string $attributeCode, string $code, array $labels): void
+    {
+        $this->consumer->execute(new AMQPMessage(sprintf('{
+            "type": "akeneo_attribute_option_updated",
+            "payload": {
+                "code": %s,
+                "attribute": %s,
+                "labels": %s
+            }
+        }', json_encode($code), json_encode($attributeCode), json_encode($labels))));
+    }
+
+    private function consumeTaxon(string $code, ?string $parentCode, array $labels): void
+    {
+        $this->consumer->execute(new AMQPMessage(sprintf('{
+            "type": "akeneo_category_updated",
+            "payload": {
+                "code": %s,
+                "parent": %s,
+                "labels": %s
+            }
+        }', json_encode($code), json_encode($parentCode), json_encode($labels))));
     }
 }
