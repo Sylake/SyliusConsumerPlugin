@@ -8,8 +8,6 @@ use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\Assert;
 use Sylake\SyliusConsumerPlugin\Entity\AkeneoAttributeOption;
-use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
-use Sylius\Component\Product\Model\ProductAttributeInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -50,7 +48,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
     /**
      * @test
      */
-    public function it_adds_new_akeneo_attribute_option_from_akeneo_message()
+    public function it_adds_and_updates_an_akeneo_attribute_option_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_attribute_option_updated",
@@ -74,29 +72,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
         Assert::assertNotNull($akeneoAttributeOption);
         Assert::assertSame('high', $akeneoAttributeOption->getCode());
         Assert::assertSame('product_positioning', $akeneoAttributeOption->getAttribute());
-        Assert::assertSame([
-            'de_DE' => 'Hoch',
-            'en_GB' => 'High',
-        ], $akeneoAttributeOption->getLabels());
-    }
-
-    /**
-     * @test
-     */
-    public function it_updates_existing_akeneo_attribute_option_from_akeneo_message()
-    {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_attribute_option_updated",
-            "payload": {
-                "code": "high",
-                "attribute": "product_positioning",
-                "sort_order": 0,
-                "labels": {
-                    "de_DE": "Hoch",
-                    "en_GB": "High"
-                }
-            }
-        }'));
+        Assert::assertSame(['de_DE' => 'Hoch', 'en_GB' => 'High'], $akeneoAttributeOption->getLabels());
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_attribute_option_updated",
@@ -120,10 +96,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
         Assert::assertNotNull($akeneoAttributeOption);
         Assert::assertSame('high', $akeneoAttributeOption->getCode());
         Assert::assertSame('product_positioning', $akeneoAttributeOption->getAttribute());
-        Assert::assertSame([
-            'de_DE' => 'Hoch (updated)',
-            'en_GB' => 'High (updated)',
-        ], $akeneoAttributeOption->getLabels());
+        Assert::assertSame(['de_DE' => 'Hoch (updated)', 'en_GB' => 'High (updated)'], $akeneoAttributeOption->getLabels());
     }
 
     /**

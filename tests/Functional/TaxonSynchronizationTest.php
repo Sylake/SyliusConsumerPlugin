@@ -48,7 +48,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
     /**
      * @test
      */
-    public function it_adds_new_taxon_without_parent_from_akeneo_message()
+    public function it_adds_and_updates_a_taxon_from_akeneo_message()
     {
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_category_updated",
@@ -60,8 +60,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
                     "de_DE": "Hauptkatalog",
                     "fr_FR": "Catalogue principal"
                 }
-            },
-            "recordedOn": "2017-05-22 14:24:40"
+            }
         }'));
 
         /** @var TaxonInterface|null $taxon */
@@ -75,26 +74,6 @@ final class TaxonSynchronizationTest extends KernelTestCase
         Assert::assertSame('hauptkatalog', $taxon->getTranslation('de_DE')->getSlug());
         Assert::assertSame('Catalogue principal', $taxon->getTranslation('fr_FR')->getName());
         Assert::assertSame('catalogue-principal', $taxon->getTranslation('fr_FR')->getSlug());
-    }
-
-    /**
-     * @test
-     */
-    public function it_adds_new_taxon_with_parent_from_akeneo_message()
-    {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_updated",
-            "payload": {
-                "code": "master",
-                "parent": null,
-                "labels": {
-                    "en_US": "Master catalog",
-                    "de_DE": "Hauptkatalog",
-                    "fr_FR": "Catalogue principal"
-                }
-            },
-            "recordedOn": "2017-05-22 14:24:40"
-        }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_category_updated",
@@ -106,8 +85,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
                     "de_DE": "Audio und Video",
                     "fr_FR": "Audio et Video"
                 }
-            },
-            "recordedOn": "2017-05-22 14:24:40"
+            }
         }'));
 
         /** @var TaxonInterface|null $taxon */
@@ -121,40 +99,6 @@ final class TaxonSynchronizationTest extends KernelTestCase
         Assert::assertSame('hauptkatalog/audio-und-video', $taxon->getTranslation('de_DE')->getSlug());
         Assert::assertSame('Audio et Video', $taxon->getTranslation('fr_FR')->getName());
         Assert::assertSame('catalogue-principal/audio-et-video', $taxon->getTranslation('fr_FR')->getSlug());
-    }
-
-    /**
-     * @test
-     */
-    public function it_updates_existing_taxon_from_akeneo_message()
-    {
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_updated",
-            "payload": {
-                "code": "master",
-                "parent": null,
-                "labels": {
-                    "en_US": "Master catalog",
-                    "de_DE": "Hauptkatalog",
-                    "fr_FR": "Catalogue principal"
-                }
-            },
-            "recordedOn": "2017-05-22 14:24:40"
-        }'));
-
-        $this->consumer->execute(new AMQPMessage('{
-            "type": "akeneo_category_updated",
-            "payload": {
-                "code": "audio_video",
-                "parent": "master",
-                "labels": {
-                    "en_US": "Audio and Video",
-                    "de_DE": "Audio und Video",
-                    "fr_FR": "Audio et Video"
-                }
-            },
-            "recordedOn": "2017-05-22 14:24:40"
-        }'));
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_category_updated",
@@ -166,8 +110,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
                     "de_DE": "Audio und Video (updated)",
                     "fr_FR": "Audio et Video (updated)"
                 }
-            },
-            "recordedOn": "2017-05-22 14:24:40"
+            }
         }'));
 
         /** @var TaxonInterface|null $taxon */
