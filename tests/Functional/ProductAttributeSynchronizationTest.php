@@ -230,6 +230,58 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     /**
      * @test
      */
+    public function it_adds_and_updates_a_bool_attribute(): void
+    {
+        $this->consumeAttribute('awesome_cert', 'pim_catalog_boolean', ['en_US' => 'Certificate of awesomeness']);
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "awesome_cert": [{"locale": null, "scope": null, "data": true}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertTrue($product->getAttributeByCodeAndLocale('subtitle', 'en_US')->getValue());
+        Assert::assertTrue($product->getAttributeByCodeAndLocale('subtitle', 'de_DE')->getValue());
+
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "awesome_cert": [{"locale": "en_US", "scope": null, "data": false}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }'));
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertFalse($product->getAttributeByCodeAndLocale('subtitle', 'en_US')->getValue());
+        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'de_DE'));
+    }
+
+    /**
+     * @test
+     */
     public function it_updates_an_existing_product_with_attributes()
     {
         $this->consumeAttribute('main_color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
