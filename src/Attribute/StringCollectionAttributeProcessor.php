@@ -25,29 +25,29 @@ final class StringCollectionAttributeProcessor implements AttributeProcessorInte
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
         if (!$this->supports($attribute)) {
-            return;
+            return [];
         }
 
         /** @var array $data */
         $data = $attribute->data();
         if ([] === $data) {
-            return;
+            return [];
         }
 
         /** @var AttributeValueInterface|null $attributeValue */
         $attributeValue = $this->attributeValueProvider->provide($product, $attribute->attribute(), $attribute->locale());
         if (null === $attributeValue) {
-            return;
+            return [];
         }
 
         $attributeValue->setValue(implode(', ', array_map(function (string $value) use ($attribute): string {
             return $this->attributeOptionResolver->resolve($attribute->attribute(), $attribute->locale(), $value);
         }, $data)));
 
-        $product->addAttribute($attributeValue);
+        return [$attributeValue];
     }
 
     private function supports(Attribute $attribute): bool

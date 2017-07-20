@@ -18,16 +18,18 @@ final class DescriptionAttributeProcessor implements AttributeProcessorInterface
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
         if (!$this->supports($attribute)) {
-            return;
+            return [];
         }
 
         $product->setFallbackLocale($attribute->locale());
         $product->setCurrentLocale($attribute->locale());
 
         $product->setDescription($attribute->data());
+
+        return [];
     }
 
     private function supports(Attribute $attribute): bool

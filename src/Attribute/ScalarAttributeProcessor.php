@@ -25,21 +25,21 @@ final class ScalarAttributeProcessor implements AttributeProcessorInterface
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
         if (!$this->supports($attribute)) {
-            return;
+            return [];
         }
 
         /** @var AttributeValueInterface|null $attributeValue */
         $attributeValue = $this->attributeValueProvider->provide($product, $attribute->attribute(), $attribute->locale());
         if (null === $attributeValue) {
-            return;
+            return [];
         }
 
         $attributeValue->setValue($this->getValue($attribute));
 
-        $product->addAttribute($attributeValue);
+        return [$attributeValue];
     }
 
     private function getValue(Attribute $attribute)

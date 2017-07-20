@@ -45,10 +45,10 @@ final class ChannelPricingAttributeProcessor implements AttributeProcessorInterf
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
         if (!$this->supports($attribute)) {
-            return;
+            return [];
         }
 
         /** @var ProductVariantInterface $productVariant */
@@ -87,6 +87,8 @@ final class ChannelPricingAttributeProcessor implements AttributeProcessorInterf
                 $productVariant->addChannelPricing($channelPricing);
             }
         }
+
+        return [];
     }
 
     private function supports(Attribute $attribute): bool

@@ -32,10 +32,10 @@ final class ImageAttributeProcessor implements AttributeProcessorInterface
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
         if (!$this->supports($attribute)) {
-            return;
+            return [];
         }
 
         foreach ($product->getImagesByType('akeneo') as $productImage) {
@@ -43,7 +43,7 @@ final class ImageAttributeProcessor implements AttributeProcessorInterface
         }
 
         if (null === $attribute->data()) {
-            return;
+            return [];
         }
 
         /** @var ProductImageInterface|null $image */
@@ -61,6 +61,8 @@ final class ImageAttributeProcessor implements AttributeProcessorInterface
         }
 
         $product->addImage($productImage);
+
+        return [];
     }
 
     private function supports(Attribute $attribute): bool

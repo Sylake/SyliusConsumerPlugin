@@ -19,27 +19,27 @@ final class UnitAttributeProcessor implements AttributeProcessorInterface
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
         if (!$this->supports($attribute)) {
-            return;
+            return [];
         }
 
         /** @var array $data */
         $data = $attribute->data();
         if (null === $data['amount']) {
-            return;
+            return [];
         }
 
         /** @var AttributeValueInterface|null $attributeValue */
         $attributeValue = $this->attributeValueProvider->provide($product, $attribute->attribute(), $attribute->locale());
         if (null === $attributeValue) {
-            return;
+            return [];
         }
 
         $attributeValue->setValue(sprintf('%s %s', $data['amount'], $data['unit']));
 
-        $product->addAttribute($attributeValue);
+        return [$attributeValue];
     }
 
     private function supports(Attribute $attribute): bool

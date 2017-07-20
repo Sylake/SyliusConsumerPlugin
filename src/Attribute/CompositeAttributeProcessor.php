@@ -18,10 +18,14 @@ final class CompositeAttributeProcessor implements AttributeProcessorInterface
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
+        $attributes = [];
+
         foreach ($this->processors as $processor) {
-            $processor->process($product, $attribute);
+            $attributes = array_merge($attributes, $processor->process($product, $attribute));
         }
+
+        return $attributes;
     }
 }

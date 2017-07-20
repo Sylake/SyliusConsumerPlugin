@@ -18,6 +18,7 @@ use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Sylius\Component\Product\Model\ProductAssociationInterface;
 use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
+use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Model\TranslationInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -212,17 +213,45 @@ final class ProductProjector
 
     private function handleAttributes(array $attributes, ProductInterface $product): void
     {
-        foreach ($product->getAttributes() as $attributeValue) {
-            $product->removeAttribute($attributeValue);
+        $currentProductAttributes = $product->getAttributes()->toArray();
+        $processedProductAttributes = $this->processAttributes($attributes, $product);
+
+        $compareProductAttributes = function (ProductAttributeValueInterface $a, ProductAttributeValueInterface $b): int {
+            return $a->getId() <=> $b->getId();
+        };
+
+        $productTaxonToAdd = array_udiff(
+            $processedProductAttributes,
+            $currentProductAttributes,
+            $compareProductAttributes
+        );
+        foreach ($productTaxonToAdd as $productTaxon) {
+            $product->addAttribute($productTaxon);
         }
+
+        $productTaxonToRemove = array_udiff(
+            $currentProductAttributes,
+            $processedProductAttributes,
+            $compareProductAttributes
+        );
+        foreach ($productTaxonToRemove as $productTaxon) {
+            $product->removeAttribute($productTaxon);
+        }
+    }
+
+    private function processAttributes(array $attributes, ProductInterface $product): array
+    {
+        $processedAttributes = [];
 
         $locales = array_map(function (LocaleInterface $locale): string {
             return $locale->getCode();
         }, $this->localeRepository->findAll());
 
         foreach (new Attributes($attributes, $locales) as $attribute) {
-            $this->attributeProcessor->process($product, $attribute);
+            $processedAttributes = array_merge($processedAttributes, $this->attributeProcessor->process($product, $attribute));
         }
+
+        return $processedAttributes;
     }
 
     private function handleAssociations(array $associations, ProductInterface $product): void

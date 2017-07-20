@@ -6,8 +6,15 @@ namespace Sylake\SyliusConsumerPlugin\Attribute;
 
 use Sylake\SyliusConsumerPlugin\Model\Attribute;
 use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 
 interface AttributeProcessorInterface
 {
-    public function process(ProductInterface $product, Attribute $attribute): void;
+    /**
+     * @param ProductInterface $product
+     * @param Attribute $attribute
+     *
+     * @return ProductAttributeValueInterface[]
+     */
+    public function process(ProductInterface $product, Attribute $attribute): array;
 }

@@ -32,10 +32,10 @@ final class ChannelAttributeProcessor implements AttributeProcessorInterface
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
         if (!$this->supports($attribute)) {
-            return;
+            return [];
         }
 
         foreach ($product->getChannels() as $channel) {
@@ -61,6 +61,8 @@ final class ChannelAttributeProcessor implements AttributeProcessorInterface
         foreach ($channels as $channel) {
             $product->addChannel($channel);
         }
+
+        return [];
     }
 
     private function supports(Attribute $attribute): bool
