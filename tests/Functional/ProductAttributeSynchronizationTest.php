@@ -16,14 +16,9 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     /**
      * @test
      */
-    public function it_adds_a_new_product_with_attributes()
+    public function it_adds_and_updates_a_text_attribute(): void
     {
-        $this->consumeAttribute('main_color', 'pim_catalog_simpleselect', ['en_US' => 'Main color']);
-        $this->consumeAttribute('tshirt_style', 'pim_catalog_simpleselect', ['en_US' => 'T-Shirt style']);
-
-        $this->consumeAttributeOption('main_color', 'black', ['en_US' => 'Black', 'de_DE' => 'Schwarz']);
-        $this->consumeAttributeOption('tshirt_style', 'crewneck', ['en_US' => 'Crewneck', 'de_DE' => 'Rundhalsausschnitt']);
-        $this->consumeAttributeOption('tshirt_style', 'short_sleeve', ['en_US' => 'Short sleeve', 'de_DE' => 'Kurzarm']);
+        $this->consumeAttribute('text_attribute', 'pim_catalog_text', ['en_US' => 'Text attribute']);
 
         $this->consumer->execute(new AMQPMessage('{
             "type": "akeneo_product_updated",
@@ -32,10 +27,8 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "categories": [],
                 "enabled": true,
                 "values": {
-                    "main_color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "subtitle": [{"locale": "en_US", "scope": null, "data": "English subtitle"}],
-                    "tshirt_style": [{"locale": null, "scope": null, "data": ["crewneck", "short_sleeve"]}]
+                    "text_attribute": [{"locale": null, "scope": null, "data": "Foo bar (locale independent)"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}
@@ -46,15 +39,30 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
+        Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('text_attribute', 'en_US')->getValue());
+        Assert::assertSame('Foo bar (locale independent)', $product->getAttributeByCodeAndLocale('text_attribute', 'de_DE')->getValue());
 
-        Assert::assertSame('Black', $product->getAttributeByCodeAndLocale('main_color', 'en_US')->getValue());
-        Assert::assertSame('Schwarz', $product->getAttributeByCodeAndLocale('main_color', 'de_DE')->getValue());
+        $this->consumer->execute(new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "text_attribute": [{"locale": "en_US", "scope": null, "data": "Foo bar (en_US)"}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }'));
 
-        Assert::assertSame('Crewneck, Short sleeve', $product->getAttributeByCodeAndLocale('tshirt_style', 'en_US')->getValue());
-        Assert::assertSame('Rundhalsausschnitt, Kurzarm', $product->getAttributeByCodeAndLocale('tshirt_style', 'de_DE')->getValue());
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
-        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'en_US'));
-        Assert::assertNull($product->getAttributeByCodeAndLocale('subtitle', 'de_DE'));
+        Assert::assertNotNull($product);
+        Assert::assertSame('Foo bar (en_US)', $product->getAttributeByCodeAndLocale('text_attribute', 'en_US')->getValue());
+        Assert::assertNull($product->getAttributeByCodeAndLocale('text_attribute', 'de_DE'));
     }
 
     /**
