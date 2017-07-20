@@ -19,9 +19,13 @@ final class Translations implements \IteratorAggregate
                 throw new \InvalidArgumentException('Invalid locale passed: ' . $locale);
             }
 
-            if (!is_string($translation)) {
+            if (null === $translation) {
+                continue;
+            }
+
+            if (!is_scalar($translation)) {
                 throw new \InvalidArgumentException(sprintf(
-                    'Translation should be a string, %s given.',
+                    'Translation should be a scalar, %s given.',
                     gettype($translation)
                 ));
             }
