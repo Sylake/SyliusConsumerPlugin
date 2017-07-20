@@ -68,5 +68,7 @@ abstract class SynchronizationTestCase extends KernelTestCase
     protected function consume(string $message): void
     {
         $this->consumer->execute(new AMQPMessage($message));
+
+        $this->entityManager->clear();
     }
 }
