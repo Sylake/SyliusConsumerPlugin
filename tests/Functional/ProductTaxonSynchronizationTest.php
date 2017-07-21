@@ -32,7 +32,7 @@ final class ProductTaxonSynchronizationTest extends ProductSynchronizationTestCa
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -55,7 +55,7 @@ final class ProductTaxonSynchronizationTest extends ProductSynchronizationTestCa
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');

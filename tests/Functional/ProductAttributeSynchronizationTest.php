@@ -30,7 +30,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "subtitle": [{"locale": null, "scope": null, "data": "Foo bar (locale independent)"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -52,7 +52,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "subtitle": [{"locale": "en_US", "scope": null, "data": "Foo bar (en_US)"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -82,7 +82,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "short_description": [{"locale": null, "scope": null, "data": "Foo bar (locale independent)"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -104,7 +104,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "short_description": [{"locale": "en_US", "scope": null, "data": "Foo bar (en_US)"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -137,7 +137,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "color": [{"locale": null, "scope": null, "data": "black"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -159,7 +159,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "color": [{"locale": "en_US", "scope": null, "data": "red"}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -192,7 +192,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "color": [{"locale": null, "scope": null, "data": ["black", "red"]}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -214,7 +214,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "color": [{"locale": "en_US", "scope": null, "data": ["black"]}],
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -244,7 +244,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "awesome_cert": [{"locale": null, "scope": null, "data": true}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -266,7 +266,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "awesome_cert": [{"locale": "en_US", "scope": null, "data": false}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -296,7 +296,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "megapixels": [{"locale": null, "scope": null, "data": 12}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -318,7 +318,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "megapixels": [{"locale": "en_US", "scope": null, "data": 9}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -348,7 +348,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "megapixels": [{"locale": null, "scope": null, "data": 12.3}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -370,7 +370,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "megapixels": [{"locale": "en_US", "scope": null, "data": 9.7}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -398,9 +398,9 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "enabled": true,
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "release_date": [{"locale": null, "scope": null, "data": "2017-04-18T00:00:00+02:00"}]
+                    "release_date": [{"locale": null, "scope": null, "data": "2017-06-01T00:00:00+02:30"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -409,8 +409,8 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame('2017-04-18', $product->getAttributeByCodeAndLocale('release_date', 'en_US')->getValue()->format('Y-m-d'));
-        Assert::assertSame('2017-04-18', $product->getAttributeByCodeAndLocale('release_date', 'de_DE')->getValue()->format('Y-m-d'));
+        Assert::assertEquals(\DateTime::createFromFormat('!Y-m-d', '2017-06-01'), $product->getAttributeByCodeAndLocale('release_date', 'en_US')->getValue());
+        Assert::assertEquals(\DateTime::createFromFormat('!Y-m-d', '2017-06-01'), $product->getAttributeByCodeAndLocale('release_date', 'de_DE')->getValue());
 
         $this->consume('{
             "type": "akeneo_product_updated",
@@ -420,9 +420,9 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "enabled": true,
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "release_date": [{"locale": "en_US", "scope": null, "data": "2017-06-06T00:00:00+02:00"}]
+                    "release_date": [{"locale": "en_US", "scope": null, "data": "2017-06-06T00:00:00+02:30"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -431,7 +431,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
 
         Assert::assertNotNull($product);
-        Assert::assertSame('2017-06-06', $product->getAttributeByCodeAndLocale('release_date', 'en_US')->getValue()->format('Y-m-d'));
+        Assert::assertEquals(\DateTime::createFromFormat('!Y-m-d', '2017-06-06'), $product->getAttributeByCodeAndLocale('release_date', 'en_US')->getValue());
         Assert::assertNull($product->getAttributeByCodeAndLocale('release_date', 'de_DE'));
     }
 
@@ -450,7 +450,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "unexisting": [{"locale": null, "scope": null, "data": "foo"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -480,7 +480,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "subtitle": [{"locale": null, "scope": null, "data": null}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -510,7 +510,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "subtitle": [{"locale": null, "scope": null, "data": ""}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -540,7 +540,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "subtitle": [{"locale": "en_US", "scope": null, "data": "English subtitle"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -561,7 +561,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');

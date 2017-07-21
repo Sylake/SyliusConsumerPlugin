@@ -28,7 +28,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
                     "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -40,7 +40,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
         Assert::assertSame('Akeneo T-Shirt black and purple with short sleeve', $product->getTranslation('en_US')->getName());
         Assert::assertSame('aknts-bpxs-akeneo-t-shirt-black-and-purple-with-short-sleeve', $product->getTranslation('en_US')->getSlug());
         Assert::assertSame('T-Shirt description', $product->getTranslation('en_US')->getDescription());
-        Assert::assertEquals(\DateTime::createFromFormat(\DateTime::ATOM, '2017-04-18T16:12:55+02:00'), $product->getCreatedAt());
+        Assert::assertEquals(\DateTime::createFromFormat(\DateTime::ATOM, '2017-04-18T12:30:45+02:30'), $product->getCreatedAt());
         Assert::assertTrue($product->isEnabled());
 
         $this->consume('{
@@ -53,7 +53,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve (updated)"}],
                     "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description (updated)"}]
                 },
-                "created": "2017-04-18T16:12:58+02:00",
+                "created": "2017-04-18T12:45:45+02:30",
                 "associations": {}
             }
         }');
@@ -65,7 +65,7 @@ final class ProductSynchronizationTest extends ProductSynchronizationTestCase
         Assert::assertSame('Akeneo T-Shirt black and purple with short sleeve (updated)', $product->getTranslation('en_US')->getName());
         Assert::assertSame('aknts-bpxs-akeneo-t-shirt-black-and-purple-with-short-sleeve-updated', $product->getTranslation('en_US')->getSlug());
         Assert::assertSame('T-Shirt description (updated)', $product->getTranslation('en_US')->getDescription());
-        Assert::assertEquals(\DateTime::createFromFormat(\DateTime::ATOM, '2017-04-18T16:12:58+02:00'), $product->getCreatedAt());
+        Assert::assertEquals(\DateTime::createFromFormat(\DateTime::ATOM, '2017-04-18T12:45:45+02:30'), $product->getCreatedAt());
         Assert::assertFalse($product->isEnabled());
     }
 }

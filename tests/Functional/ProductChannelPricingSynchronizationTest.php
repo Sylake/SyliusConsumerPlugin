@@ -33,7 +33,7 @@ final class ProductChannelPricingSynchronizationTest extends ProductSynchronizat
                         {"amount": 14, "currency": "USD"}
                     ]}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');
@@ -68,7 +68,7 @@ final class ProductChannelPricingSynchronizationTest extends ProductSynchronizat
                         {"amount": 14, "currency": "USD"}
                     ]}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
         }');

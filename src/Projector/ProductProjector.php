@@ -337,6 +337,10 @@ final class ProductProjector
 
     private function handleCreatedAt(\DateTime $createdAt, ProductInterface $product, ProductVariantInterface $productVariant): void
     {
+        // Doctrine saves dates stripping the timezone and retrieves them with the default one,
+        // so we have to convert it to the default timezone to make it right
+        $createdAt->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+
         $product->setCreatedAt($createdAt);
         $productVariant->setCreatedAt($createdAt);
     }

@@ -31,7 +31,11 @@ final class DateAttributeProcessor implements AttributeProcessorInterface
             return [];
         }
 
-        $attributeValue->setValue(\DateTime::createFromFormat(\DateTime::ATOM, $attribute->data()));
+        // Strip everything except the year, month and day
+        $attributeValue->setValue(\DateTime::createFromFormat(
+            '!Y-m-d',
+            \DateTime::createFromFormat(\DateTime::ATOM, $attribute->data())->format('Y-m-d')
+        ));
 
         return [$attributeValue];
     }
