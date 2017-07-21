@@ -420,7 +420,7 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
                 "enabled": true,
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "release_date": [{"locale": null, "scope": null, "data": "2017-06-06T00:00:00+02:00"}]
+                    "release_date": [{"locale": "en_US", "scope": null, "data": "2017-06-06T00:00:00+02:00"}]
                 },
                 "created": "2017-04-18T16:12:55+02:00",
                 "associations": {}

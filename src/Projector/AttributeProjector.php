@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use Sylake\SyliusConsumerPlugin\Event\AttributeUpdated;
 use Sylius\Component\Attribute\AttributeType\AttributeTypeInterface;
 use Sylius\Component\Attribute\AttributeType\CheckboxAttributeType;
+use Sylius\Component\Attribute\AttributeType\DateAttributeType;
 use Sylius\Component\Attribute\AttributeType\TextareaAttributeType;
 use Sylius\Component\Attribute\AttributeType\TextAttributeType;
 use Sylius\Component\Attribute\Factory\AttributeFactoryInterface;
@@ -32,6 +33,7 @@ final class AttributeProjector
         'pim_catalog_text' => TextAttributeType::TYPE,
         'pim_catalog_textarea' => TextareaAttributeType::TYPE,
         'pim_catalog_boolean' => CheckboxAttributeType::TYPE,
+        'pim_catalog_date' => DateAttributeType::TYPE,
     ];
 
     public function __construct(

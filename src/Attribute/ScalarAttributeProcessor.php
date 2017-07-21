@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace Sylake\SyliusConsumerPlugin\Attribute;
 
 use Sylake\SyliusConsumerPlugin\Model\Attribute;
+use Sylius\Component\Attribute\AttributeType\CheckboxAttributeType;
+use Sylius\Component\Attribute\AttributeType\DateAttributeType;
+use Sylius\Component\Attribute\AttributeType\IntegerAttributeType;
+use Sylius\Component\Attribute\AttributeType\TextareaAttributeType;
+use Sylius\Component\Attribute\AttributeType\TextAttributeType;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 
@@ -15,6 +20,12 @@ final class ScalarAttributeProcessor implements AttributeProcessorInterface
 
     /** @var AttributeOptionResolverInterface */
     private $attributeOptionResolver;
+
+    private static $supportedAttributeTypes = [
+        TextAttributeType::TYPE,
+        TextareaAttributeType::TYPE,
+        CheckboxAttributeType::TYPE,
+    ];
 
     public function __construct(
         AttributeValueProviderInterface $attributeValueProvider,
@@ -33,7 +44,7 @@ final class ScalarAttributeProcessor implements AttributeProcessorInterface
 
         /** @var AttributeValueInterface|null $attributeValue */
         $attributeValue = $this->attributeValueProvider->provide($product, $attribute->attribute(), $attribute->locale());
-        if (null === $attributeValue) {
+        if (null === $attributeValue || !in_array($attributeValue->getAttribute()->getType(), self::$supportedAttributeTypes, true)) {
             return [];
         }
 

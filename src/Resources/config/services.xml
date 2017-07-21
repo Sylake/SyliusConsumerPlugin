@@ -68,6 +68,11 @@
                 </service>
             </argument>
             <argument type="service">
+                <service class="Sylake\SyliusConsumerPlugin\Attribute\DateAttributeProcessor">
+                    <argument type="service" id="sylake_sylius_consumer.attribute.attribute_value_provider" />
+                </service>
+            </argument>
+            <argument type="service">
                 <service class="Sylake\SyliusConsumerPlugin\Attribute\ScalarAttributeProcessor">
                     <argument type="service" id="sylake_sylius_consumer.attribute.attribute_value_provider" />
                     <argument type="service" id="sylake_sylius_consumer.attribute.attribute_option_resolver" />
