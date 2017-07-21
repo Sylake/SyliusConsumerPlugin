@@ -22,7 +22,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
         $this->consumeAssociationType('SUBSTITUTION', ['en_US' => 'Substitution']);
         $this->consumeAssociationType('CROSS_SELL', ['en_US' => 'Cross sell']);
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_WPXS",
@@ -31,12 +31,26 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt white and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
-        }'));
+        }');
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_PBXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt white and purple with short sleeve"}]
+                },
+                "created": "2017-04-18T12:30:45+02:30",
+                "associations": {}
+            }
+        }');
+
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -45,13 +59,13 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {
                     "SUBSTITUTION": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS", "AKNTS_PWXS"]},
-                    "CROSS_SELL": {"groups": [], "products": ["AKNTS_WPXS"]}
+                    "CROSS_SELL": {"groups": [], "products": ["AKNTS_WPXS", "AKNTS_PBXS"]}
                 }
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -59,17 +73,17 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
 
         $substitutionAssociation = $this->getProductAssociation($product, 'SUBSTITUTION');
         Assert::assertNotNull($substitutionAssociation);
-        $this->assertArraysAreEqual(['AKNTS_WPXS'], $substitutionAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
+        $this->assertArraysAreEqual(['AKNTS_WPXS', 'AKNTS_PBXS'], $substitutionAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
             return $product->getCode();
         })->toArray());
 
         $crossSellAssociation = $this->getProductAssociation($product, 'CROSS_SELL');
         Assert::assertNotNull($crossSellAssociation);
-        $this->assertArraysAreEqual(['AKNTS_WPXS'], $crossSellAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
+        $this->assertArraysAreEqual(['AKNTS_WPXS', 'AKNTS_PBXS'], $crossSellAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
             return $product->getCode();
         })->toArray());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -78,12 +92,12 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
                 "values": {
                     "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {
-                    "SUBSTITUTION": {"groups": [], "products": []}
+                    "SUBSTITUTION": {"groups": [], "products": ["AKNTS_PBXS"]}
                 }
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -91,7 +105,7 @@ final class ProductAssociationSynchronizationTest extends ProductSynchronization
 
         $substitutionAssociation = $this->getProductAssociation($product, 'SUBSTITUTION');
         Assert::assertNotNull($substitutionAssociation);
-        $this->assertArraysAreEqual([], $substitutionAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
+        $this->assertArraysAreEqual(['AKNTS_PBXS'], $substitutionAssociation->getAssociatedProducts()->map(function (ProductInterface $product) {
             return $product->getCode();
         })->toArray());
 

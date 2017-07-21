@@ -14,35 +14,21 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 /**
  * @author Kamil Kokot <kamil@kokot.me>
  */
-final class AttributeOptionSynchronizationTest extends KernelTestCase
+final class AttributeOptionSynchronizationTest extends SynchronizationTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     /**
      * @var RepositoryInterface
      */
     private $akeneoAttributeOptionRepository;
 
     /**
-     * @var ConsumerInterface
-     */
-    private $consumer;
-
-    /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
-        self::bootKernel();
+        parent::setUp();
 
-        $this->entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
         $this->akeneoAttributeOptionRepository = static::$kernel->getContainer()->get('sylake_sylius_consumer.repository.akeneo_attribute_option');
-        $this->consumer = static::$kernel->getContainer()->get('rabbitmq_simplebus.consumer');
-
-        (new ORMPurger($this->entityManager))->purge();
     }
 
     /**
@@ -50,7 +36,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
      */
     public function it_adds_and_updates_an_akeneo_attribute_option_from_akeneo_message()
     {
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_attribute_option_updated",
             "payload": {
                 "code": "high",
@@ -61,7 +47,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
                     "en_GB": "High"
                 }
             }
-        }'));
+        }');
 
         /** @var AkeneoAttributeOption|null $akeneoAttributeOption */
         $akeneoAttributeOption = $this->akeneoAttributeOptionRepository->findOneBy([
@@ -74,7 +60,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
         Assert::assertSame('product_positioning', $akeneoAttributeOption->getAttribute());
         Assert::assertSame(['de_DE' => 'Hoch', 'en_GB' => 'High'], $akeneoAttributeOption->getLabels());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_attribute_option_updated",
             "payload": {
                 "code": "high",
@@ -85,7 +71,7 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
                     "en_GB": "High (updated)"
                 }
             }
-        }'));
+        }');
 
         /** @var AkeneoAttributeOption|null $akeneoAttributeOption */
         $akeneoAttributeOption = $this->akeneoAttributeOptionRepository->findOneBy([
@@ -97,14 +83,5 @@ final class AttributeOptionSynchronizationTest extends KernelTestCase
         Assert::assertSame('high', $akeneoAttributeOption->getCode());
         Assert::assertSame('product_positioning', $akeneoAttributeOption->getAttribute());
         Assert::assertSame(['de_DE' => 'Hoch (updated)', 'en_GB' => 'High (updated)'], $akeneoAttributeOption->getLabels());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        $this->entityManager->clear();
-        $this->entityManager = null;
     }
 }

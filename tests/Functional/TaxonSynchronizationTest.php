@@ -14,35 +14,21 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 /**
  * @author Kamil Kokot <kamil@kokot.me>
  */
-final class TaxonSynchronizationTest extends KernelTestCase
+final class TaxonSynchronizationTest extends SynchronizationTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     /**
      * @var TaxonRepositoryInterface
      */
     private $taxonRepository;
 
     /**
-     * @var ConsumerInterface
-     */
-    private $consumer;
-
-    /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
-        self::bootKernel();
+        parent::setUp();
 
-        $this->entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
         $this->taxonRepository = static::$kernel->getContainer()->get('sylius.repository.taxon');
-        $this->consumer = static::$kernel->getContainer()->get('rabbitmq_simplebus.consumer');
-
-        (new ORMPurger($this->entityManager))->purge();
     }
 
     /**
@@ -50,7 +36,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
      */
     public function it_adds_and_updates_a_taxon_from_akeneo_message()
     {
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_category_updated",
             "payload": {
                 "code": "master",
@@ -61,7 +47,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
                     "fr_FR": "Catalogue principal"
                 }
             }
-        }'));
+        }');
 
         /** @var TaxonInterface|null $taxon */
         $taxon = $this->taxonRepository->findOneBy(['code' => 'master']);
@@ -75,7 +61,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
         Assert::assertSame('Catalogue principal', $taxon->getTranslation('fr_FR')->getName());
         Assert::assertSame('catalogue-principal', $taxon->getTranslation('fr_FR')->getSlug());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_category_updated",
             "payload": {
                 "code": "audio_video",
@@ -86,7 +72,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
                     "fr_FR": "Audio et Video"
                 }
             }
-        }'));
+        }');
 
         /** @var TaxonInterface|null $taxon */
         $taxon = $this->taxonRepository->findOneBy(['code' => 'audio_video']);
@@ -100,7 +86,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
         Assert::assertSame('Audio et Video', $taxon->getTranslation('fr_FR')->getName());
         Assert::assertSame('catalogue-principal/audio-et-video', $taxon->getTranslation('fr_FR')->getSlug());
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_category_updated",
             "payload": {
                 "code": "audio_video",
@@ -111,7 +97,7 @@ final class TaxonSynchronizationTest extends KernelTestCase
                     "fr_FR": "Audio et Video (updated)"
                 }
             }
-        }'));
+        }');
 
         /** @var TaxonInterface|null $taxon */
         $taxon = $this->taxonRepository->findOneBy(['code' => 'audio_video']);
@@ -124,14 +110,5 @@ final class TaxonSynchronizationTest extends KernelTestCase
         Assert::assertSame('audio-und-video-updated', $taxon->getTranslation('de_DE')->getSlug());
         Assert::assertSame('Audio et Video (updated)', $taxon->getTranslation('fr_FR')->getName());
         Assert::assertSame('audio-et-video-updated', $taxon->getTranslation('fr_FR')->getSlug());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        $this->entityManager->clear();
-        $this->entityManager = null;
     }
 }

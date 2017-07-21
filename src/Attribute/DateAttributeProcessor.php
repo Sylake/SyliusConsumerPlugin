@@ -8,7 +8,7 @@ use Sylake\SyliusConsumerPlugin\Model\Attribute;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 
-final class UnitAttributeProcessor implements AttributeProcessorInterface
+final class DateAttributeProcessor implements AttributeProcessorInterface
 {
     /** @var AttributeValueProviderInterface */
     private $attributeValueProvider;
@@ -25,29 +25,26 @@ final class UnitAttributeProcessor implements AttributeProcessorInterface
             return [];
         }
 
-        /** @var array $data */
-        $data = $attribute->data();
-        if (null === $data['amount']) {
-            return [];
-        }
-
         /** @var AttributeValueInterface|null $attributeValue */
         $attributeValue = $this->attributeValueProvider->provide($product, $attribute->attribute(), $attribute->locale());
         if (null === $attributeValue) {
             return [];
         }
 
-        $attributeValue->setValue(sprintf('%s %s', $data['amount'], $data['unit']));
+        // Strip everything except the year, month and day
+        $attributeValue->setValue(\DateTime::createFromFormat(
+            '!Y-m-d',
+            \DateTime::createFromFormat(\DateTime::ATOM, $attribute->data())->format('Y-m-d')
+        ));
 
         return [$attributeValue];
     }
 
     private function supports(Attribute $attribute): bool
     {
-        return is_array($attribute->data())
-            && count($attribute->data()) === 2
-            && array_key_exists('amount', $attribute->data())
-            && array_key_exists('unit', $attribute->data())
+        return is_string($attribute->data())
+            && '' !== $attribute->data()
+            && false !== \DateTime::createFromFormat(\DateTime::ATOM, $attribute->data())
         ;
     }
 }

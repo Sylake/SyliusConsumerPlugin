@@ -43,6 +43,7 @@ final class AttributeUpdatedDenormalizerSpec extends ObjectBehavior
             'type' => 'akeneo_attribute_updated',
             'payload' => [
                 'code' => 'COLOR',
+                'type' => 'pim_catalog_type',
                 'labels' => [
                     'en_US' => 'Color',
                     'pl_PL' => 'Kolor',
@@ -53,6 +54,7 @@ final class AttributeUpdatedDenormalizerSpec extends ObjectBehavior
         $this->supports($supportedMessage)->shouldReturn(true);
         $this->denormalize($supportedMessage)->shouldBeLike(new AttributeUpdated(
             'COLOR',
+            'pim_catalog_type',
             new Translations(['en_US' => 'Color', 'pl_PL' => 'Kolor'])
         ));
     }

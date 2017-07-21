@@ -19,7 +19,7 @@ final class ProductUpdatedDenormalizer extends AkeneoDenormalizer
             $payload['categories'],
             $payload['values'],
             $this->getAssociations($payload),
-            \DateTime::createFromFormat(\DateTime::W3C, $payload['created']) ?: null
+            \DateTime::createFromFormat(\DateTime::ATOM, $payload['created']) ?: null
         );
     }
 

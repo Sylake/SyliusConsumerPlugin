@@ -5,16 +5,27 @@ declare(strict_types=1);
 namespace Sylake\SyliusConsumerPlugin\Attribute;
 
 use Sylake\SyliusConsumerPlugin\Model\Attribute;
+use Sylius\Component\Attribute\AttributeType\CheckboxAttributeType;
+use Sylius\Component\Attribute\AttributeType\DateAttributeType;
+use Sylius\Component\Attribute\AttributeType\IntegerAttributeType;
+use Sylius\Component\Attribute\AttributeType\TextareaAttributeType;
+use Sylius\Component\Attribute\AttributeType\TextAttributeType;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 
-final class StringCollectionAttributeProcessor implements AttributeProcessorInterface
+final class ScalarAttributeProcessor implements AttributeProcessorInterface
 {
     /** @var AttributeValueProviderInterface */
     private $attributeValueProvider;
 
     /** @var AttributeOptionResolverInterface */
     private $attributeOptionResolver;
+
+    private static $supportedAttributeTypes = [
+        TextAttributeType::TYPE,
+        TextareaAttributeType::TYPE,
+        CheckboxAttributeType::TYPE,
+    ];
 
     public function __construct(
         AttributeValueProviderInterface $attributeValueProvider,
@@ -31,29 +42,30 @@ final class StringCollectionAttributeProcessor implements AttributeProcessorInte
             return [];
         }
 
-        /** @var array $data */
-        $data = $attribute->data();
-        if ([] === $data) {
-            return [];
-        }
-
         /** @var AttributeValueInterface|null $attributeValue */
         $attributeValue = $this->attributeValueProvider->provide($product, $attribute->attribute(), $attribute->locale());
-        if (null === $attributeValue) {
+        if (null === $attributeValue || !in_array($attributeValue->getAttribute()->getType(), self::$supportedAttributeTypes, true)) {
             return [];
         }
 
-        $attributeValue->setValue(implode(', ', array_map(function (string $value) use ($attribute): string {
-            return $this->attributeOptionResolver->resolve($attribute->attribute(), $attribute->locale(), $value);
-        }, $data)));
+        $attributeValue->setValue($this->getValue($attribute));
 
         return [$attributeValue];
     }
 
+    private function getValue(Attribute $attribute)
+    {
+        $value = $attribute->data();
+
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        return $this->attributeOptionResolver->resolve($attribute->attribute(), $attribute->locale(), $value);
+    }
+
     private function supports(Attribute $attribute): bool
     {
-        return is_array($attribute->data()) && array_reduce($attribute->data(), function (bool $accumulator, $value): bool {
-            return $accumulator && is_string($value) && !empty($value);
-        }, true);
+        return is_scalar($attribute->data()) && null !== $attribute->data() && '' !== $attribute->data();
     }
 }

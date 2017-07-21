@@ -45,18 +45,52 @@ final class ChannelPricingAttributeProcessor implements AttributeProcessorInterf
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
         if (!$this->supports($attribute)) {
-            return;
+            return [];
         }
 
         /** @var ProductVariantInterface $productVariant */
         $productVariant = current($product->getVariants()->slice(0, 1));
 
-        foreach ($productVariant->getChannelPricings() as $channelPricing) {
-            $productVariant->removeChannelPricing($channelPricing);
+        $currentChannelPricings = $productVariant->getChannelPricings()->toArray();
+        $processedChannelPricings = $this->processChannelPricings($attribute, $productVariant);
+
+        $compareChannelPricings = function (ChannelPricingInterface $a, ChannelPricingInterface $b): int {
+            return $a->getId() <=> $b->getId();
+        };
+
+        $productChannelPricingToAdd = array_udiff(
+            $processedChannelPricings,
+            $currentChannelPricings,
+            $compareChannelPricings
+        );
+        foreach ($productChannelPricingToAdd as $productChannelPricing) {
+            $productVariant->addChannelPricing($productChannelPricing);
         }
+
+        $productChannelPricingToRemove = array_udiff(
+            $currentChannelPricings,
+            $processedChannelPricings,
+            $compareChannelPricings
+        );
+        foreach ($productChannelPricingToRemove as $productChannelPricing) {
+            $productVariant->removeChannelPricing($productChannelPricing);
+        }
+
+        return [];
+    }
+
+    private function supports(Attribute $attribute): bool
+    {
+        return $this->priceAttribute === $attribute->attribute() && is_array($attribute->data());
+    }
+
+    private function processChannelPricings(Attribute $attribute, ProductVariantInterface$productVariant): array
+    {
+        /** @var ChannelPricingInterface[] $channelPricings */
+        $channelPricings = [];
 
         foreach ($attribute->data() as $price) {
             if (null === $price['amount']) {
@@ -84,14 +118,11 @@ final class ChannelPricingAttributeProcessor implements AttributeProcessorInterf
 
                 $channelPricing->setPrice($price['amount'] * 100);
 
-                $productVariant->addChannelPricing($channelPricing);
+                $channelPricings[] = $channelPricing;
             }
         }
-    }
 
-    private function supports(Attribute $attribute): bool
-    {
-        return $this->priceAttribute === $attribute->attribute() && is_array($attribute->data());
+        return $channelPricings;
     }
 
 }

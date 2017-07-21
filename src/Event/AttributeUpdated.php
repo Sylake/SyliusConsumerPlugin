@@ -6,38 +6,33 @@ use Sylake\SyliusConsumerPlugin\Model\Translations;
 
 final class AttributeUpdated
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $code;
 
-    /**
-     * @var Translations
-     */
+    /** @var string */
+    private $type;
+
+    /**@var Translations */
     private $names;
 
-    /**
-     * @param string $code
-     * @param Translations $names
-     */
-    public function __construct($code, Translations $names)
+    public function __construct(string $code, string $type, Translations $names)
     {
         $this->code = $code;
+        $this->type = $type;
         $this->names = $names;
     }
 
-    /**
-     * @return string
-     */
-    public function code()
+    public function code(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return Translations
-     */
-    public function names()
+    public function type(): string
+    {
+        return $this->type;
+    }
+
+    public function names(): Translations
     {
         return $this->names;
     }

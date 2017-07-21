@@ -20,7 +20,7 @@ final class ProductChannelPricingSynchronizationTest extends ProductSynchronizat
      */
     public function it_adds_and_updates_a_product_with_channels_and_pricing()
     {
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -33,10 +33,10 @@ final class ProductChannelPricingSynchronizationTest extends ProductSynchronizat
                         {"amount": 14, "currency": "USD"}
                     ]}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
@@ -55,7 +55,7 @@ final class ProductChannelPricingSynchronizationTest extends ProductSynchronizat
         Assert::assertSame(1400, $productVariant->getChannelPricingForChannel($this->getChannelByCode('USD_1'))->getPrice());
         Assert::assertNull($productVariant->getChannelPricingForChannel($this->getChannelByCode('GBP_1')));
 
-        $this->consumer->execute(new AMQPMessage('{
+        $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
                 "identifier": "AKNTS_BPXS",
@@ -68,10 +68,10 @@ final class ProductChannelPricingSynchronizationTest extends ProductSynchronizat
                         {"amount": 14, "currency": "USD"}
                     ]}]
                 },
-                "created": "2017-04-18T16:12:55+02:00",
+                "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
             }
-        }'));
+        }');
 
         /** @var ProductInterface|null $product */
         $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);

@@ -32,18 +32,49 @@ final class ImageAttributeProcessor implements AttributeProcessorInterface
     }
 
     /** {@inheritdoc} */
-    public function process(ProductInterface $product, Attribute $attribute): void
+    public function process(ProductInterface $product, Attribute $attribute): array
     {
         if (!$this->supports($attribute)) {
-            return;
+            return [];
         }
 
-        foreach ($product->getImagesByType('akeneo') as $productImage) {
+        $currentImages = $product->getImagesByType('akeneo')->toArray();
+        $processedImages = $this->processImages($product, $attribute);
+
+        $compareImages = function (ProductImageInterface $a, ProductImageInterface $b): int {
+            return $a->getId() <=> $b->getId();
+        };
+
+        $productImageToAdd = array_udiff(
+            $processedImages,
+            $currentImages,
+            $compareImages
+        );
+        foreach ($productImageToAdd as $productImage) {
+            $product->addImage($productImage);
+        }
+
+        $productImageToRemove = array_udiff(
+            $currentImages,
+            $processedImages,
+            $compareImages
+        );
+        foreach ($productImageToRemove as $productImage) {
             $product->removeImage($productImage);
         }
 
+        return [];
+    }
+
+    private function supports(Attribute $attribute): bool
+    {
+        return $this->imageAttribute === $attribute->attribute() && (null === $attribute->data() || is_string($attribute->data()));
+    }
+
+    private function processImages(ProductInterface $product, Attribute $attribute): array
+    {
         if (null === $attribute->data()) {
-            return;
+            return [];
         }
 
         /** @var ProductImageInterface|null $image */
@@ -60,11 +91,6 @@ final class ImageAttributeProcessor implements AttributeProcessorInterface
             $productImage->setPath($attribute->data());
         }
 
-        $product->addImage($productImage);
-    }
-
-    private function supports(Attribute $attribute): bool
-    {
-        return $this->imageAttribute === $attribute->attribute() && (null === $attribute->data() || is_string($attribute->data()));
+        return [$productImage];
     }
 }

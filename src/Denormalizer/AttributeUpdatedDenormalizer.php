@@ -12,7 +12,7 @@ final class AttributeUpdatedDenormalizer extends AkeneoDenormalizer
      */
     protected function denormalizePayload(array $payload)
     {
-        return new AttributeUpdated($payload['code'], new Translations($payload['labels']));
+        return new AttributeUpdated($payload['code'], $payload['type'], new Translations($payload['labels']));
     }
 
     /**
