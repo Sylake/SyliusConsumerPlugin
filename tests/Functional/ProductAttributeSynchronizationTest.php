@@ -386,6 +386,58 @@ final class ProductAttributeSynchronizationTest extends ProductSynchronizationTe
     /**
      * @test
      */
+    public function it_adds_and_updates_a_date_attribute(): void
+    {
+        $this->consumeAttribute('release_date', 'pim_catalog_date', ['en_US' => 'Release date']);
+
+        $this->consume('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "release_date": [{"locale": null, "scope": null, "data": "2017-04-18T00:00:00+02:00"}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }');
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertSame('2017-04-18', $product->getAttributeByCodeAndLocale('release_date', 'en_US')->getValue()->format('Y-m-d'));
+        Assert::assertSame('2017-04-18', $product->getAttributeByCodeAndLocale('release_date', 'de_DE')->getValue()->format('Y-m-d'));
+
+        $this->consume('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "release_date": [{"locale": null, "scope": null, "data": "2017-06-06T00:00:00+02:00"}]
+                },
+                "created": "2017-04-18T16:12:55+02:00",
+                "associations": {}
+            }
+        }');
+
+        /** @var ProductInterface|null $product */
+        $product = $this->productRepository->findOneBy(['code' => 'AKNTS_BPXS']);
+
+        Assert::assertNotNull($product);
+        Assert::assertSame('2017-06-06', $product->getAttributeByCodeAndLocale('release_date', 'en_US')->getValue()->format('Y-m-d'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('release_date', 'de_DE'));
+    }
+
+    /**
+     * @test
+     */
     public function it_ignores_unexisting_attributes()
     {
         $this->consume('{
