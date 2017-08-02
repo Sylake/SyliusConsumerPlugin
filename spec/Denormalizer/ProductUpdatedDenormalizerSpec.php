@@ -104,4 +104,36 @@ final class ProductUpdatedDenormalizerSpec extends ObjectBehavior
         $this->supports($messageWithoutIdentifier)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithoutIdentifier]);
     }
+    
+    function it_ignores_extra_fields_passed_with_payload()
+    {
+        $messageWithExtraFields = new AMQPMessage('{
+            "type": "akeneo_product_updated",
+            "payload": {
+                "identifier": "AKNTS_BPXS",
+                "categories": [],
+                "enabled": true,
+                "values": {
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
+                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
+                },
+                "created": "2017-04-18T12:30:45+02:30",
+                "associations": {},
+                "extraField": {}
+            }
+        }');
+
+        $this->supports($messageWithExtraFields)->shouldReturn(true);
+        $this->denormalize($messageWithExtraFields)->shouldBeLike(new ProductUpdated(
+            'AKNTS_BPXS',
+            true,
+            [],
+            [
+                'name' => [['locale' => null, 'scope' => null, 'data' => 'Akeneo T-Shirt black and purple with short sleeve']],
+                'description' => [['locale' => 'en_US', 'scope' => 'mobile', 'data' => 'T-Shirt description']],
+            ],
+            [],
+            \DateTime::createFromFormat(\DateTime::ATOM, '2017-04-18T12:30:45+02:30')
+        ));
+    }
 }
