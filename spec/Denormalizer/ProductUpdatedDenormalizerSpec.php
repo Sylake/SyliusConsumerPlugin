@@ -104,7 +104,7 @@ final class ProductUpdatedDenormalizerSpec extends ObjectBehavior
         $this->supports($messageWithoutIdentifier)->shouldReturn(false);
         $this->shouldThrow(DenormalizationFailedException::class)->during('denormalize', [$messageWithoutIdentifier]);
     }
-    
+
     function it_ignores_extra_fields_passed_with_payload()
     {
         $messageWithExtraFields = new AMQPMessage('{
