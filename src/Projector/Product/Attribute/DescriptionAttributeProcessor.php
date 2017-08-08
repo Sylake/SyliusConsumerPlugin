@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Sylake\SyliusConsumerPlugin\Attribute;
+namespace Sylake\SyliusConsumerPlugin\Projector\Product\Attribute;
 
 use Sylake\SyliusConsumerPlugin\Model\Attribute;
 use Sylius\Component\Core\Model\ProductInterface;
 
-final class NameAttributeProcessor implements AttributeProcessorInterface
+final class DescriptionAttributeProcessor implements AttributeProcessorInterface
 {
     /** @var string */
-    private $nameAttribute;
+    private $descriptionAttribute;
 
-    public function __construct(string $nameAttribute)
+    public function __construct(string $descriptionAttribute)
     {
-        $this->nameAttribute = $nameAttribute;
+        $this->descriptionAttribute = $descriptionAttribute;
     }
 
     /** {@inheritdoc} */
@@ -27,14 +27,14 @@ final class NameAttributeProcessor implements AttributeProcessorInterface
         $product->setFallbackLocale($attribute->locale());
         $product->setCurrentLocale($attribute->locale());
 
-        $product->setName($attribute->data() ?: $product->getCode());
+        $product->setDescription($attribute->data());
 
         return [];
     }
 
     private function supports(Attribute $attribute): bool
     {
-        return $this->nameAttribute === $attribute->attribute() && (is_string($attribute->data()) || null === $attribute->data());
+        return $this->descriptionAttribute === $attribute->attribute() && is_string($attribute->data());
     }
 
 }

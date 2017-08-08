@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sylake\SyliusConsumerPlugin\Attribute;
+namespace Sylake\SyliusConsumerPlugin\Projector\Product\Attribute;
 
 use Sylake\SyliusConsumerPlugin\Entity\AkeneoAttributeOption;
 use Sylius\Component\Resource\Repository\RepositoryInterface;

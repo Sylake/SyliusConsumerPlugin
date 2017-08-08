@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sylake\SyliusConsumerPlugin\Projector;
+namespace Sylake\SyliusConsumerPlugin\Projector\Product;
 
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductTranslationInterface;

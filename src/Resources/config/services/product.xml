@@ -22,40 +22,40 @@
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductUpdated" method="__invoke" />
         </service>
 
-        <service id="sylake_sylius_consumer.projector.product_slug_generator" class="Sylake\SyliusConsumerPlugin\Projector\ProductSlugGenerator">
+        <service id="sylake_sylius_consumer.projector.product_slug_generator" class="Sylake\SyliusConsumerPlugin\Projector\Product\ProductSlugGenerator">
             <argument type="service" id="sylius.generator.slug" />
         </service>
 
-        <service id="sylake_sylius_consumer.attribute.attribute_option_resolver" class="Sylake\SyliusConsumerPlugin\Attribute\AttributeOptionResolver">
+        <service id="sylake_sylius_consumer.attribute.attribute_option_resolver" class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\AttributeOptionResolver">
             <argument type="service" id="sylake_sylius_consumer.repository.akeneo_attribute_option" />
         </service>
 
-        <service id="sylake_sylius_consumer.attribute.attribute_value_provider" class="Sylake\SyliusConsumerPlugin\Attribute\AttributeValueProvider">
+        <service id="sylake_sylius_consumer.attribute.attribute_value_provider" class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\AttributeValueProvider">
             <argument type="service" id="sylius.factory.product_attribute_value" />
             <argument type="service" id="sylius.repository.product_attribute" />
             <argument type="service" id="sylius.repository.product_attribute_value" />
         </service>
 
-        <service id="sylake_sylius_consumer.attribute.attribute_processor" class="Sylake\SyliusConsumerPlugin\Attribute\CompositeAttributeProcessor">
+        <service id="sylake_sylius_consumer.attribute.attribute_processor" class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\CompositeAttributeProcessor">
             <argument type="service">
-                <service class="Sylake\SyliusConsumerPlugin\Attribute\NameAttributeProcessor">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\NameAttributeProcessor">
                     <argument>%sylake_sylius_consumer.denormalizer.product.name_attribute%</argument>
                 </service>
             </argument>
             <argument type="service">
-                <service class="Sylake\SyliusConsumerPlugin\Attribute\DescriptionAttributeProcessor">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\DescriptionAttributeProcessor">
                     <argument>%sylake_sylius_consumer.denormalizer.product.description_attribute%</argument>
                 </service>
             </argument>
             <argument type="service">
-                <service class="Sylake\SyliusConsumerPlugin\Attribute\ChannelAttributeProcessor">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\ChannelAttributeProcessor">
                     <argument type="service" id="sylius.repository.channel" />
                     <argument type="service" id="sylius.repository.currency" />
                     <argument>%sylake_sylius_consumer.denormalizer.product.price_attribute%</argument>
                 </service>
             </argument>
             <argument type="service">
-                <service class="Sylake\SyliusConsumerPlugin\Attribute\ChannelPricingAttributeProcessor">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\ChannelPricingAttributeProcessor">
                     <argument type="service" id="sylius.factory.channel_pricing" />
                     <argument type="service" id="sylius.repository.channel" />
                     <argument type="service" id="sylius.repository.currency" />
@@ -64,30 +64,30 @@
                 </service>
             </argument>
             <argument type="service">
-                <service class="Sylake\SyliusConsumerPlugin\Attribute\ImageAttributeProcessor">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\ImageAttributeProcessor">
                     <argument type="service" id="sylius.factory.product_image" />
                     <argument type="service" id="sylius.repository.product_image" />
                     <argument>%sylake_sylius_consumer.denormalizer.product.image_attribute%</argument>
                 </service>
             </argument>
             <argument type="service">
-                <service class="Sylake\SyliusConsumerPlugin\Attribute\UnitAttributeProcessor">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\UnitAttributeProcessor">
                     <argument type="service" id="sylake_sylius_consumer.attribute.attribute_value_provider" />
                 </service>
             </argument>
             <argument type="service">
-                <service class="Sylake\SyliusConsumerPlugin\Attribute\StringCollectionAttributeProcessor">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\StringCollectionAttributeProcessor">
                     <argument type="service" id="sylake_sylius_consumer.attribute.attribute_value_provider" />
                     <argument type="service" id="sylake_sylius_consumer.attribute.attribute_option_resolver" />
                 </service>
             </argument>
             <argument type="service">
-                <service class="Sylake\SyliusConsumerPlugin\Attribute\DateAttributeProcessor">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\DateAttributeProcessor">
                     <argument type="service" id="sylake_sylius_consumer.attribute.attribute_value_provider" />
                 </service>
             </argument>
             <argument type="service">
-                <service class="Sylake\SyliusConsumerPlugin\Attribute\ScalarAttributeProcessor">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\ScalarAttributeProcessor">
                     <argument type="service" id="sylake_sylius_consumer.attribute.attribute_value_provider" />
                     <argument type="service" id="sylake_sylius_consumer.attribute.attribute_option_resolver" />
                 </service>
