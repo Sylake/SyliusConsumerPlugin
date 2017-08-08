@@ -20,6 +20,6 @@ final class AttributeUpdatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::ATTRIBUTE_UPDATED_MESSAGE_TYPE;
+        return 'akeneo_attribute_updated';
     }
 }

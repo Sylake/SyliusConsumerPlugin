@@ -22,6 +22,6 @@ final class GroupUpdatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::GROUP_UPDATED_MESSAGE_TYPE;
+        return 'akeneo_group_updated';
     }
 }

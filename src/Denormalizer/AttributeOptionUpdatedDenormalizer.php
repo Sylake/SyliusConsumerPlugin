@@ -22,6 +22,6 @@ final class AttributeOptionUpdatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::ATTRIBUTE_OPTION_UPDATED_MESSAGE_TYPE;
+        return 'akeneo_attribute_option_updated';
     }
 }
