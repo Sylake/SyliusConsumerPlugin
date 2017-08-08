@@ -23,6 +23,15 @@
                 </service>
             </argument>
         </service>
+        <service id="sylake_sylius_consumer.repository.akeneo_group" class="Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service">
+                <service class="Doctrine\ORM\Mapping\ClassMetadata">
+                    <factory service="doctrine.orm.default_entity_manager" method="getClassMetadata" />
+                    <argument>Sylake\SyliusConsumerPlugin\Entity\AkeneoGroup</argument>
+                </service>
+            </argument>
+        </service>
         <service id="sylake_sylius_consumer.attribute.attribute_option_resolver" class="Sylake\SyliusConsumerPlugin\Attribute\AttributeOptionResolver">
             <argument type="service" id="sylake_sylius_consumer.repository.akeneo_attribute_option" />
         </service>
@@ -112,6 +121,11 @@
             <argument type="service" id="monolog.logger" />
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\FamilyUpdated" method="__invoke" />
         </service>
+        <service class="Sylake\SyliusConsumerPlugin\Projector\GroupProjector">
+            <argument type="service" id="sylake_sylius_consumer.repository.akeneo_group" />
+            <argument type="service" id="monolog.logger" />
+            <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\GroupUpdated" method="__invoke" />
+        </service>
         <service class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
             <argument type="service" id="sylius.factory.product" />
             <argument type="service" id="sylius.factory.product_taxon" />
@@ -145,6 +159,9 @@
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Denormalizer\FamilyUpdatedDenormalizer">
+            <tag name="rabbitmq_simplebus.amqp_denormalizer" />
+        </service>
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\GroupUpdatedDenormalizer">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
         <service class="Sylake\SyliusConsumerPlugin\Denormalizer\ProductUpdatedDenormalizer">
