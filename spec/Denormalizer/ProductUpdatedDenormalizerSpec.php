@@ -47,8 +47,7 @@ final class ProductUpdatedDenormalizerSpec extends ObjectBehavior
                 "categories": [],
                 "enabled": true,
                 "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple"}]
                 },
                 "created": "2017-04-18T12:30:45+02:30",
                 "associations": {}
@@ -60,10 +59,9 @@ final class ProductUpdatedDenormalizerSpec extends ObjectBehavior
             'AKNTS_BPXS',
             true,
             [],
-            [
-                'name' => [['locale' => null, 'scope' => null, 'data' => 'Akeneo T-Shirt black and purple with short sleeve']],
-                'description' => [['locale' => 'en_US', 'scope' => 'mobile', 'data' => 'T-Shirt description']],
-            ],
+            ['name' => [['locale' => null, 'scope' => null, 'data' => 'Akeneo T-Shirt black and purple']]],
+            [],
+            null,
             [],
             \DateTime::createFromFormat(\DateTime::ATOM, '2017-04-18T12:30:45+02:30')
         ));
@@ -78,7 +76,7 @@ final class ProductUpdatedDenormalizerSpec extends ObjectBehavior
                 "categories": [],
                 "enabled": false,
                 "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple"}]
                 },
                 "created": "2017-04-18T12:45:45+02:30",
                 "associations": {}
@@ -94,7 +92,7 @@ final class ProductUpdatedDenormalizerSpec extends ObjectBehavior
                 "categories": [],
                 "enabled": false,
                 "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple"}]
                 },
                 "created": "2017-04-18T12:45:45+02:30",
                 "associations": {}
@@ -114,8 +112,7 @@ final class ProductUpdatedDenormalizerSpec extends ObjectBehavior
                 "categories": [],
                 "enabled": true,
                 "values": {
-                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple with short sleeve"}],
-                    "description": [{"locale": "en_US", "scope": "mobile", "data": "T-Shirt description"}]
+                    "name": [{"locale": null, "scope": null, "data": "Akeneo T-Shirt black and purple"}]
                 },
                 "created": "2017-04-18T12:30:45+02:30",
                 "associations": {},
@@ -128,10 +125,9 @@ final class ProductUpdatedDenormalizerSpec extends ObjectBehavior
             'AKNTS_BPXS',
             true,
             [],
-            [
-                'name' => [['locale' => null, 'scope' => null, 'data' => 'Akeneo T-Shirt black and purple with short sleeve']],
-                'description' => [['locale' => 'en_US', 'scope' => 'mobile', 'data' => 'T-Shirt description']],
-            ],
+            ['name' => [['locale' => null, 'scope' => null, 'data' => 'Akeneo T-Shirt black and purple']]],
+            [],
+            null,
             [],
             \DateTime::createFromFormat(\DateTime::ATOM, '2017-04-18T12:30:45+02:30')
         ));

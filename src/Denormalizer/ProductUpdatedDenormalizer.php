@@ -50,6 +50,8 @@ final class ProductUpdatedDenormalizer extends AkeneoDenormalizer
             $payload['categories'],
             $payload['values'],
             $this->getAssociations($payload),
+            $payload['family'] ?? '',
+            array_values($payload['groups'] ?? []),
             \DateTime::createFromFormat(\DateTime::ATOM, $payload['created']) ?: null
         );
     }
