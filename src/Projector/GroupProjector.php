@@ -67,6 +67,11 @@ final class GroupProjector
             'en_GB' => 'Groups codes',
             'de_DE' => 'Gruppencodes',
         ]));
+
+        $this->createAttributeIfNotExists('AKENEO_GROUPS_NAMES', new Translations([
+            'en_GB' => 'Groups',
+            'de_DE' => 'Gruppen',
+        ]));
     }
 
     private function createAttributeIfNotExists(string $code, Translations $names): void

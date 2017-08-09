@@ -30,6 +30,9 @@ final class ProductGroupSynchronizationTest extends ProductSynchronizationTestCa
      */
     public function it_adds_updates_and_removes_a_family_code_attribute(): void
     {
+        $this->consumeGroup('FIRST_GROUP_CODE', ['en_US' => 'Group 1.', 'de_DE' => 'Gruppe 1.']);
+        $this->consumeGroup('SECOND_GROUP_CODE', ['en_US' => 'Group 2.', 'de_DE' => 'Gruppe 2.']);
+
         $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
@@ -51,6 +54,10 @@ final class ProductGroupSynchronizationTest extends ProductSynchronizationTestCa
         Assert::assertNotNull($product);
         Assert::assertSame('FIRST_GROUP_CODE, SECOND_GROUP_CODE', $product->getAttributeByCodeAndLocale('AKENEO_GROUPS_CODES', 'en_US')->getValue());
         Assert::assertSame('FIRST_GROUP_CODE, SECOND_GROUP_CODE', $product->getAttributeByCodeAndLocale('AKENEO_GROUPS_CODES', 'de_DE')->getValue());
+        Assert::assertSame('Group 1., Group 2.', $product->getAttributeByCodeAndLocale('AKENEO_GROUPS_NAMES', 'en_US')->getValue());
+        Assert::assertSame('Gruppe 1., Gruppe 2.', $product->getAttributeByCodeAndLocale('AKENEO_GROUPS_NAMES', 'de_DE')->getValue());
+
+        $this->consumeGroup('FIRST_GROUP_CODE', ['en_US' => 'Group 1. (updated)', 'de_DE' => 'Gruppe 1. (updated)']);
 
         $this->consume('{
             "type": "akeneo_product_updated",
@@ -73,6 +80,8 @@ final class ProductGroupSynchronizationTest extends ProductSynchronizationTestCa
         Assert::assertNotNull($product);
         Assert::assertSame('FIRST_GROUP_CODE', $product->getAttributeByCodeAndLocale('AKENEO_GROUPS_CODES', 'en_US')->getValue());
         Assert::assertSame('FIRST_GROUP_CODE', $product->getAttributeByCodeAndLocale('AKENEO_GROUPS_CODES', 'de_DE')->getValue());
+        Assert::assertSame('Group 1. (updated)', $product->getAttributeByCodeAndLocale('AKENEO_GROUPS_NAMES', 'en_US')->getValue());
+        Assert::assertSame('Gruppe 1. (updated)', $product->getAttributeByCodeAndLocale('AKENEO_GROUPS_NAMES', 'de_DE')->getValue());
 
         $this->consume('{
             "type": "akeneo_product_updated",
@@ -95,5 +104,7 @@ final class ProductGroupSynchronizationTest extends ProductSynchronizationTestCa
         Assert::assertNotNull($product);
         Assert::assertNull($product->getAttributeByCodeAndLocale('AKENEO_GROUPS_CODES', 'en_US'));
         Assert::assertNull($product->getAttributeByCodeAndLocale('AKENEO_GROUPS_CODES', 'de_DE'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('AKENEO_GROUPS_NAMES', 'en_US'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('AKENEO_GROUPS_NAMES', 'de_DE'));
     }
 }

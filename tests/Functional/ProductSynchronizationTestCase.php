@@ -89,6 +89,17 @@ abstract class ProductSynchronizationTestCase extends SynchronizationTestCase
         }', json_encode($code), json_encode($labels)));
     }
 
+    protected function consumeGroup(string $code, array $labels): void
+    {
+        $this->consume(sprintf('{
+            "type": "akeneo_group_updated",
+            "payload": {
+                "code": %s,
+                "labels": %s
+            }
+        }', json_encode($code), json_encode($labels)));
+    }
+
     protected function consumeTaxon(string $code, ?string $parentCode, array $labels): void
     {
         $this->consume(sprintf('{

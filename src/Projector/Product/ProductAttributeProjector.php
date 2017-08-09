@@ -89,6 +89,7 @@ final class ProductAttributeProjector
 
         return [
             'AKENEO_GROUPS_CODES' => [['locale' => null, 'data' => $event->groups()]],
+            'AKENEO_GROUPS_NAMES' => [['locale' => null, 'data' => $event->groups()]],
         ];
     }
 }
