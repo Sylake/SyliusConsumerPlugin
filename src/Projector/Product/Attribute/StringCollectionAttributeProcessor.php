@@ -2,20 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Sylake\SyliusConsumerPlugin\Attribute;
+namespace Sylake\SyliusConsumerPlugin\Projector\Product\Attribute;
 
 use Sylake\SyliusConsumerPlugin\Model\Attribute;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 
-final class UnitAttributeProcessor implements AttributeProcessorInterface
+final class StringCollectionAttributeProcessor implements AttributeProcessorInterface
 {
     /** @var AttributeValueProviderInterface */
     private $attributeValueProvider;
 
-    public function __construct(AttributeValueProviderInterface $attributeValueProvider)
-    {
+    /** @var AttributeOptionResolverInterface */
+    private $attributeOptionResolver;
+
+    public function __construct(
+        AttributeValueProviderInterface $attributeValueProvider,
+        AttributeOptionResolverInterface $attributeOptionResolver
+    ) {
         $this->attributeValueProvider = $attributeValueProvider;
+        $this->attributeOptionResolver = $attributeOptionResolver;
     }
 
     /** {@inheritdoc} */
@@ -27,7 +33,7 @@ final class UnitAttributeProcessor implements AttributeProcessorInterface
 
         /** @var array $data */
         $data = $attribute->data();
-        if (null === $data['amount']) {
+        if ([] === $data) {
             return [];
         }
 
@@ -37,17 +43,17 @@ final class UnitAttributeProcessor implements AttributeProcessorInterface
             return [];
         }
 
-        $attributeValue->setValue(sprintf('%s %s', $data['amount'], $data['unit']));
+        $attributeValue->setValue(implode(', ', array_map(function (string $value) use ($attribute): string {
+            return $this->attributeOptionResolver->resolve($attribute->attribute(), $attribute->locale(), $value);
+        }, $data)));
 
         return [$attributeValue];
     }
 
     private function supports(Attribute $attribute): bool
     {
-        return is_array($attribute->data())
-            && count($attribute->data()) === 2
-            && array_key_exists('amount', $attribute->data())
-            && array_key_exists('unit', $attribute->data())
-        ;
+        return is_array($attribute->data()) && array_reduce($attribute->data(), function (bool $accumulator, $value): bool {
+            return $accumulator && is_string($value) && !empty($value);
+        }, true);
     }
 }

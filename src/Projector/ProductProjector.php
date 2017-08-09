@@ -6,9 +6,10 @@ namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Doctrine\Common\Collections\Collection;
 use Psr\Log\LoggerInterface;
-use Sylake\SyliusConsumerPlugin\Attribute\AttributeProcessorInterface;
+use Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\AttributeProcessorInterface;
 use Sylake\SyliusConsumerPlugin\Event\ProductUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Attributes;
+use Sylake\SyliusConsumerPlugin\Projector\Product\ProductSlugGeneratorInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductTaxonInterface;
 use Sylius\Component\Core\Model\ProductTranslationInterface;

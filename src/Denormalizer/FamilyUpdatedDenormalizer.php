@@ -22,6 +22,6 @@ final class FamilyUpdatedDenormalizer extends AkeneoDenormalizer
      */
     protected function getSupportedMessageType(): string
     {
-        return MessageType::FAMILY_UPDATED_MESSAGE_TYPE;
+        return 'akeneo_family_updated';
     }
 }
