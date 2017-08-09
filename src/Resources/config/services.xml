@@ -10,4 +10,12 @@
         <import resource="services/product.xml" />
         <import resource="services/taxon.xml" />
     </imports>
+
+    <services>
+        <service class="Sylake\SyliusConsumerPlugin\Command\SetupCommand">
+            <argument type="service" id="sylius.repository.product_attribute" />
+            <argument type="service" id="sylius.factory.product_attribute" />
+            <tag name="console.command" />
+        </service>
+    </services>
 </container>

@@ -29,7 +29,12 @@ final class ProductAttributeProjector
 
     public function __invoke(ProductUpdated $event, ProductInterface $product): void
     {
-        $this->handleAttributes($event->attributes(), $product);
+        $attributes = array_merge(
+            $event->attributes(),
+            $this->provideFamilyRelatedAttributes($event)
+        );
+
+        $this->handleAttributes($attributes, $product);
     }
 
     private function handleAttributes(array $attributes, ProductInterface $product): void
@@ -61,5 +66,18 @@ final class ProductAttributeProjector
         }
 
         return $processedAttributes;
+    }
+
+    private function provideFamilyRelatedAttributes(ProductUpdated $event): array
+    {
+        $attributes = [];
+
+        if (null === $event->family()) {
+            return $attributes;
+        }
+
+        $attributes['AKENEO_FAMILY_CODE'] = [['locale' => null, 'data' => $event->family()]];
+
+        return $attributes;
     }
 }
