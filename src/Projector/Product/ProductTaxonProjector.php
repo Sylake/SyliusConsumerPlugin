@@ -57,24 +57,12 @@ final class ProductTaxonProjector
         $currentProductTaxons = $product->getProductTaxons()->toArray();
         $processedProductTaxons = $this->processProductTaxons($taxonCodes, $product);
 
-        $compareProductTaxons = function (ProductTaxonInterface $a, ProductTaxonInterface $b): int {
-            return $a->getId() <=> $b->getId();
-        };
-
-        $productTaxonToAdd = array_udiff(
-            $processedProductTaxons,
-            $currentProductTaxons,
-            $compareProductTaxons
-        );
+        $productTaxonToAdd = ResourceUtil::diff($processedProductTaxons, $currentProductTaxons);
         foreach ($productTaxonToAdd as $productTaxon) {
             $product->addProductTaxon($productTaxon);
         }
 
-        $productTaxonToRemove = array_udiff(
-            $currentProductTaxons,
-            $processedProductTaxons,
-            $compareProductTaxons
-        );
+        $productTaxonToRemove = ResourceUtil::diff($currentProductTaxons, $processedProductTaxons);
         foreach ($productTaxonToRemove as $productTaxon) {
             $product->removeProductTaxon($productTaxon);
         }
