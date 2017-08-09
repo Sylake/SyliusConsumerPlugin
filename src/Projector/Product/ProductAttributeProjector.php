@@ -77,6 +77,7 @@ final class ProductAttributeProjector
 
         return [
             'AKENEO_FAMILY_CODE' => [['locale' => null, 'data' => $event->family()]],
+            'AKENEO_FAMILY_NAME' => [['locale' => null, 'data' => $event->family()]],
         ];
     }
 

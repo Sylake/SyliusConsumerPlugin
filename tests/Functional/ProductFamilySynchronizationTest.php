@@ -30,6 +30,11 @@ final class ProductFamilySynchronizationTest extends ProductSynchronizationTestC
      */
     public function it_adds_updates_and_removes_a_family_code_attribute(): void
     {
+        $this->consumeFamily('FAMILY_CODE', [
+            'en_US' => 'Family',
+            'de_DE' => 'Familie',
+        ]);
+
         $this->consume('{
             "type": "akeneo_product_updated",
             "payload": {
@@ -51,6 +56,13 @@ final class ProductFamilySynchronizationTest extends ProductSynchronizationTestC
         Assert::assertNotNull($product);
         Assert::assertSame('FAMILY_CODE', $product->getAttributeByCodeAndLocale('AKENEO_FAMILY_CODE', 'en_US')->getValue());
         Assert::assertSame('FAMILY_CODE', $product->getAttributeByCodeAndLocale('AKENEO_FAMILY_CODE', 'de_DE')->getValue());
+        Assert::assertSame('Family', $product->getAttributeByCodeAndLocale('AKENEO_FAMILY_NAME', 'en_US')->getValue());
+        Assert::assertSame('Familie', $product->getAttributeByCodeAndLocale('AKENEO_FAMILY_NAME', 'de_DE')->getValue());
+
+        $this->consumeFamily('FAMILY_CODE_UPDATED', [
+            'en_US' => 'Family (updated)',
+            'de_DE' => 'Familie (updated)',
+        ]);
 
         $this->consume('{
             "type": "akeneo_product_updated",
@@ -73,6 +85,8 @@ final class ProductFamilySynchronizationTest extends ProductSynchronizationTestC
         Assert::assertNotNull($product);
         Assert::assertSame('FAMILY_CODE_UPDATED', $product->getAttributeByCodeAndLocale('AKENEO_FAMILY_CODE', 'en_US')->getValue());
         Assert::assertSame('FAMILY_CODE_UPDATED', $product->getAttributeByCodeAndLocale('AKENEO_FAMILY_CODE', 'de_DE')->getValue());
+        Assert::assertSame('Family (updated)', $product->getAttributeByCodeAndLocale('AKENEO_FAMILY_NAME', 'en_US')->getValue());
+        Assert::assertSame('Familie (updated)', $product->getAttributeByCodeAndLocale('AKENEO_FAMILY_NAME', 'de_DE')->getValue());
 
         $this->consume('{
             "type": "akeneo_product_updated",
@@ -95,5 +109,7 @@ final class ProductFamilySynchronizationTest extends ProductSynchronizationTestC
         Assert::assertNotNull($product);
         Assert::assertNull($product->getAttributeByCodeAndLocale('AKENEO_FAMILY_CODE', 'en_US'));
         Assert::assertNull($product->getAttributeByCodeAndLocale('AKENEO_FAMILY_CODE', 'de_DE'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('AKENEO_FAMILY_NAME', 'en_US'));
+        Assert::assertNull($product->getAttributeByCodeAndLocale('AKENEO_FAMILY_NAME', 'de_DE'));
     }
 }

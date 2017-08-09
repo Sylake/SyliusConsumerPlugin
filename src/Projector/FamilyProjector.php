@@ -67,6 +67,11 @@ final class FamilyProjector
             'en_GB' => 'Family code',
             'de_DE' => 'Familiencode',
         ]));
+
+        $this->createAttributeIfNotExists('AKENEO_FAMILY_NAME', new Translations([
+            'en_GB' => 'Family',
+            'de_DE' => 'Familie',
+        ]));
     }
 
     private function createAttributeIfNotExists(string $code, Translations $names): void
