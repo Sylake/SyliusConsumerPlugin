@@ -11,10 +11,11 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
  */
 final class FamilySynchronizationTest extends SynchronizationTestCase
 {
-    /**
-     * @var RepositoryInterface
-     */
+    /** @var RepositoryInterface */
     private $akeneoAttributeOptionRepository;
+
+    /** @var RepositoryInterface */
+    private $attributeRepository;
 
     /**
      * {@inheritdoc}
@@ -24,6 +25,7 @@ final class FamilySynchronizationTest extends SynchronizationTestCase
         parent::setUp();
 
         $this->akeneoAttributeOptionRepository = static::$kernel->getContainer()->get('sylake_sylius_consumer.repository.akeneo_attribute_option');
+        $this->attributeRepository = static::$kernel->getContainer()->get('sylius.repository.product_attribute');
     }
 
     /**
@@ -53,6 +55,9 @@ final class FamilySynchronizationTest extends SynchronizationTestCase
         Assert::assertSame('AKENEO_FAMILY_NAME', $akeneoAttributeOption->getAttribute());
         Assert::assertSame(['de_DE' => 'Familie', 'en_GB' => 'Family'], $akeneoAttributeOption->getLabels());
 
+        Assert::assertNotNull($this->attributeRepository->findOneBy(['code' => 'AKENEO_FAMILY_CODE']));
+        Assert::assertNotNull($this->attributeRepository->findOneBy(['code' => 'AKENEO_FAMILY_NAME']));
+
         $this->consume('{
             "type": "akeneo_family_updated",
             "payload": {
@@ -74,5 +79,8 @@ final class FamilySynchronizationTest extends SynchronizationTestCase
         Assert::assertSame('FAMILY', $akeneoAttributeOption->getCode());
         Assert::assertSame('AKENEO_FAMILY_NAME', $akeneoAttributeOption->getAttribute());
         Assert::assertSame(['de_DE' => 'Familie (updated)', 'en_GB' => 'Family (updated)'], $akeneoAttributeOption->getLabels());
+
+        Assert::assertNotNull($this->attributeRepository->findOneBy(['code' => 'AKENEO_FAMILY_CODE']));
+        Assert::assertNotNull($this->attributeRepository->findOneBy(['code' => 'AKENEO_FAMILY_NAME']));
     }
 }
