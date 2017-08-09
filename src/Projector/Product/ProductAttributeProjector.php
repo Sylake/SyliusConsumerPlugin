@@ -9,7 +9,6 @@ use Sylake\SyliusConsumerPlugin\Model\Attributes;
 use Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\AttributeProcessorInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Locale\Model\LocaleInterface;
-use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class ProductAttributeProjector
@@ -38,24 +37,12 @@ final class ProductAttributeProjector
         $currentProductAttributes = $product->getAttributes()->toArray();
         $processedProductAttributes = $this->processAttributes($attributes, $product);
 
-        $compareProductAttributes = function (ProductAttributeValueInterface $a, ProductAttributeValueInterface $b): int {
-            return $a->getId() <=> $b->getId();
-        };
-
-        $productTaxonToAdd = array_udiff(
-            $processedProductAttributes,
-            $currentProductAttributes,
-            $compareProductAttributes
-        );
+        $productTaxonToAdd = ResourceUtil::diff($processedProductAttributes, $currentProductAttributes);
         foreach ($productTaxonToAdd as $productTaxon) {
             $product->addAttribute($productTaxon);
         }
 
-        $productTaxonToRemove = array_udiff(
-            $currentProductAttributes,
-            $processedProductAttributes,
-            $compareProductAttributes
-        );
+        $productTaxonToRemove = ResourceUtil::diff($currentProductAttributes, $processedProductAttributes);
         foreach ($productTaxonToRemove as $productTaxon) {
             $product->removeAttribute($productTaxon);
         }

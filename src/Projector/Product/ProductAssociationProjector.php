@@ -48,27 +48,14 @@ final class ProductAssociationProjector
         /** @var Collection|ProductAssociationInterface[] $currentProductAssociations */
         $currentProductAssociations = $product->getAssociations();
         $currentProductAssociations = $currentProductAssociations->toArray();
-
         $processedProductAssociations = $this->processAssociations($associations, $product);
 
-        $compareProductAssociations = function (ProductAssociationInterface $a, ProductAssociationInterface $b): int {
-            return $a->getId() <=> $b->getId();
-        };
-
-        $productAssociationToAdd = array_udiff(
-            $processedProductAssociations,
-            $currentProductAssociations,
-            $compareProductAssociations
-        );
+        $productAssociationToAdd = ResourceUtil::diff($processedProductAssociations, $currentProductAssociations);
         foreach ($productAssociationToAdd as $productAssociation) {
             $product->addAssociation($productAssociation);
         }
 
-        $productAssociationToRemove = array_udiff(
-            $currentProductAssociations,
-            $processedProductAssociations,
-            $compareProductAssociations
-        );
+        $productAssociationToRemove = ResourceUtil::diff($currentProductAssociations, $processedProductAssociations);
         foreach ($productAssociationToRemove as $productAssociation) {
             $product->removeAssociation($productAssociation);
         }
