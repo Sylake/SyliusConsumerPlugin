@@ -8,16 +8,29 @@
 
         <service class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
             <argument type="service" id="sylius.factory.product" />
-            <argument type="service" id="sylius.factory.product_taxon" />
-            <argument type="service" id="sylius.factory.product_association" />
             <argument type="service" id="sylake_sylius_consumer.projector.product_slug_generator" />
             <argument type="service" id="sylius.repository.product" />
-            <argument type="service" id="sylius.repository.product_taxon" />
-            <argument type="service" id="sylius.repository.taxon" />
-            <argument type="service" id="sylius.repository.product_association_type" />
-            <argument type="service" id="sylius.repository.product_association" />
-            <argument type="service" id="sylius.repository.locale" />
-            <argument type="service" id="sylake_sylius_consumer.attribute.attribute_processor" />
+            <argument type="service">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\ProductTaxonProjector">
+                    <argument type="service" id="sylius.factory.product_taxon" />
+                    <argument type="service" id="sylius.repository.product_taxon" />
+                    <argument type="service" id="sylius.repository.taxon" />
+                </service>
+            </argument>
+            <argument type="service">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\ProductAttributeProjector">
+                    <argument type="service" id="sylius.repository.locale" />
+                    <argument type="service" id="sylake_sylius_consumer.attribute.attribute_processor" />
+                </service>
+            </argument>
+            <argument type="service">
+                <service class="Sylake\SyliusConsumerPlugin\Projector\Product\ProductAssociationProjector">
+                    <argument type="service" id="sylius.factory.product_association" />
+                    <argument type="service" id="sylius.repository.product" />
+                    <argument type="service" id="sylius.repository.product_association_type" />
+                    <argument type="service" id="sylius.repository.product_association" />
+                </service>
+            </argument>
             <argument type="service" id="monolog.logger" />
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\ProductUpdated" method="__invoke" />
         </service>

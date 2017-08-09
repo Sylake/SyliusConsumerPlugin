@@ -4,23 +4,15 @@ declare(strict_types=1);
 
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
-use Doctrine\Common\Collections\Collection;
 use Psr\Log\LoggerInterface;
-use Sylake\SyliusConsumerPlugin\Projector\Product\Attribute\AttributeProcessorInterface;
 use Sylake\SyliusConsumerPlugin\Event\ProductUpdated;
-use Sylake\SyliusConsumerPlugin\Model\Attributes;
+use Sylake\SyliusConsumerPlugin\Projector\Product\ProductAssociationProjector;
+use Sylake\SyliusConsumerPlugin\Projector\Product\ProductAttributeProjector;
 use Sylake\SyliusConsumerPlugin\Projector\Product\ProductSlugGeneratorInterface;
+use Sylake\SyliusConsumerPlugin\Projector\Product\ProductTaxonProjector;
 use Sylius\Component\Core\Model\ProductInterface;
-use Sylius\Component\Core\Model\ProductTaxonInterface;
 use Sylius\Component\Core\Model\ProductTranslationInterface;
-use Sylius\Component\Core\Model\ProductVariantInterface;
-use Sylius\Component\Core\Model\TaxonInterface;
-use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
-use Sylius\Component\Product\Model\ProductAssociationInterface;
-use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
-use Sylius\Component\Product\Model\ProductAttributeValueInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Model\TranslationInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
@@ -30,16 +22,6 @@ final class ProductProjector
      * @var ProductFactoryInterface
      */
     private $productFactory;
-
-    /**
-     * @var FactoryInterface
-     */
-    private $productTaxonFactory;
-
-    /**
-     * @var FactoryInterface
-     */
-    private $associationFactory;
 
     /**
      * @var ProductSlugGeneratorInterface
@@ -52,34 +34,19 @@ final class ProductProjector
     private $productRepository;
 
     /**
-     * @var RepositoryInterface
+     * @var ProductTaxonProjector
      */
-    private $productTaxonRepository;
+    private $productTaxonProjector;
 
     /**
-     * @var RepositoryInterface
+     * @var ProductAttributeProjector
      */
-    private $taxonRepository;
+    private $productAttributeProjector;
 
     /**
-     * @var RepositoryInterface
+     * @var ProductAssociationProjector
      */
-    private $associationTypeRepository;
-
-    /**
-     * @var RepositoryInterface
-     */
-    private $associationRepository;
-
-    /**
-     * @var RepositoryInterface
-     */
-    private $localeRepository;
-
-    /**
-     * @var AttributeProcessorInterface
-     */
-    private $attributeProcessor;
+    private $productAssociationProjector;
 
     /**
      * @var LoggerInterface
@@ -88,29 +55,19 @@ final class ProductProjector
 
     public function __construct(
         ProductFactoryInterface $productFactory,
-        FactoryInterface $productTaxonFactory,
-        FactoryInterface $associationFactory,
         ProductSlugGeneratorInterface $productSlugGenerator,
         RepositoryInterface $productRepository,
-        RepositoryInterface $productTaxonRepository,
-        RepositoryInterface $taxonRepository,
-        RepositoryInterface $associationTypeRepository,
-        RepositoryInterface $associationRepository,
-        RepositoryInterface $localeRepository,
-        AttributeProcessorInterface $attributeProcessor,
+        ProductTaxonProjector $productTaxonProjector,
+        ProductAttributeProjector $productAttributeProjector,
+        ProductAssociationProjector $productAssociationProjector,
         LoggerInterface $logger
     ) {
         $this->productFactory = $productFactory;
-        $this->productTaxonFactory = $productTaxonFactory;
-        $this->associationFactory = $associationFactory;
         $this->productSlugGenerator = $productSlugGenerator;
         $this->productRepository = $productRepository;
-        $this->productTaxonRepository = $productTaxonRepository;
-        $this->taxonRepository = $taxonRepository;
-        $this->associationTypeRepository = $associationTypeRepository;
-        $this->associationRepository = $associationRepository;
-        $this->localeRepository = $localeRepository;
-        $this->attributeProcessor = $attributeProcessor;
+        $this->productTaxonProjector = $productTaxonProjector;
+        $this->productAttributeProjector = $productAttributeProjector;
+        $this->productAssociationProjector = $productAssociationProjector;
         $this->logger = $logger;
     }
 
@@ -119,14 +76,12 @@ final class ProductProjector
         $this->logger->debug(sprintf('Projecting product with code "%s".', $event->code()));
 
         $product = $this->provideProduct($event->code());
-        $productVariant = $this->provideProductVariant($event->code(), $product);
 
+        ($this->productTaxonProjector)($event, $product);
+        ($this->productAttributeProjector)($event, $product);
+        ($this->productAssociationProjector)($event, $product);
         $this->handleEnabled($event->enabled(), $product);
-        $this->handleMainTaxon($event->taxons(), $product);
-        $this->handleProductTaxons($event->taxons(), $product);
-        $this->handleAttributes($event->attributes(), $product);
-        $this->handleAssociations($event->associations(), $product);
-        $this->handleCreatedAt($event->createdAt(), $product, $productVariant);
+        $this->handleCreatedAt($event->createdAt(), $product);
         $this->handleSlug($product);
 
         $this->productRepository->add($product);
@@ -137,213 +92,16 @@ final class ProductProjector
         $product->setEnabled($enabled);
     }
 
-    /**
-     * Set main taxon to be the first most specific taxon.
-     */
-    private function handleMainTaxon(array $taxonCodes, ProductInterface $product): void
-    {
-        $mainTaxonCode = array_reduce($taxonCodes, function (string $mainTaxonCode, string $taxonCode): string {
-            return 0 === strpos($taxonCode, $mainTaxonCode) ? $taxonCode : $mainTaxonCode;
-        }, current($taxonCodes));
-
-        $mainTaxon = $this->taxonRepository->findOneBy(['code' => $mainTaxonCode]);
-
-        $product->setMainTaxon($mainTaxon);
-    }
-
-    private function handleProductTaxons(array $taxonCodes, ProductInterface $product): void
-    {
-        $currentProductTaxons = $product->getProductTaxons()->toArray();
-        $processedProductTaxons = $this->processProductTaxons($taxonCodes, $product);
-
-        $compareProductTaxons = function (ProductTaxonInterface $a, ProductTaxonInterface $b): int {
-            return $a->getId() <=> $b->getId();
-        };
-
-        $productTaxonToAdd = array_udiff(
-            $processedProductTaxons,
-            $currentProductTaxons,
-            $compareProductTaxons
-        );
-        foreach ($productTaxonToAdd as $productTaxon) {
-            $product->addProductTaxon($productTaxon);
-        }
-
-        $productTaxonToRemove = array_udiff(
-            $currentProductTaxons,
-            $processedProductTaxons,
-            $compareProductTaxons
-        );
-        foreach ($productTaxonToRemove as $productTaxon) {
-            $product->removeProductTaxon($productTaxon);
-        }
-    }
-
-    private function processProductTaxons(array $taxonCodes, ProductInterface $product): array
-    {
-        /** @var ProductTaxonInterface[] $productTaxons */
-        $productTaxons = [];
-
-        foreach ($taxonCodes as $taxonCode) {
-            /** @var TaxonInterface $taxon */
-            $taxon = $this->taxonRepository->findOneBy(['code' => $taxonCode]);
-
-            if (null === $taxon) {
-                continue;
-            }
-
-            $productTaxons[] = $this->provideProductTaxon($product, $taxon);
-        }
-
-        return $productTaxons;
-    }
-
-    private function provideProductTaxon(ProductInterface $product, TaxonInterface $taxon): ProductTaxonInterface
-    {
-        $productTaxon = $this->productTaxonRepository->findOneBy(['product' => $product, 'taxon' => $taxon]);
-
-        if (null === $productTaxon) {
-            /** @var ProductTaxonInterface $productTaxon */
-            $productTaxon = $this->productTaxonFactory->createNew();
-            $productTaxon->setTaxon($taxon);
-            $productTaxon->setProduct($product);
-        }
-
-        return $productTaxon;
-    }
-
-    private function handleAttributes(array $attributes, ProductInterface $product): void
-    {
-        $currentProductAttributes = $product->getAttributes()->toArray();
-        $processedProductAttributes = $this->processAttributes($attributes, $product);
-
-        $compareProductAttributes = function (ProductAttributeValueInterface $a, ProductAttributeValueInterface $b): int {
-            return $a->getId() <=> $b->getId();
-        };
-
-        $productTaxonToAdd = array_udiff(
-            $processedProductAttributes,
-            $currentProductAttributes,
-            $compareProductAttributes
-        );
-        foreach ($productTaxonToAdd as $productTaxon) {
-            $product->addAttribute($productTaxon);
-        }
-
-        $productTaxonToRemove = array_udiff(
-            $currentProductAttributes,
-            $processedProductAttributes,
-            $compareProductAttributes
-        );
-        foreach ($productTaxonToRemove as $productTaxon) {
-            $product->removeAttribute($productTaxon);
-        }
-    }
-
-    private function processAttributes(array $attributes, ProductInterface $product): array
-    {
-        $processedAttributes = [];
-
-        $locales = array_map(function (LocaleInterface $locale): string {
-            return $locale->getCode();
-        }, $this->localeRepository->findAll());
-
-        foreach (new Attributes($attributes, $locales) as $attribute) {
-            $processedAttributes = array_merge($processedAttributes, $this->attributeProcessor->process($product, $attribute));
-        }
-
-        return $processedAttributes;
-    }
-
-    private function handleAssociations(array $associations, ProductInterface $product): void
-    {
-        /** @var Collection|ProductAssociationInterface[] $currentProductAssociations */
-        $currentProductAssociations = $product->getAssociations();
-        $currentProductAssociations = $currentProductAssociations->toArray();
-
-        $processedProductAssociations = $this->processAssociations($associations, $product);
-
-        $compareProductAssociations = function (ProductAssociationInterface $a, ProductAssociationInterface $b): int {
-            return $a->getId() <=> $b->getId();
-        };
-
-        $productAssociationToAdd = array_udiff(
-            $processedProductAssociations,
-            $currentProductAssociations,
-            $compareProductAssociations
-        );
-        foreach ($productAssociationToAdd as $productAssociation) {
-            $product->addAssociation($productAssociation);
-        }
-
-        $productAssociationToRemove = array_udiff(
-            $currentProductAssociations,
-            $processedProductAssociations,
-            $compareProductAssociations
-        );
-        foreach ($productAssociationToRemove as $productAssociation) {
-            $product->removeAssociation($productAssociation);
-        }
-    }
-
-    private function processAssociations(array $associations, ProductInterface $product): array
-    {
-        /** @var ProductAssociationInterface[] $productAssociations */
-        $productAssociations = [];
-
-        foreach ($associations as $associationTypeCode => $productsCodes) {
-            /** @var ProductAssociationTypeInterface $associationType */
-            $associationType = $this->associationTypeRepository->findOneBy(['code' => $associationTypeCode]);
-
-            if (null === $associationType) {
-                continue;
-            }
-
-            $association = $this->provideAssociation($product, $associationType);
-
-            foreach ($association->getAssociatedProducts() as $associatedProduct) {
-                $association->removeAssociatedProduct($associatedProduct);
-            }
-
-            foreach ($productsCodes as $productCode) {
-                /** @var ProductInterface|null $relatedProduct */
-                $relatedProduct = $this->productRepository->findOneBy(['code' => $productCode]);
-
-                if (null === $relatedProduct) {
-                    continue;
-                }
-
-                $association->addAssociatedProduct($relatedProduct);
-            }
-
-            $productAssociations[] = $association;
-        }
-
-        return $productAssociations;
-    }
-
-    private function provideAssociation(ProductInterface $product, ProductAssociationTypeInterface $associationType): ProductAssociationInterface
-    {
-        /** @var ProductAssociationInterface $association */
-        $association = $this->associationRepository->findOneBy(['type' => $associationType, 'owner' => $product]);
-
-        if (null === $association) {
-            $association = $this->associationFactory->createNew();
-            $association->setOwner($product);
-            $association->setType($associationType);
-        }
-
-        return $association;
-    }
-
-    private function handleCreatedAt(\DateTime $createdAt, ProductInterface $product, ProductVariantInterface $productVariant): void
+    private function handleCreatedAt(\DateTime $createdAt, ProductInterface $product): void
     {
         // Doctrine saves dates stripping the timezone and retrieves them with the default one,
         // so we have to convert it to the default timezone to make it right
         $createdAt->setTimezone(new \DateTimeZone(date_default_timezone_get()));
 
         $product->setCreatedAt($createdAt);
-        $productVariant->setCreatedAt($createdAt);
+        foreach ($product->getVariants() as $productVariant) {
+            $productVariant->setCreatedAt($createdAt);
+        }
     }
 
     private function handleSlug(ProductInterface $product): void
@@ -362,17 +120,11 @@ final class ProductProjector
         if (null === $product) {
             $product = $this->productFactory->createWithVariant();
             $product->setCode($code);
+
+            $productVariant = current($product->getVariants()->slice(0, 1));
+            $productVariant->setCode($code);
         }
 
         return $product;
-    }
-
-    private function provideProductVariant(string $code, ProductInterface $product): ProductVariantInterface
-    {
-        /** @var ProductVariantInterface $productVariant */
-        $productVariant = current($product->getVariants()->slice(0, 1));
-        $productVariant->setCode($code);
-
-        return $productVariant;
     }
 }
