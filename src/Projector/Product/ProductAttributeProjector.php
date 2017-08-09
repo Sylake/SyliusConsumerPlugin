@@ -71,27 +71,23 @@ final class ProductAttributeProjector
 
     private function provideFamilyRelatedAttributes(ProductUpdated $event): array
     {
-        $attributes = [];
-
         if (null === $event->family()) {
-            return $attributes;
+            return [];
         }
 
-        $attributes['AKENEO_FAMILY_CODE'] = [['locale' => null, 'data' => $event->family()]];
-
-        return $attributes;
+        return [
+            'AKENEO_FAMILY_CODE' => [['locale' => null, 'data' => $event->family()]],
+        ];
     }
 
     private function provideGroupsRelatedAttributes(ProductUpdated $event): array
     {
-        $attributes = [];
-
         if ([] === $event->groups()) {
-            return $attributes;
+            return [];
         }
 
-        $attributes['AKENEO_GROUPS_CODES'] = [['locale' => null, 'data' => $event->groups()]];
-
-        return $attributes;
+        return [
+            'AKENEO_GROUPS_CODES' => [['locale' => null, 'data' => $event->groups()]],
+        ];
     }
 }
