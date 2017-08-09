@@ -35,6 +35,11 @@ final class SetupCommand extends Command
             'en_GB' => 'Family code',
             'de_DE' => 'Familiencode',
         ]), $output);
+
+        $this->createAttributeIfNotExists('AKENEO_GROUPS_CODES', new Translations([
+            'en_GB' => 'Groups codes',
+            'de_DE' => 'Gruppencodes',
+        ]), $output);
     }
 
     private function createAttributeIfNotExists(string $code, Translations $names, OutputInterface $output)

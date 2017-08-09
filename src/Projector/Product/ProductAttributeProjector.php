@@ -31,7 +31,8 @@ final class ProductAttributeProjector
     {
         $attributes = array_merge(
             $event->attributes(),
-            $this->provideFamilyRelatedAttributes($event)
+            $this->provideFamilyRelatedAttributes($event),
+            $this->provideGroupsRelatedAttributes($event)
         );
 
         $this->handleAttributes($attributes, $product);
@@ -77,6 +78,19 @@ final class ProductAttributeProjector
         }
 
         $attributes['AKENEO_FAMILY_CODE'] = [['locale' => null, 'data' => $event->family()]];
+
+        return $attributes;
+    }
+
+    private function provideGroupsRelatedAttributes(ProductUpdated $event): array
+    {
+        $attributes = [];
+
+        if ([] === $event->groups()) {
+            return $attributes;
+        }
+
+        $attributes['AKENEO_GROUPS_CODES'] = [['locale' => null, 'data' => $event->groups()]];
 
         return $attributes;
     }
