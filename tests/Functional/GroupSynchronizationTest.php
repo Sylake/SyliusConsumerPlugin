@@ -3,7 +3,7 @@
 namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 
 use PHPUnit\Framework\Assert;
-use Sylake\SyliusConsumerPlugin\Entity\AkeneoGroup;
+use Sylake\SyliusConsumerPlugin\Entity\AkeneoAttributeOption;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 /**
@@ -14,7 +14,7 @@ final class GroupSynchronizationTest extends SynchronizationTestCase
     /**
      * @var RepositoryInterface
      */
-    private $akeneoGroupRepository;
+    private $akeneoAttributeOptionRepository;
 
     /**
      * {@inheritdoc}
@@ -23,7 +23,7 @@ final class GroupSynchronizationTest extends SynchronizationTestCase
     {
         parent::setUp();
 
-        $this->akeneoGroupRepository = static::$kernel->getContainer()->get('sylake_sylius_consumer.repository.akeneo_group');
+        $this->akeneoAttributeOptionRepository = static::$kernel->getContainer()->get('sylake_sylius_consumer.repository.akeneo_attribute_option');
     }
 
     /**
@@ -42,12 +42,16 @@ final class GroupSynchronizationTest extends SynchronizationTestCase
             }
         }');
 
-        /** @var AkeneoGroup|null $akeneoGroup */
-        $akeneoGroup = $this->akeneoGroupRepository->findOneBy(['code' => 'GROUP']);
+        /** @var AkeneoAttributeOption|null $akeneoAttributeOption */
+        $akeneoAttributeOption = $this->akeneoAttributeOptionRepository->findOneBy([
+            'code' => 'GROUP',
+            'attribute' => 'AKENEO_GROUPS_NAMES',
+        ]);
 
-        Assert::assertNotNull($akeneoGroup);
-        Assert::assertSame('GROUP', $akeneoGroup->getCode());
-        Assert::assertSame(['de_DE' => 'Gruppe', 'en_GB' => 'Group'], $akeneoGroup->getLabels());
+        Assert::assertNotNull($akeneoAttributeOption);
+        Assert::assertSame('GROUP', $akeneoAttributeOption->getCode());
+        Assert::assertSame('AKENEO_GROUPS_NAMES', $akeneoAttributeOption->getAttribute());
+        Assert::assertSame(['de_DE' => 'Gruppe', 'en_GB' => 'Group'], $akeneoAttributeOption->getLabels());
 
         $this->consume('{
             "type": "akeneo_group_updated",
@@ -60,12 +64,15 @@ final class GroupSynchronizationTest extends SynchronizationTestCase
             }
         }');
 
-        /** @var AkeneoGroup|null $akeneoGroup */
-        $akeneoGroup = $this->akeneoGroupRepository->findOneBy(['code' => 'GROUP']);
+        /** @var AkeneoAttributeOption|null $akeneoAttributeOption */
+        $akeneoAttributeOption = $this->akeneoAttributeOptionRepository->findOneBy([
+            'code' => 'GROUP',
+            'attribute' => 'AKENEO_GROUPS_NAMES',
+        ]);
 
-        Assert::assertNotNull($akeneoGroup);
-        Assert::assertNotNull($akeneoGroup);
-        Assert::assertSame('GROUP', $akeneoGroup->getCode());
-        Assert::assertSame(['de_DE' => 'Gruppe (updated)', 'en_GB' => 'Group (updated)'], $akeneoGroup->getLabels());
+        Assert::assertNotNull($akeneoAttributeOption);
+        Assert::assertSame('GROUP', $akeneoAttributeOption->getCode());
+        Assert::assertSame('AKENEO_GROUPS_NAMES', $akeneoAttributeOption->getAttribute());
+        Assert::assertSame(['de_DE' => 'Gruppe (updated)', 'en_GB' => 'Group (updated)'], $akeneoAttributeOption->getLabels());
     }
 }

@@ -6,25 +6,12 @@ namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 
 use PHPUnit\Framework\Assert;
 use Sylius\Component\Core\Model\ProductInterface;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\NullOutput;
 
 /**
  * @author Kamil Kokot <kamil@kokot.me>
  */
 final class ProductGroupSynchronizationTest extends ProductSynchronizationTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        (new Application(static::$kernel))->find('sylake:consumer:setup')->run(new ArrayInput([]), new NullOutput());
-    }
-
     /**
      * @test
      */
