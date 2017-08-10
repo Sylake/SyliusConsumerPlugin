@@ -34,12 +34,24 @@ final class ProductUpdated
      */
     private $createdAt;
 
+    /**
+     * @var ?string
+     */
+    private $family;
+
+    /**
+     * @var array
+     */
+    private $groups;
+
     public function __construct(
         string $code,
         bool $enabled,
         array $taxons,
         array $attributes,
         array $associations,
+        ?string $family,
+        array $groups,
         ?\DateTime $createdAt
     ) {
         $this->code = $code;
@@ -47,6 +59,8 @@ final class ProductUpdated
         $this->taxons = $taxons;
         $this->attributes = $attributes;
         $this->associations = $associations;
+        $this->family = $family;
+        $this->groups = $groups;
         $this->createdAt = $createdAt;
     }
 
@@ -73,6 +87,16 @@ final class ProductUpdated
     public function associations(): array
     {
         return $this->associations;
+    }
+
+    public function family(): ?string
+    {
+        return $this->family;
+    }
+
+    public function groups(): array
+    {
+        return $this->groups;
     }
 
     public function createdAt(): ?\DateTime

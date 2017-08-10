@@ -7,20 +7,11 @@
         </service>
 
         <service class="Sylake\SyliusConsumerPlugin\Projector\GroupProjector">
-            <argument type="service" id="sylake_sylius_consumer.repository.akeneo_group" />
+            <argument type="service" id="sylius.repository.product_attribute" />
+            <argument type="service" id="sylake_sylius_consumer.repository.akeneo_attribute_option" />
+            <argument type="service" id="sylius.factory.product_attribute" />
             <argument type="service" id="monolog.logger" />
             <tag name="event_subscriber" subscribes_to="Sylake\SyliusConsumerPlugin\Event\GroupUpdated" method="__invoke" />
-        </service>
-
-        <service id="sylake_sylius_consumer.repository.akeneo_group"
-                 class="Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository">
-            <argument type="service" id="doctrine.orm.default_entity_manager" />
-            <argument type="service">
-                <service class="Doctrine\ORM\Mapping\ClassMetadata">
-                    <factory service="doctrine.orm.default_entity_manager" method="getClassMetadata" />
-                    <argument>Sylake\SyliusConsumerPlugin\Entity\AkeneoGroup</argument>
-                </service>
-            </argument>
         </service>
     </services>
 </container>
