@@ -6,7 +6,7 @@
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
 
-        <service class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
+        <service id="sylake_sylius_consumer.projector.product" class="Sylake\SyliusConsumerPlugin\Projector\ProductProjector">
             <argument type="service" id="sylius.factory.product" />
             <argument type="service" id="sylake_sylius_consumer.projector.product_slug_generator" />
             <argument type="service" id="sylius.repository.product" />
