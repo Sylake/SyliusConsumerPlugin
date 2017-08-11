@@ -7,22 +7,22 @@ use Prophecy\Argument;
 
 final class TranslationsSpec extends ObjectBehavior
 {
-    function it_throws_invalid_argument_exception_if_locale_is_invalid()
+    function it_ignores_invalid_locales()
     {
         $this->beConstructedWith([
             'invalidlocale' => 'translations',
         ]);
 
-        $this->shouldThrow(\InvalidArgumentException::class)->duringInstantiation();
+        $this->shouldIterateAs([]);
     }
 
-    function it_throws_invalid_argument_exception_if_translation_is_invalid()
+    function it_ignores_invalid_translations()
     {
         $this->beConstructedWith([
             'en_US' => ['array', 'is', 'invalid'],
         ]);
 
-        $this->shouldThrow(\InvalidArgumentException::class)->duringInstantiation();
+        $this->shouldIterateAs([]);
     }
 
     function it_does_not_throw_any_exceptions_if_translations_are_valid()
@@ -32,6 +32,9 @@ final class TranslationsSpec extends ObjectBehavior
             'pl_PL' => 'Drzewo',
         ]);
 
-        $this->shouldImplement(\Traversable::class);
+        $this->shouldIterateAs([
+            'en' => 'Tree',
+            'pl_PL' => 'Drzewo',
+        ]);
     }
 }
