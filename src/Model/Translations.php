@@ -16,7 +16,7 @@ final class Translations implements \IteratorAggregate
     {
         foreach ($translations as $locale => $translation) {
             if (false === (bool) preg_match('/^[a-z]{2}(?:_[A-Z]{2})?$/', $locale)) {
-                throw new \InvalidArgumentException('Invalid locale passed: ' . $locale);
+                continue;
             }
 
             if (null === $translation) {
@@ -24,10 +24,7 @@ final class Translations implements \IteratorAggregate
             }
 
             if (!is_scalar($translation)) {
-                throw new \InvalidArgumentException(sprintf(
-                    'Translation should be a scalar, %s given.',
-                    gettype($translation)
-                ));
+                continue;
             }
 
             $this->translations[$locale] = $translation;
