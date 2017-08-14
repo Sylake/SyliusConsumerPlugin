@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Sylake\SyliusConsumerPlugin\Event\ProductUpdated;
 use Sylake\SyliusConsumerPlugin\Projector\Product\ProductAssociationProjector;
 use Sylake\SyliusConsumerPlugin\Projector\Product\ProductAttributeProjector;
+use Sylake\SyliusConsumerPlugin\Projector\Product\ProductPostprocessorInterface;
 use Sylake\SyliusConsumerPlugin\Projector\Product\ProductSlugGeneratorInterface;
 use Sylake\SyliusConsumerPlugin\Projector\Product\ProductTaxonProjector;
 use Sylius\Component\Core\Model\ProductInterface;
@@ -53,6 +54,11 @@ final class ProductProjector
      */
     private $logger;
 
+    /**
+     * @var array|ProductPostprocessorInterface[]
+     */
+    private $postprocessors = [];
+
     public function __construct(
         ProductFactoryInterface $productFactory,
         ProductSlugGeneratorInterface $productSlugGenerator,
@@ -71,6 +77,11 @@ final class ProductProjector
         $this->logger = $logger;
     }
 
+    public function addPostprocessor(ProductPostprocessorInterface $postprocessor): void
+    {
+        $this->postprocessors[] = $postprocessor;
+    }
+
     public function __invoke(ProductUpdated $event): void
     {
         $this->logger->debug(sprintf('Projecting product with code "%s".', $event->code()));
@@ -83,6 +94,8 @@ final class ProductProjector
         $this->handleEnabled($event->enabled(), $product);
         $this->handleCreatedAt($event->createdAt(), $product);
         $this->handleSlug($product);
+
+        $this->handlePostprocessors($event, $product);
 
         $this->productRepository->add($product);
     }
@@ -126,5 +139,12 @@ final class ProductProjector
         }
 
         return $product;
+    }
+
+    private function handlePostprocessors(ProductUpdated $event, ProductInterface $product): void
+    {
+        foreach ($this->postprocessors as $postprocessor) {
+            $postprocessor($event, $product);
+        }
     }
 }

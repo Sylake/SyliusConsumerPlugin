@@ -49,3 +49,14 @@ Usage
 ```bash
 $ bin/console rabbitmq:consumer sylake
 ```
+
+Extending product projector
+---------------------------
+
+Adding a product postprocessor allows to change product before saving it.
+
+1. Create a class which implements `Sylake\SyliusConsumerPlugin\Projector\Product\ProductPostprocessorInterface`.
+
+2. Define it as a service with tag `sylake_sylius_consumer.projector.product.postprocessor`.
+
+3. :tada:
