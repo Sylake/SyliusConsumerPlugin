@@ -63,14 +63,25 @@ final class TaxonProjector
             $taxon->setCode($event->code());
         }
 
-        $taxon->setParent($event->parent() ? $this->repository->findOneBy(['code' => $event->parent()]) : null);
+        $parent = null;
+        if (null !== $event->parent()) {
+            /** @var TaxonInterface|null $parent */
+            $parent = $this->repository->findOneBy(['code' => $event->parent()]);
+        }
+
+        $taxon->setParent($parent);
 
         foreach ($event->names() as $locale => $name) {
+            if (null !== $parent) {
+                $parent->setFallbackLocale($locale);
+                $parent->setCurrentLocale($locale);
+            }
+
             $taxon->setFallbackLocale($locale);
             $taxon->setCurrentLocale($locale);
 
             $taxon->setName($name ?? $event->code());
-            $taxon->setSlug($this->slugGenerator->generate($taxon, $locale));
+            $taxon->setSlug($this->slugGenerator->generate($taxon->getName(), null !== $parent ? $parent->getId() : null));
         }
 
         $this->repository->add($taxon);
