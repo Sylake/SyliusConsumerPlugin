@@ -16,7 +16,7 @@ final class TranslationsTest extends TestCase
         $translations = new Translations([
             'en' => 'Tree',
             'pl_PL' => 'Drzewo',
-            'de_DE' => null,
+            'de_DE' => ['foo' => 'bar'],
         ]);
 
         $traversedTranslations = [];

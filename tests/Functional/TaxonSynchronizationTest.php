@@ -111,4 +111,31 @@ final class TaxonSynchronizationTest extends SynchronizationTestCase
         Assert::assertSame('Audio et Video (updated)', $taxon->getTranslation('fr_FR')->getName());
         Assert::assertSame('audio-et-video-updated', $taxon->getTranslation('fr_FR')->getSlug());
     }
+
+    /**
+     * @test
+     */
+    public function it_uses_taxon_code_as_its_name_if_it_does_not_have_name_in_given_locale()
+    {
+        $this->consume('{
+            "type": "akeneo_category_updated",
+            "payload": {
+                "code": "master",
+                "parent": null,
+                "labels": {
+                    "en_US": null,
+                    "de_DE": null
+                }
+            }
+        }');
+
+        /** @var TaxonInterface|null $taxon */
+        $taxon = $this->taxonRepository->findOneBy(['code' => 'master']);
+
+        Assert::assertNotNull($taxon);
+        Assert::assertSame('master', $taxon->getTranslation('en_US')->getName());
+        Assert::assertSame('master', $taxon->getTranslation('en_US')->getSlug());
+        Assert::assertSame('master', $taxon->getTranslation('de_DE')->getName());
+        Assert::assertSame('master', $taxon->getTranslation('de_DE')->getSlug());
+    }
 }

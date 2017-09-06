@@ -54,7 +54,7 @@ final class AssociationTypeProjector
         foreach ($event->names() as $locale => $name) {
             $associationType->setFallbackLocale($locale);
             $associationType->setCurrentLocale($locale);
-            $associationType->setName($name);
+            $associationType->setName($name ?? $event->code());
         }
 
         $this->repository->add($associationType);

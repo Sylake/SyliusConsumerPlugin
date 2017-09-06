@@ -68,7 +68,7 @@ final class AttributeProjector
         foreach ($event->names() as $locale => $name) {
             $attribute->setFallbackLocale($locale);
             $attribute->setCurrentLocale($locale);
-            $attribute->setName($name);
+            $attribute->setName($name ?? $event->code());
         }
 
         $this->repository->add($attribute);
