@@ -116,7 +116,7 @@ final class ChannelPricingAttributeProcessor implements AttributeProcessorInterf
                     $channelPricing->setProductVariant($productVariant);
                 }
 
-                $channelPricing->setPrice($price['amount'] * 100);
+                $channelPricing->setPrice((int) ($price['amount'] * 100));
 
                 $channelPricings[] = $channelPricing;
             }
