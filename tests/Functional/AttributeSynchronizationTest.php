@@ -79,4 +79,29 @@ final class AttributeSynchronizationTest extends SynchronizationTestCase
         Assert::assertSame('Main color (updated)', $attribute->getTranslation('en_US')->getName());
         Assert::assertSame('Couleur principale (updated)', $attribute->getTranslation('fr_FR')->getName());
     }
+
+    /**
+     * @test
+     */
+    public function it_uses_attribute_code_as_its_name_if_it_does_not_have_name_in_given_locale()
+    {
+        $this->consume('{
+            "type": "akeneo_attribute_updated",
+            "payload": {
+                "code": "main_color",
+                "type": "pim_catalog_simpleselect",
+                "labels": {
+                    "de_DE": null,
+                    "en_US": null
+                }
+            }
+        }');
+
+        /** @var ProductAttributeInterface|null $attribute */
+        $attribute = $this->attributeRepository->findOneBy(['code' => 'main_color']);
+
+        Assert::assertNotNull($attribute);
+        Assert::assertSame('main_color', $attribute->getTranslation('de_DE')->getName());
+        Assert::assertSame('main_color', $attribute->getTranslation('en_US')->getName());
+    }
 }

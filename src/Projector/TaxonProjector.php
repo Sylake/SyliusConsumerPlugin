@@ -69,7 +69,7 @@ final class TaxonProjector
             $taxon->setFallbackLocale($locale);
             $taxon->setCurrentLocale($locale);
 
-            $taxon->setName($name);
+            $taxon->setName($name ?? $event->code());
             $taxon->setSlug($this->slugGenerator->generate($taxon, $locale));
         }
 

@@ -76,4 +76,28 @@ final class AssociationTypeSynchronizationTest extends SynchronizationTestCase
         Assert::assertSame('Substitution (updated)', $associationType->getTranslation('en_US')->getName());
         Assert::assertSame('Remplacement (updated)', $associationType->getTranslation('fr_FR')->getName());
     }
+
+    /**
+     * @test
+     */
+    public function it_uses_association_code_as_its_name_if_it_does_not_have_name_in_given_locale()
+    {
+        $this->consume('{
+            "type": "akeneo_association_type_updated",
+            "payload": {
+                "code": "SUBSTITUTION",
+                "labels": {
+                    "de_DE": null,
+                    "en_US": null
+                }
+            }
+        }');
+
+        /** @var ProductAssociationTypeInterface|null $association */
+        $association = $this->associationTypeRepository->findOneBy(['code' => 'SUBSTITUTION']);
+
+        Assert::assertNotNull($association);
+        Assert::assertSame('SUBSTITUTION', $association->getTranslation('de_DE')->getName());
+        Assert::assertSame('SUBSTITUTION', $association->getTranslation('en_US')->getName());
+    }
 }

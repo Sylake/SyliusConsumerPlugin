@@ -19,11 +19,7 @@ final class Translations implements \IteratorAggregate
                 continue;
             }
 
-            if (null === $translation) {
-                continue;
-            }
-
-            if (!is_scalar($translation)) {
+            if (null !== $translation && !is_scalar($translation)) {
                 continue;
             }
 
