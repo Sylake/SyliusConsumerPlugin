@@ -19,7 +19,7 @@ final class ProductPostprocessorSynchronizationTest extends ProductSynchronizati
     {
         /** @var ProductProjector $productProjector */
         $productProjector = static::$kernel->getContainer()->get('sylake_sylius_consumer.projector.product');
-        $productProjector->addPostprocessor(new class implements ProductPostprocessorInterface {
+        $productProjector->addPostprocessor(new class() implements ProductPostprocessorInterface {
             public function __invoke(ProductUpdated $event, ProductInterface $product): void
             {
                 $product->setCode($product->getCode() . '_POSTPROCESSED');

@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 
-use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\Assert;
 use Sylius\Component\Core\Model\ProductInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class ProductAttributeSynchronizationTest extends ProductSynchronizationTestCase
 {
     /**

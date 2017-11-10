@@ -6,8 +6,6 @@ namespace Sylake\SyliusConsumerPlugin\Projector\Product\Attribute;
 
 use Sylake\SyliusConsumerPlugin\Model\Attribute;
 use Sylius\Component\Attribute\AttributeType\CheckboxAttributeType;
-use Sylius\Component\Attribute\AttributeType\DateAttributeType;
-use Sylius\Component\Attribute\AttributeType\IntegerAttributeType;
 use Sylius\Component\Attribute\AttributeType\TextareaAttributeType;
 use Sylius\Component\Attribute\AttributeType\TextAttributeType;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
@@ -56,6 +54,10 @@ final class ScalarAttributeProcessor implements AttributeProcessorInterface
     private function getValue(Attribute $attribute)
     {
         $value = $attribute->data();
+
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
 
         if (!is_string($value)) {
             return $value;

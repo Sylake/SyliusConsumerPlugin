@@ -11,9 +11,6 @@ use PhpAmqpLib\Message\AMQPMessage;
 use Sylius\Bundle\FixturesBundle\Fixture\FixtureInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 abstract class SynchronizationTestCase extends KernelTestCase
 {
     /**

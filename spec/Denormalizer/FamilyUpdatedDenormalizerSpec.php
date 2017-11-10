@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use PhpAmqpLib\Message\AMQPMessage;

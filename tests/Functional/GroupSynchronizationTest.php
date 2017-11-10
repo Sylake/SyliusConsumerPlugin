@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 
 use PHPUnit\Framework\Assert;
 use Sylake\SyliusConsumerPlugin\Entity\AkeneoAttributeOption;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class GroupSynchronizationTest extends SynchronizationTestCase
 {
     /** @var RepositoryInterface */

@@ -1,19 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManagerInterface;
-use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
-use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\Assert;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class TaxonSynchronizationTest extends SynchronizationTestCase
 {
     /**

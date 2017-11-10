@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Sylake\SyliusConsumerPlugin\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Sylake\SyliusConsumerPlugin\DependencyInjection\SylakeSyliusConsumerExtension;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class ExtensionTest extends AbstractExtensionTestCase
 {
     /**

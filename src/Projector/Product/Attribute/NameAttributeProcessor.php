@@ -36,5 +36,4 @@ final class NameAttributeProcessor implements AttributeProcessorInterface
     {
         return $this->nameAttribute === $attribute->attribute() && (is_string($attribute->data()) || null === $attribute->data());
     }
-
 }
