@@ -55,6 +55,10 @@ final class ScalarAttributeProcessor implements AttributeProcessorInterface
     {
         $value = $attribute->data();
 
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
         if (!is_string($value)) {
             return $value;
         }
