@@ -9,7 +9,6 @@ use SyliusLabs\RabbitMqSimpleBusBundle\Denormalizer\DenormalizationFailedExcepti
 
 final class ProductUpdatedDenormalizer extends AkeneoDenormalizer
 {
-
     /**
      * {@inheritdoc}
      */

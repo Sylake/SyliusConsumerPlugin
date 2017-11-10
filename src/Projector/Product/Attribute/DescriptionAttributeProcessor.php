@@ -36,5 +36,4 @@ final class DescriptionAttributeProcessor implements AttributeProcessorInterface
     {
         return $this->descriptionAttribute === $attribute->attribute() && is_string($attribute->data());
     }
-
 }

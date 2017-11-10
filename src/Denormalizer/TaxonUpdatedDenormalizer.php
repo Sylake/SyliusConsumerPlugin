@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sylake\SyliusConsumerPlugin\Denormalizer;
 
 use Sylake\SyliusConsumerPlugin\Event\TaxonUpdated;

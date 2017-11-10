@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sylake\SyliusConsumerPlugin;
 
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;

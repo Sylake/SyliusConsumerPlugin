@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sylake\SyliusConsumerPlugin\Projector;
 
 use Psr\Log\LoggerInterface;
 use Sylake\SyliusConsumerPlugin\Entity\AkeneoAttributeOption;
-use Sylake\SyliusConsumerPlugin\Entity\AkeneoFamily;
 use Sylake\SyliusConsumerPlugin\Event\FamilyUpdated;
 use Sylake\SyliusConsumerPlugin\Model\Translations;
 use Sylius\Component\Attribute\AttributeType\TextAttributeType;

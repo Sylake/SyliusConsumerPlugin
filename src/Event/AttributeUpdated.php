@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sylake\SyliusConsumerPlugin\Event;
 
 use Sylake\SyliusConsumerPlugin\Model\Translations;
@@ -12,7 +14,7 @@ final class AttributeUpdated
     /** @var string */
     private $type;
 
-    /**@var Translations */
+    /** @var Translations */
     private $names;
 
     public function __construct(string $code, string $type, Translations $names)

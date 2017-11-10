@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 
 use PHPUnit\Framework\Assert;

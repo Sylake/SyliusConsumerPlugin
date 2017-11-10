@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 
-use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\Assert;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 

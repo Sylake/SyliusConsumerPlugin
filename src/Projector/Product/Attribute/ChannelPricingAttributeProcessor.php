@@ -87,7 +87,7 @@ final class ChannelPricingAttributeProcessor implements AttributeProcessorInterf
         return $this->priceAttribute === $attribute->attribute() && is_array($attribute->data());
     }
 
-    private function processChannelPricings(Attribute $attribute, ProductVariantInterface$productVariant): array
+    private function processChannelPricings(Attribute $attribute, ProductVariantInterface $productVariant): array
     {
         /** @var ChannelPricingInterface[] $channelPricings */
         $channelPricings = [];
@@ -107,7 +107,7 @@ final class ChannelPricingAttributeProcessor implements AttributeProcessorInterf
                 /** @var ChannelPricingInterface|null $channelPricing */
                 $channelPricing = $this->channelPricingRepository->findOneBy([
                     'productVariant' => $productVariant,
-                    'channelCode' => $channel->getCode()
+                    'channelCode' => $channel->getCode(),
                 ]);
 
                 if (null === $channelPricing) {
@@ -124,5 +124,4 @@ final class ChannelPricingAttributeProcessor implements AttributeProcessorInterf
 
         return $channelPricings;
     }
-
 }

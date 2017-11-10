@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Sylake\SyliusConsumerPlugin\Model;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 final class TranslationsSpec extends ObjectBehavior
 {

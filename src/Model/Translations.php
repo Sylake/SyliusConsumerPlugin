@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sylake\SyliusConsumerPlugin\Model;
 
 final class Translations implements \IteratorAggregate
