@@ -17,7 +17,7 @@
         "php": "^7.1",
 
         "php-amqplib/rabbitmq-bundle": "^1.12",
-        "sylius-labs/rabbitmq-simplebus-bundle": "^1.0.0@beta",
+        "sylius-labs/rabbitmq-simplebus-bundle": "^1.0",
         "sylius/sylius": "1.0.0-beta.3"
     },
     "require-dev": {
