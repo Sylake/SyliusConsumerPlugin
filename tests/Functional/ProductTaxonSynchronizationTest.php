@@ -8,9 +8,6 @@ use PHPUnit\Framework\Assert;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class ProductTaxonSynchronizationTest extends ProductSynchronizationTestCase
 {
     /**

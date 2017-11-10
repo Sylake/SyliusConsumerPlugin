@@ -9,9 +9,6 @@ use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class ProductChannelPricingSynchronizationTest extends ProductSynchronizationTestCase
 {
     /**

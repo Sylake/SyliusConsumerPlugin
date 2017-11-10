@@ -8,9 +8,6 @@ use PHPUnit\Framework\Assert;
 use Sylake\SyliusConsumerPlugin\Entity\AkeneoAttributeOption;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class GroupSynchronizationTest extends SynchronizationTestCase
 {
     /** @var RepositoryInterface */

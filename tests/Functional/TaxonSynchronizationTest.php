@@ -8,9 +8,6 @@ use PHPUnit\Framework\Assert;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class TaxonSynchronizationTest extends SynchronizationTestCase
 {
     /**

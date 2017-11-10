@@ -7,9 +7,6 @@ namespace Tests\Sylake\SyliusConsumerPlugin\Functional;
 use PHPUnit\Framework\Assert;
 use Sylius\Component\Core\Model\ProductInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class ProductFamilySynchronizationTest extends ProductSynchronizationTestCase
 {
     /**

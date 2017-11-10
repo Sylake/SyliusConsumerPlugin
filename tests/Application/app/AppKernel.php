@@ -5,9 +5,6 @@ declare(strict_types=1);
 use Sylius\Bundle\CoreBundle\Application\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 class AppKernel extends Kernel
 {
     /**

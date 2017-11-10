@@ -9,9 +9,6 @@ use Sylius\Component\Product\Model\ProductAssociationTypeInterface;
 use Sylius\Component\Product\Model\ProductAttributeInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class AttributeSynchronizationTest extends SynchronizationTestCase
 {
     /**

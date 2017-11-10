@@ -8,9 +8,6 @@ use PHPUnit\Framework\Assert;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Product\Model\ProductAssociationInterface;
 
-/**
- * @author Kamil Kokot <kamil@kokot.me>
- */
 final class ProductAssociationSynchronizationTest extends ProductSynchronizationTestCase
 {
     /**
