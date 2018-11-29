@@ -2,11 +2,11 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\FamilyUpdatedDenormalizer">
+        <service class="Sylake\SyliusConsumerPlugin\Denormalizer\FamilyUpdatedDenormalizer" id="sylius.denormalizer.family">
             <tag name="rabbitmq_simplebus.amqp_denormalizer" />
         </service>
 
-        <service class="Sylake\SyliusConsumerPlugin\Projector\FamilyProjector">
+        <service class="Sylake\SyliusConsumerPlugin\Projector\FamilyProjector" id="sylius.projector.family">
             <argument type="service" id="sylius.repository.product_attribute" />
             <argument type="service" id="sylake_sylius_consumer.repository.akeneo_attribute_option" />
             <argument type="service" id="sylius.factory.product_attribute" />
